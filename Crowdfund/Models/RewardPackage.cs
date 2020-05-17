@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TestProject.Models
+namespace Crowdfund.Models
 {
     public class RewardPackage
     {

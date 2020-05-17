@@ -1,4 +1,4 @@
-namespace TestProject.Models
+namespace Crowdfund.Models
 {
     public enum MediaType
     {

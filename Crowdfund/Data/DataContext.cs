@@ -1,7 +1,7 @@
+using Crowdfund.Models;
 using Microsoft.EntityFrameworkCore;
-using TestProject.Models;
 
-namespace ConsoleApp.Data
+namespace Crowdfund.Data
 {
     public class DataContext : DbContext
     {

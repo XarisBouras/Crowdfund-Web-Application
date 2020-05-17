@@ -1,6 +1,6 @@
 using System;
 
-namespace TestProject.Models
+namespace Crowdfund.Models
 {
     public class Post
     {

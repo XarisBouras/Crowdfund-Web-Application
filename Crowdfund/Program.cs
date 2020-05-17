@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using ConsoleApp.Data;
+using Crowdfund.Data;
+using Crowdfund.Models;
 using Microsoft.EntityFrameworkCore;
-using TestProject.Models;
 
-namespace ConsoleApp
+namespace Crowdfund
 {
     class Program
     {
@@ -13,7 +13,7 @@ namespace ConsoleApp
             var dbCtx = new DataContext();
             //=========Project Creator=======================================================
             
-            var user = new User
+            /*var user = new User
             {
                 Email = "test@test.com",
                 FirstName = "TestUser",
@@ -78,12 +78,12 @@ namespace ConsoleApp
 
             user.UserProjectReward.Add(userProject);
 
-            dbCtx.SaveChanges();
+            dbCtx.SaveChanges();*/
             
             //============================================================================
             //==========Project Backer=======================================================
             
-            /*var user2 = new User
+            var user2 = new User
             {
                 FirstName = "TestUser2",
                 LastName = "TestUser2LastName",
@@ -98,7 +98,7 @@ namespace ConsoleApp
 
             var project = dbCtx.Set<UserProjectReward>()
                 .Include(p => p.Project).ThenInclude(p => p.RewardPackages)
-                .FirstOrDefault(u => u.UserId == 1 && u.ProjectId == 1)?.Project;
+                .FirstOrDefault(u => u.UserId == 1 && u.ProjectId == 1 && u.IsOwner == true)?.Project;
             
             var  projectReward = project?.RewardPackages.FirstOrDefault(rp => rp.RewardPackageId == 1);
 
@@ -113,7 +113,7 @@ namespace ConsoleApp
             
             loggedInUser.UserProjectReward.Add(user2ProjectBacking);
             
-            dbCtx.SaveChanges();*/
+            dbCtx.SaveChanges();
             //============================================================================
             
             //var eligiblePackages = project.RewardPackages.Where(rp => rp.MinAmount >= 15);
