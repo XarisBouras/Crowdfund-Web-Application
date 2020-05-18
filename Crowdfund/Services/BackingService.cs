@@ -28,10 +28,11 @@ namespace Crowdfund.Services
             var project = _projectService.GetProjectById(projectId);
 
             if (user == null || project == null) return false;
+
+            var projectOwner = _context.Set<UserProjectReward>()
+                .Any(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == true);
             
-            var projectOwner = user.UserProjectReward.FirstOrDefault(u => u.IsOwner);
-            
-            if (projectOwner != null) return false;
+            if (projectOwner) return false;
 
             var userProjectBacking = new UserProjectReward
             {

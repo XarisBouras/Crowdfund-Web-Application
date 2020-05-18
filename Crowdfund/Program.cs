@@ -22,7 +22,7 @@ namespace Crowdfund
 
             // ===============================================================
             //Create TestUser1
-            var user1 = userSvc.CreateUser(new CreateUserOptions
+            /*var user1 = userSvc.CreateUser(new CreateUserOptions
             {
                 Email = "test_user1@test.com",
                 FirstName = "TestUser1",
@@ -49,13 +49,13 @@ namespace Crowdfund
                 DueTo = new DateTime(2020, 12, 15),
                 Goal = 1000
             });
-            Console.WriteLine(project.Category);
+            Console.WriteLine(project.Category);*/
             // ===========================================================
             
             // TestUser2 backs TestUsers'1 Project
 
-            /*var backingSuccess = backingSvc.CreateBacking(2, 1, 0, 150);
-            Console.WriteLine(backingSuccess);*/
+            var backingSuccess = backingSvc.CreateBacking(1, 1, 0, 150);
+            Console.WriteLine(backingSuccess);
             
             // OLD === for reference ===
             //=========Project Creator=======================================================
