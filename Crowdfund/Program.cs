@@ -2,6 +2,9 @@
 using System.Linq;
 using Crowdfund.Data;
 using Crowdfund.Models;
+using Crowdfund.Services;
+using Crowdfund.Services.Options.ProjectOptions;
+using Crowdfund.Services.Options.UserOptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Crowdfund
@@ -11,15 +14,53 @@ namespace Crowdfund
         static void Main(string[] args)
         {
             var dbCtx = new DataContext();
-            //=========Project Creator=======================================================
-            
-            /*var user = new User
+
+            var userSvc = new UserService(dbCtx);
+            var rewardSvc = new RewardService(dbCtx);
+            var projectSvc = new ProjectService(dbCtx, userSvc, rewardSvc);
+            var backingSvc = new BackingService(dbCtx, userSvc, projectSvc, rewardSvc);
+
+            // ===============================================================
+            //Create TestUser1
+            var user1 = userSvc.CreateUser(new CreateUserOptions
             {
-                Email = "test@test.com",
-                FirstName = "TestUser",
-                LastName = "TestUserLastName"
-            };
+                Email = "test_user1@test.com",
+                FirstName = "TestUser1",
+                LastName = "TestUse2rLastName"
+            });
+            Console.WriteLine(user1.UserId);
             
+            //Create TestUser1
+            var user2 = userSvc.CreateUser(new CreateUserOptions
+            {
+                Email = "test_user2@test.com",
+                FirstName = "TestUser2",
+                LastName = "TestUser2LastName"
+            });
+            Console.WriteLine(user2.UserId);
+            
+            //Create TestUser1's Project
+            var project = projectSvc.CreateProject(new CreateProjectOptions
+            {
+                UserId = 1,
+                Title = "Project 1",
+                Description = "lorem ipsum....",
+                CategoryId = 2,
+                DueTo = new DateTime(2020, 12, 15),
+                Goal = 1000
+            });
+            Console.WriteLine(project.Category);
+            // ===========================================================
+            
+            // TestUser2 backs TestUsers'1 Project
+
+            /*var backingSuccess = backingSvc.CreateBacking(2, 1, 0, 150);
+            Console.WriteLine(backingSuccess);*/
+            
+            // OLD === for reference ===
+            //=========Project Creator=======================================================
+
+            /*
             dbCtx.Add(user);
 
             var project = new Project()
@@ -79,11 +120,11 @@ namespace Crowdfund
             user.UserProjectReward.Add(userProject);
 
             dbCtx.SaveChanges();*/
-            
+
             //============================================================================
             //==========Project Backer=======================================================
-            
-            var user2 = new User
+
+            /*var user2 = new User
             {
                 FirstName = "TestUser2",
                 LastName = "TestUser2LastName",
@@ -113,13 +154,11 @@ namespace Crowdfund
             
             loggedInUser.UserProjectReward.Add(user2ProjectBacking);
             
-            dbCtx.SaveChanges();
+            dbCtx.SaveChanges();*/
             //============================================================================
-            
+
             //var eligiblePackages = project.RewardPackages.Where(rp => rp.MinAmount >= 15);
 
-            
-            Console.WriteLine("OK");
             dbCtx.Dispose();
         }
     }

@@ -11,7 +11,7 @@ namespace Crowdfund.Models
         
         public string Description { get; set; }
         
-        public DateTime DueTo { get; set; }
+        public DateTime? DueTo { get; set; }
         
         public decimal Goal { get; set; }
         
