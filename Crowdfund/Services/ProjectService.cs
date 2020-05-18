@@ -5,6 +5,7 @@ using Crowdfund.Models;
 using Crowdfund.Services.Interfaces;
 using Crowdfund.Services.Options.ProjectOptions;
 using Crowdfund.Services.Options.RewardPackageOptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crowdfund.Services
 {
@@ -55,7 +56,7 @@ namespace Crowdfund.Services
 
         public Project GetProjectById(int id)
         {
-            return _context.Set<Project>().Find(id);
+            return _context.Set<Project>().Include(p => p.RewardPackages).FirstOrDefault(p => p.ProjectId == id);
         }
 
         public bool AddRewardPackage(Project project, CreateRewardPackageOptions rewardPackageOptions)

@@ -22,11 +22,9 @@ namespace Crowdfund.Models
         public IList<Media> Medias { get; set; }
         
         public Category Category { get; set; }
-        
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        
-        //public IList<UserProjectReward> UserProjectReward { get; set; }
-        
+
         public Project()
         {
             RewardPackages = new List<RewardPackage>();

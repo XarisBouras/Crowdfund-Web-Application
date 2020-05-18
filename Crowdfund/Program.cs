@@ -4,6 +4,7 @@ using Crowdfund.Data;
 using Crowdfund.Models;
 using Crowdfund.Services;
 using Crowdfund.Services.Options.ProjectOptions;
+using Crowdfund.Services.Options.RewardPackageOptions;
 using Crowdfund.Services.Options.UserOptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +19,10 @@ namespace Crowdfund
             var userSvc = new UserService(dbCtx);
             var rewardSvc = new RewardService(dbCtx);
             var projectSvc = new ProjectService(dbCtx, userSvc, rewardSvc);
-            var backingSvc = new BackingService(dbCtx, userSvc, projectSvc, rewardSvc);
+            var backingSvc = new BackingService(dbCtx, userSvc, projectSvc);
 
             // ===============================================================
-            //Create TestUser1
+
             /*var user1 = userSvc.CreateUser(new CreateUserOptions
             {
                 Email = "test_user1@test.com",
@@ -30,7 +31,7 @@ namespace Crowdfund
             });
             Console.WriteLine(user1.UserId);
             
-            //Create TestUser1
+
             var user2 = userSvc.CreateUser(new CreateUserOptions
             {
                 Email = "test_user2@test.com",
@@ -49,14 +50,27 @@ namespace Crowdfund
                 DueTo = new DateTime(2020, 12, 15),
                 Goal = 1000
             });
+            
+            var rewardPkg1 = new CreateRewardPackageOptions
+            {
+                Title = "Reward Package 1",
+                Description = "Get reward package 1",
+                Quantity = 10,
+                MinAmount = 10
+            };
+
+            var result = projectSvc.AddRewardPackage(project, rewardPkg1);
+            
+            Console.WriteLine(result);
             Console.WriteLine(project.Category);*/
             // ===========================================================
             
             // TestUser2 backs TestUsers'1 Project
 
-            var backingSuccess = backingSvc.CreateBacking(1, 1, 0, 150);
+            var backingSuccess = backingSvc.CreateBacking(2, 1, 1, 10);
             Console.WriteLine(backingSuccess);
             
+            dbCtx.Dispose();
             // OLD === for reference ===
             //=========Project Creator=======================================================
 
@@ -158,8 +172,6 @@ namespace Crowdfund
             //============================================================================
 
             //var eligiblePackages = project.RewardPackages.Where(rp => rp.MinAmount >= 15);
-
-            dbCtx.Dispose();
         }
     }
 }

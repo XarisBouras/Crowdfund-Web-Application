@@ -11,15 +11,12 @@ namespace Crowdfund.Services
         private readonly DataContext _context;
         private readonly IUserService _userService;
         private readonly IProjectService _projectService;
-        private readonly IRewardService _rewardService;
 
-        public BackingService(DataContext context, IUserService userService, IProjectService projectService,
-            IRewardService rewardService)
+        public BackingService(DataContext context, IUserService userService, IProjectService projectService)
         {
             _context = context;
             _userService = userService;
             _projectService = projectService;
-            _rewardService = rewardService;
         }
 
         public bool CreateBacking(int userId, int projectId, int rewardPackageId, decimal amount)
@@ -34,12 +31,16 @@ namespace Crowdfund.Services
             
             if (projectOwner) return false;
 
+            var rewardPackage = project.RewardPackages
+                .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId);
+
+            if (rewardPackage == null && rewardPackageId != 0) return false;
+
             var userProjectBacking = new UserProjectReward
             {
                 IsOwner = false,
                 Project = project,
-                RewardPackage = rewardPackageId == 0 ? null : project.RewardPackages
-                                                    .FirstOrDefault(rp => rp.MinAmount >= amount && rp.RewardPackageId == rewardPackageId),
+                RewardPackage = rewardPackageId == 0 ? null : rewardPackage,
                 Amount = amount
             };
             

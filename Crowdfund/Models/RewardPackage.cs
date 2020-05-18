@@ -5,6 +5,8 @@ namespace Crowdfund.Models
     public class RewardPackage
     {
         public int RewardPackageId { get; set; }
+
+        public string Title { get; set; }
         
         public string Description { get; set; } 
         
