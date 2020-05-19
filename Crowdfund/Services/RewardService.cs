@@ -19,7 +19,7 @@ namespace Crowdfund.Services
             var rewardPackage = new RewardPackage
             {
                 Description = createRewardPackageOptions.Description,
-                MinAmount = createRewardPackageOptions.MinAmount,
+                MinAmount = createRewardPackageOptions.MinAmount.Value,
                 Quantity = createRewardPackageOptions.Quantity
             };
 
