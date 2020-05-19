@@ -1,6 +1,8 @@
-using Crowdfund.Data;
 using Crowdfund.Models;
 using Crowdfund.Services.Options.UserOptions;
+using Crowdfund.Services.SearchOptions;
+using Crowdfund.Services.UpdateOptions;
+using System.Linq;
 
 namespace Crowdfund.Services.Interfaces
 {
@@ -8,5 +10,7 @@ namespace Crowdfund.Services.Interfaces
     {
         User CreateUser(CreateUserOptions createUserOptions);
         User GetUserById(int id);
+        IQueryable<User> SearchUser(SearchUserOptions options);
+        User UpdateUser(UpdateUserOptions options);
     }
 }

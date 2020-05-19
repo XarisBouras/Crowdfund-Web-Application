@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Crowdfund.Models
 {
@@ -22,6 +23,23 @@ namespace Crowdfund.Models
         public User()
         {
             UserProjectReward = new List<UserProjectReward>();
+        }
+
+        public bool IsValidEmail(String Email)
+        {
+            if (!string.IsNullOrEmpty(Email))
+            {
+                string expression = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+                if (Regex.IsMatch(Email, expression))
+                {
+                    if (Regex.Replace(Email, expression, string.Empty).Length == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+
         }
     }
 }
