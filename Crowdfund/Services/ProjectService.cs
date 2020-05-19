@@ -23,7 +23,7 @@ namespace Crowdfund.Services
         }
         public Project CreateProject(CreateProjectOptions createProjectOptions)
         {
-            if (!Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId) || createProjectOptions.Goal == 0 ||
+            if (!Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId) || createProjectOptions.Goal <= 0 ||
                 createProjectOptions.Title == null || createProjectOptions.DueTo == null)
             {
                 return null;
