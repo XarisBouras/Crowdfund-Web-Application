@@ -9,6 +9,6 @@ namespace Crowdfund.Services.Options.ProjectOptions
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public IList<Category> Category { get; set; } 
+        public IList<int> Category { get; set; } 
     }
 }

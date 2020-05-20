@@ -1,4 +1,5 @@
 using Crowdfund.Models;
+using Crowdfund.Services.Options.MediaOptions;
 using Crowdfund.Services.Options.ProjectOptions;
 using Crowdfund.Services.Options.RewardPackageOptions;
 using System.Linq;
@@ -17,11 +18,15 @@ namespace Crowdfund.Services.Interfaces
 
         bool DeleteProject(int? userId, int? projectId);
 
-        bool AddRewardPackage(CreateRewardPackageOptions createRewardPackageOptions);
+        RewardPackage AddRewardPackage(CreateRewardPackageOptions createRewardPackageOptions);
 
-        bool UpdateRewardPackage(UpdateRewardPackageOptions updateRewardPackageOptions);
+        RewardPackage UpdateRewardPackage(UpdateRewardPackageOptions updateRewardPackageOptions);
 
         bool DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId);
+
+        Media AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId);
+
+        bool DeleteMedia(int? userId, int? projectId, int? mediaId);
         
     }
 }

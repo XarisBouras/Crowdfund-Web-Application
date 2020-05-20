@@ -2,6 +2,8 @@ using Crowdfund.Data;
 using Crowdfund.Models;
 using Crowdfund.Services.Interfaces;
 using Crowdfund.Services.Options.RewardPackageOptions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Crowdfund.Services
 {
@@ -13,24 +15,114 @@ namespace Crowdfund.Services
         {
             _context = context;
         }
-        
-        public RewardPackage CreateRewardPackage(CreateRewardPackageOptions createRewardPackageOptions)
+
+        public RewardPackage CreateRewardPackage(CreateRewardPackageOptions createRewardOptions)
         {
-            var rewardPackage = new RewardPackage
+            var rewardList = _context.Set<Project>()
+                                 .Include(p => p.RewardPackages)
+                                 .Where(p => p.ProjectId == createRewardOptions.ProjectId)
+                                 .SingleOrDefault();
+
+            if (rewardList != null)
             {
-                Description = createRewardPackageOptions.Description,
-                MinAmount = createRewardPackageOptions.MinAmount.Value,
-                Quantity = createRewardPackageOptions.Quantity
+                foreach (var item in rewardList.RewardPackages)
+                {
+                    if (item.MinAmount == createRewardOptions.MinAmount)
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            var reward = new RewardPackage()
+            {
+                Title = createRewardOptions.Title,
+                Description = createRewardOptions.Description,
+                MinAmount = createRewardOptions.MinAmount.Value,
+                Quantity = createRewardOptions.Quantity
             };
 
-            _context.Set<RewardPackage>().Add(rewardPackage);
-            
-            return _context.SaveChanges() > 0 ? rewardPackage : null;
+            return reward;
+        }
+       
+        public RewardPackage UpdateRewardPackage(UpdateRewardPackageOptions updateRewardOptions)
+        {
+
+            var rewardList = _context.Set<Project>()
+                                .Include(p => p.RewardPackages)
+                                .Where(p => p.ProjectId == updateRewardOptions.ProjectId)
+                                .SingleOrDefault();
+           
+            foreach (var item in rewardList.RewardPackages)
+            {
+                if (item.MinAmount == updateRewardOptions.MinAmount)
+                {
+                    return null;
+                }
+            }
+
+            var packageToUpdate = GetRewardPackageById(updateRewardOptions.RewardPackageId);
+
+            if (packageToUpdate == null)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrWhiteSpace(updateRewardOptions.Title))
+            {
+                packageToUpdate.Title = updateRewardOptions.Title;
+            }
+
+            if (!string.IsNullOrWhiteSpace(updateRewardOptions.Description))
+            {
+                packageToUpdate.Description = updateRewardOptions.Description;
+            }
+
+            if (updateRewardOptions.Quantity != null)
+            {
+                packageToUpdate.Quantity = updateRewardOptions.Quantity;
+            }
+
+            if (updateRewardOptions.MinAmount != null)
+            {
+                packageToUpdate.MinAmount = updateRewardOptions.MinAmount.Value;
+            }
+
+            return packageToUpdate;
         }
 
-        public RewardPackage GetRewardPackageById(int id)
+        public bool DeleteRewardPackage(int? projectId, int? rewardPackageId)
         {
-            return _context.Set<RewardPackage>().Find(id);
+            var rewardList = _context.Set<Project>()
+                                 .Include(p => p.RewardPackages)
+                                 .Where(p => p.ProjectId == projectId)
+                                 .SingleOrDefault();
+
+            if (rewardList == null)
+            {
+                return false;
+            }
+
+            var packageToDelete = GetRewardPackageById(rewardPackageId);
+
+            if (packageToDelete == null)
+            {
+                return false;
+            }
+
+            _context.Remove(packageToDelete);
+
+            return _context.SaveChanges() > 0 ? true : false;
+        }
+
+        public RewardPackage GetRewardPackageById(int? packageId)
+        {
+            if (packageId == null)
+            {
+                return null;
+            }
+
+            return _context.Set<RewardPackage>().Find(packageId);
         }
     }
 }

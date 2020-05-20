@@ -3,6 +3,7 @@ using System.Linq;
 using Crowdfund.Data;
 using Crowdfund.Models;
 using Crowdfund.Services.Interfaces;
+using Crowdfund.Services.Options.MediaOptions;
 using Crowdfund.Services.Options.ProjectOptions;
 using Crowdfund.Services.Options.RewardPackageOptions;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,17 @@ namespace Crowdfund.Services
         private readonly DataContext _context;
         private readonly IUserService _userService;
         private readonly IRewardService _rewardService;
+        private readonly IMediaService _mediaService;
+        private readonly IPostService _postService;
 
-        public ProjectService(DataContext context, IUserService userService, IRewardService rewardService)
+        public ProjectService(DataContext context, IUserService userService,
+             IRewardService rewardService, IMediaService mediaService, IPostService postService)
         {
             _context = context;
             _userService = userService;
             _rewardService = rewardService;
+            _mediaService = mediaService;
+            _postService = postService;
         }
         public Project CreateProject(CreateProjectOptions createProjectOptions)
         {
@@ -148,7 +154,7 @@ namespace Crowdfund.Services
             {
                 foreach (var item in searchProjectOptions.Category)
                 {
-                    query = query.Where(pj => pj.Category == item);
+                   // query = query.Where(pj => pj.Category == item);
                 }               
             }
 
@@ -184,7 +190,7 @@ namespace Crowdfund.Services
             return _context.SaveChanges()>0 ? true : false;
         }
 
-        public bool AddRewardPackage(CreateRewardPackageOptions createRewardOptions)
+        public RewardPackage AddRewardPackage(CreateRewardPackageOptions createRewardOptions)
         {
             if (createRewardOptions == null 
                 || createRewardOptions.ProjectId == null 
@@ -192,14 +198,14 @@ namespace Crowdfund.Services
                 || createRewardOptions.Quantity < 0
                 || createRewardOptions.MinAmount <= 0 || createRewardOptions.MinAmount == null)
             {
-                return false;
+                return null;
             }
 
             var project = GetProjectById(createRewardOptions.ProjectId);
 
             if(project == null)
             {
-                return false;
+                return null;
             }
 
             var user = _context.Set<UserProjectReward>()
@@ -209,39 +215,20 @@ namespace Crowdfund.Services
                                .SingleOrDefault();
             if (user == null)
             {
-                return false;
+                return null;
             }           
+          
+            var reward = _rewardService.CreateRewardPackage(createRewardOptions);
 
-            var rewardList = _context.Set<Project>()
-                                 .Include(p => p.RewardPackages)
-                                 .Where(p => p.ProjectId == createRewardOptions.ProjectId)
-                                 .SingleOrDefault();
-
-            if (rewardList != null)
+            if (reward != null)
             {
-                foreach (var item in rewardList.RewardPackages)
-                {
-                    if (item.MinAmount == createRewardOptions.MinAmount)
-                    {
-                        return false;
-                    }
-                }
+                project.RewardPackages.Add(reward);
             }
-
-            var reward = new RewardPackage()
-            {
-                Title = createRewardOptions.Title,
-                Description = createRewardOptions.Description,
-                MinAmount = createRewardOptions.MinAmount.Value,
-                Quantity = createRewardOptions.Quantity
-            };
-
-            project.RewardPackages.Add(reward);
-
-            return _context.SaveChanges() >0 ? true : false;
+            
+            return _context.SaveChanges() > 0 ? reward : null;
         }
 
-        public bool UpdateRewardPackage(UpdateRewardPackageOptions updateRewardOptions)
+        public RewardPackage UpdateRewardPackage(UpdateRewardPackageOptions updateRewardOptions)
         {
             if (updateRewardOptions == null
                 || updateRewardOptions.ProjectId == null
@@ -250,14 +237,14 @@ namespace Crowdfund.Services
                 || updateRewardOptions.Quantity < 0
                 || updateRewardOptions.MinAmount <= 0 )
             {
-                return false;
+                return null;
             }
 
             var project = GetProjectById(updateRewardOptions.ProjectId);
 
             if(project == null)
             {
-                return false;
+                return null;
             }
 
             var user = _context.Set<UserProjectReward>()
@@ -267,55 +254,17 @@ namespace Crowdfund.Services
                                .SingleOrDefault();
             if (user == null)
             {
-                return false;
+                return null;
             }
-            
-            var rewardList = _context.Set<Project>()
-                                 .Include(p => p.RewardPackages)
-                                 .Where(p => p.ProjectId == updateRewardOptions.ProjectId)
-                                 .SingleOrDefault();
+                       
+           var reward = _rewardService.UpdateRewardPackage(updateRewardOptions);
 
-            if (rewardList != null)
+            if (reward == null)
             {
-                foreach (var item in rewardList.RewardPackages)
-                {
-                    if (item.MinAmount == updateRewardOptions.MinAmount)
-                    {
-                        return false;
-                    }
-                }
+                return null;
             }
-
-            var packageToUpdate = rewardList.RewardPackages
-                .Where(pc => pc.RewardPackageId == updateRewardOptions.RewardPackageId)
-                .SingleOrDefault();
-
-            if(packageToUpdate == null)
-            {
-                return false;
-            }
-
-            if(!string.IsNullOrWhiteSpace(updateRewardOptions.Title))
-            {
-                packageToUpdate.Title = updateRewardOptions.Title;
-            }
-
-            if(!string.IsNullOrWhiteSpace(updateRewardOptions.Description))
-            {
-                packageToUpdate.Description = updateRewardOptions.Description;
-            }
-
-            if(updateRewardOptions.Quantity != null)
-            {
-                packageToUpdate.Quantity = updateRewardOptions.Quantity;
-            }
-
-            if(updateRewardOptions.MinAmount != null)
-            {
-                packageToUpdate.MinAmount = updateRewardOptions.MinAmount.Value;
-            }
-
-            return _context.SaveChanges() > 0 ? true : false;
+                
+            return _context.SaveChanges() > 0 ? reward : null;
         }
 
         public bool DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId)
@@ -342,28 +291,75 @@ namespace Crowdfund.Services
                 return false;
             }
 
-            var rewardList = _context.Set<Project>()
-                                 .Include(p => p.RewardPackages)
-                                 .Where(p => p.ProjectId == projectId)
-                                 .SingleOrDefault();
+            var result = _rewardService.DeleteRewardPackage(projectId, rewardPackageId);
 
-            if (rewardList == null)
+            return result;
+        }
+
+        public Media AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId)
+        {
+            if (createMediaOptions == null
+                || projectId == null
+                || userId == null)
+            {
+                return null;
+            }
+
+            var project = GetProjectById(projectId);
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            var user = _context.Set<UserProjectReward>()
+                               .Where(pj => pj.UserId == userId
+                                    && pj.ProjectId == projectId
+                                    && pj.IsOwner == true)
+                               .SingleOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
+
+            var media = _mediaService.CreateMedia(createMediaOptions);
+
+            if(media != null)
+            {
+                project.Medias.Add(media);
+            }
+
+            return _context.SaveChanges() > 0 ? media : null;
+        }
+
+        public bool DeleteMedia(int? userId, int? projectId, int? mediaId)
+        {
+            if (userId == null || projectId == null || mediaId == null)
             {
                 return false;
             }
 
-            var packageToDelete = rewardList.RewardPackages
-                .Where(pc => pc.RewardPackageId == rewardPackageId)
-                .SingleOrDefault();
+            var project = GetProjectById(projectId);
 
-            if (packageToDelete == null)
+            if (project == null)
+            {
+                return false;
+            }
+            
+            var user = _context.Set<UserProjectReward>()
+                               .Where(pj => pj.UserId == userId
+                                    && pj.ProjectId == projectId
+                                    && pj.IsOwner == true)
+                               .SingleOrDefault();
+            if (user == null)
             {
                 return false;
             }
 
-            _context.Remove(packageToDelete);
+            
+            var result = _mediaService.DeleteMedia(projectId, mediaId);
 
-            return _context.SaveChanges() > 0 ? true : false;
+            return result;
         }
     }   
 }
