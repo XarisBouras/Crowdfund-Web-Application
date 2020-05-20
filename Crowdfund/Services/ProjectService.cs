@@ -29,8 +29,11 @@ namespace Crowdfund.Services
         }
         public Project CreateProject(CreateProjectOptions createProjectOptions)
         {
-            if (!Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId) || createProjectOptions.Goal <= 0 ||
-                createProjectOptions.Title == null || createProjectOptions.DueTo == null)
+            if (createProjectOptions == null 
+                || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId) 
+                || createProjectOptions.Goal <= 0 
+                || string.IsNullOrWhiteSpace(createProjectOptions.Title)
+                || createProjectOptions.DueTo == null)
             {
                 return null;
             }
@@ -91,15 +94,10 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            var user = _context.Set<UserProjectReward>()
-                                .Where(pj => pj.UserId == updateProjectOptions.UserId
-                                     && pj.ProjectId == updateProjectOptions.ProjectId
-                                     && pj.IsOwner == true)
-                                .SingleOrDefault();
-            if (user == null)
+            if (UserOwnsProject(updateProjectOptions.UserId, updateProjectOptions.ProjectId) == false)
             {
                 return null;
-            }           
+            }
 
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.Description))
             {
@@ -113,19 +111,14 @@ namespace Crowdfund.Services
 
             if (updateProjectOptions.DueTo != null)
             {
-                project.DueTo = updateProjectOptions.DueTo.Value;
+                project.DueTo = updateProjectOptions.DueTo;
             }
 
             if (updateProjectOptions.Goal != null)
             {
                 project.Goal = updateProjectOptions.Goal.Value;
             }
-
-            if (_context.SaveChanges() > 0)
-            {
-                return project;
-            }
-
+          
             return _context.SaveChanges()>0 ? project : null;
         }
 
@@ -175,16 +168,11 @@ namespace Crowdfund.Services
                 return false;
             }
 
-            var user = _context.Set<UserProjectReward>()
-                               .Where(pj => pj.UserId == userId
-                                    && pj.ProjectId == projectId
-                                    && pj.IsOwner == true)
-                               .SingleOrDefault();
-            if (user == null)
+            if (UserOwnsProject(userId, projectId) == false)
             {
                 return false;
             }
-          
+
             _context.Remove(project);
             
             return _context.SaveChanges()>0 ? true : false;
@@ -208,16 +196,11 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            var user = _context.Set<UserProjectReward>()
-                               .Where(pj => pj.UserId == createRewardOptions.UserId
-                                    && pj.ProjectId == createRewardOptions.ProjectId
-                                    && pj.IsOwner == true)
-                               .SingleOrDefault();
-            if (user == null)
+            if (UserOwnsProject(createRewardOptions.UserId, createRewardOptions.ProjectId) == false)
             {
                 return null;
-            }           
-          
+            }
+
             var reward = _rewardService.CreateRewardPackage(createRewardOptions);
 
             if (reward != null)
@@ -247,17 +230,12 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            var user = _context.Set<UserProjectReward>()
-                               .Where(pj => pj.UserId == updateRewardOptions.UserId
-                                    && pj.ProjectId == updateRewardOptions.ProjectId
-                                    && pj.IsOwner == true)
-                               .SingleOrDefault();
-            if (user == null)
+            if (UserOwnsProject(updateRewardOptions.UserId, updateRewardOptions.ProjectId) == false)
             {
                 return null;
             }
-                       
-           var reward = _rewardService.UpdateRewardPackage(updateRewardOptions);
+
+            var reward = _rewardService.UpdateRewardPackage(updateRewardOptions);
 
             if (reward == null)
             {
@@ -281,12 +259,7 @@ namespace Crowdfund.Services
                 return false;
             }
 
-            var user = _context.Set<UserProjectReward>()
-                               .Where(pj => pj.UserId == userId
-                                    && pj.ProjectId == projectId
-                                    && pj.IsOwner == true)
-                               .SingleOrDefault();
-            if (user == null)
+            if (UserOwnsProject(userId, projectId) == false)
             {
                 return false;
             }
@@ -312,12 +285,7 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            var user = _context.Set<UserProjectReward>()
-                               .Where(pj => pj.UserId == userId
-                                    && pj.ProjectId == projectId
-                                    && pj.IsOwner == true)
-                               .SingleOrDefault();
-            if (user == null)
+            if (UserOwnsProject(userId, projectId) == false)
             {
                 return null;
             }
@@ -345,21 +313,25 @@ namespace Crowdfund.Services
             {
                 return false;
             }
-            
-            var user = _context.Set<UserProjectReward>()
-                               .Where(pj => pj.UserId == userId
-                                    && pj.ProjectId == projectId
-                                    && pj.IsOwner == true)
-                               .SingleOrDefault();
-            if (user == null)
+
+           if( UserOwnsProject(userId, projectId) == false)
             {
                 return false;
             }
-
-            
+                                                      
             var result = _mediaService.DeleteMedia(projectId, mediaId);
 
             return result;
         }
-    }   
+
+        public bool UserOwnsProject(int? userId, int? projectId)
+        {
+            var user = _context.Set<UserProjectReward>()
+                                   .Any(pj => pj.UserId == userId
+                                        && pj.ProjectId == projectId
+                                        && pj.IsOwner == true);
+
+            return user == true ? true : false;
+        }
+    }       
 }
