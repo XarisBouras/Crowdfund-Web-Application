@@ -2,6 +2,9 @@
 using Crowdfund.Models;
 using Crowdfund.Services.CreateOptions;
 using Crowdfund.Services.Interfaces;
+using Crowdfund.Services.Options.MediaOptions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Linq;
 
@@ -49,14 +52,26 @@ namespace Crowdfund.Services
                 media.MediaUrl = urlChecking;
                 Console.WriteLine("Image");
             }
-            _context.Add(media);
-            return _context.SaveChanges() > 0 ? media : null;
+            
+            return media;
         }
 
-        public bool DeleteMedia(int id)
+        public bool DeleteMedia(int? projectId, int? id)
         {
-            var MediaToDelete = _context.Set<Media>().Where(m => m.MediaId == id).SingleOrDefault();
-            _context.Remove(MediaToDelete);
+
+            var MediaToDelete = _context.Set<Project>()
+                                        .Include(m=>m.Medias)
+                                        .Where(p => p.ProjectId == projectId)
+                                        .SingleOrDefault();
+
+            foreach(var item in MediaToDelete.Medias)
+            {
+                if (id == item.MediaId)
+                {
+                    _context.Remove(item);
+                }
+            }
+            
             _context.SaveChanges();
 
             var checking = _context.Set<Media>().Where(m => m.MediaId== id).SingleOrDefault();
