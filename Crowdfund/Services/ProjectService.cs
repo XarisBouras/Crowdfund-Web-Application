@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Crowdfund.Data;
 using Crowdfund.Models;
+using Crowdfund.Services.CreateOptions;
 using Crowdfund.Services.Interfaces;
-using Crowdfund.Services.Options.MediaOptions;
 using Crowdfund.Services.Options.ProjectOptions;
 using Crowdfund.Services.Options.RewardPackageOptions;
+using Crowdfund.Services.UpdateOptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Crowdfund.Services
@@ -19,7 +21,7 @@ namespace Crowdfund.Services
         private readonly IPostService _postService;
 
         public ProjectService(DataContext context, IUserService userService,
-             IRewardService rewardService, IMediaService mediaService, IPostService postService)
+            IRewardService rewardService, IMediaService mediaService, IPostService postService)
         {
             _context = context;
             _userService = userService;
@@ -27,26 +29,27 @@ namespace Crowdfund.Services
             _mediaService = mediaService;
             _postService = postService;
         }
+
         public Project CreateProject(CreateProjectOptions createProjectOptions)
         {
-            if (createProjectOptions == null 
-                || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId) 
-                || createProjectOptions.Goal <= 0 
+            if (createProjectOptions == null
+                || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId)
+                || createProjectOptions.Goal <= 0
                 || string.IsNullOrWhiteSpace(createProjectOptions.Title)
                 || createProjectOptions.DueTo == null)
             {
                 return null;
             }
-            
+
             var project = new Project
             {
                 Title = createProjectOptions.Title,
-                Category =  (Category)createProjectOptions.CategoryId,
+                Category = (Category) createProjectOptions.CategoryId,
                 Description = createProjectOptions.Description,
                 DueTo = createProjectOptions.DueTo,
                 Goal = createProjectOptions.Goal
             };
-            
+
             _context.Set<Project>().Add(project);
 
             var user = _userService.GetUserById(createProjectOptions.UserId);
@@ -54,7 +57,7 @@ namespace Crowdfund.Services
             {
                 return null;
             }
-            
+
             var userProject = new UserProjectReward
             {
                 IsOwner = true,
@@ -62,27 +65,24 @@ namespace Crowdfund.Services
             };
 
             user.UserProjectReward.Add(userProject);
-            
+
             return _context.SaveChanges() > 0 ? project : null;
         }
 
         public Project GetProjectById(int? id)
         {
-            if(id == null)
-            {
-                return null;
-            }
-
-            return _context.Set<Project>()
-                .Include(p => p.RewardPackages)
-                .FirstOrDefault(p => p.ProjectId == id);
+            return id != null
+                ? _context.Set<Project>()
+                    .Include(p => p.RewardPackages)
+                    .Include(p => p.Medias)
+                    .Include(p => p.Posts)
+                    .FirstOrDefault(p => p.ProjectId == id)
+                : null;
         }
 
         public Project UpdateProject(UpdateProjectOptions updateProjectOptions)
         {
-            if (updateProjectOptions == null 
-                || updateProjectOptions.ProjectId == null 
-                || updateProjectOptions.UserId == null)
+            if (updateProjectOptions?.ProjectId == null || updateProjectOptions.UserId == null)
             {
                 return null;
             }
@@ -94,7 +94,7 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            if (UserOwnsProject(updateProjectOptions.UserId, updateProjectOptions.ProjectId) == false)
+            if (Helpers.UserOwnsProject(_context, updateProjectOptions.UserId, updateProjectOptions.ProjectId) == false)
             {
                 return null;
             }
@@ -118,8 +118,8 @@ namespace Crowdfund.Services
             {
                 project.Goal = updateProjectOptions.Goal.Value;
             }
-          
-            return _context.SaveChanges()>0 ? project : null;
+
+            return _context.SaveChanges() > 0 ? project : null;
         }
 
         public IQueryable<Project> SearchProject(SearchProjectOptions searchProjectOptions)
@@ -130,28 +130,22 @@ namespace Crowdfund.Services
             }
 
             var query = _context
-                            .Set<Project>()
-                            .AsQueryable();
+                .Set<Project>()
+                .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchProjectOptions.Title))
+            if (!string.IsNullOrWhiteSpace(searchProjectOptions.SearchString))
             {
-                query = query.Where(pj => pj.Title == searchProjectOptions.Title);
+                query = query.Where(pj => pj.Title
+                                              .Contains(searchProjectOptions.SearchString) ||
+                                          pj.Description.Contains(searchProjectOptions.SearchString));
             }
 
-            if (!string.IsNullOrWhiteSpace(searchProjectOptions.Description))
+            if (searchProjectOptions.CategoryIds != null)
             {
-                query = query.Where(pj => pj.Description == searchProjectOptions.Description);
+                query = query.Where(pj => searchProjectOptions.CategoryIds.Contains((int) pj.Category));
             }
 
-            if (searchProjectOptions.Category != null)
-            {
-                foreach (var item in searchProjectOptions.Category)
-                {
-                   // query = query.Where(pj => pj.Category == item);
-                }               
-            }
-
-            return query;
+            return query.Take(500);
         }
 
         public bool DeleteProject(int? userId, int? projectId)
@@ -168,38 +162,39 @@ namespace Crowdfund.Services
                 return false;
             }
 
-            if (UserOwnsProject(userId, projectId) == false)
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
                 return false;
             }
 
             _context.Remove(project);
-            
-            return _context.SaveChanges()>0 ? true : false;
+
+            return _context.SaveChanges() > 0;
         }
 
-        public RewardPackage AddRewardPackage(CreateRewardPackageOptions createRewardOptions)
+        public RewardPackage AddRewardPackage(int? projectId, int? userId,
+            CreateRewardPackageOptions createRewardOptions)
         {
-            if (createRewardOptions == null 
-                || createRewardOptions.ProjectId == null 
-                || createRewardOptions.UserId == null 
-                || createRewardOptions.Quantity < 0
-                || createRewardOptions.MinAmount <= 0 || createRewardOptions.MinAmount == null)
+            if (projectId == null || userId == null || createRewardOptions.Quantity < 0 ||
+                createRewardOptions.MinAmount <= 0 || createRewardOptions.MinAmount == null)
             {
                 return null;
             }
 
-            var project = GetProjectById(createRewardOptions.ProjectId);
+            var project = GetProjectById(projectId);
 
-            if(project == null)
+            if (project == null)
             {
                 return null;
             }
 
-            if (UserOwnsProject(createRewardOptions.UserId, createRewardOptions.ProjectId) == false)
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
                 return null;
             }
+
+            if (project.RewardPackages.Any(r => r.MinAmount == createRewardOptions.MinAmount))
+                return null;
 
             var reward = _rewardService.CreateRewardPackage(createRewardOptions);
 
@@ -207,66 +202,69 @@ namespace Crowdfund.Services
             {
                 project.RewardPackages.Add(reward);
             }
-            
+
             return _context.SaveChanges() > 0 ? reward : null;
         }
 
-        public RewardPackage UpdateRewardPackage(UpdateRewardPackageOptions updateRewardOptions)
+        public RewardPackage UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId,
+            UpdateRewardPackageOptions updateRewardOptions)
         {
             if (updateRewardOptions == null
-                || updateRewardOptions.ProjectId == null
-                || updateRewardOptions.UserId == null
-                || updateRewardOptions.RewardPackageId == null
+                || projectId == null
+                || userId == null
+                || rewardPackageId == null
                 || updateRewardOptions.Quantity < 0
-                || updateRewardOptions.MinAmount <= 0 )
+                || updateRewardOptions.MinAmount <= 0)
             {
                 return null;
-            }
-
-            var project = GetProjectById(updateRewardOptions.ProjectId);
-
-            if(project == null)
-            {
-                return null;
-            }
-
-            if (UserOwnsProject(updateRewardOptions.UserId, updateRewardOptions.ProjectId) == false)
-            {
-                return null;
-            }
-
-            var reward = _rewardService.UpdateRewardPackage(updateRewardOptions);
-
-            if (reward == null)
-            {
-                return null;
-            }
-                
-            return _context.SaveChanges() > 0 ? reward : null;
-        }
-
-        public bool DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId)
-        {
-            if(userId == null || projectId == null || rewardPackageId == null)
-            {
-                return false;
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return false;
+                return null;
             }
 
-            if (UserOwnsProject(userId, projectId) == false)
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return null;
+            }
+
+            if (project.RewardPackages.Any(r => r.MinAmount == updateRewardOptions.MinAmount))
+                return null;
+
+            var rewardPackageToUpdate = project.RewardPackages
+                .FirstOrDefault(rp => rp.RewardPackageId == rewardPackageId);
+
+            var reward = _rewardService.UpdateRewardPackage(rewardPackageToUpdate, updateRewardOptions);
+
+            if (reward == null)
+            {
+                return null;
+            }
+
+            return _context.SaveChanges() > 0 ? reward : null;
+        }
+
+        public bool DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId)
+        {
+            if (userId == null || projectId == null || rewardPackageId == null)
             {
                 return false;
             }
 
-            var result = _rewardService.DeleteRewardPackage(projectId, rewardPackageId);
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return false;
+            }
 
-            return result;
+            var project = GetProjectById(projectId);
+
+            var rewardToDelete = project.RewardPackages
+                .FirstOrDefault(rp => rp.RewardPackageId == rewardPackageId);
+
+            return _rewardService.DeleteRewardPackage(rewardToDelete);
         }
 
         public Media AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId)
@@ -278,6 +276,11 @@ namespace Crowdfund.Services
                 return null;
             }
 
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return null;
+            }
+
             var project = GetProjectById(projectId);
 
             if (project == null)
@@ -285,14 +288,10 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            if (UserOwnsProject(userId, projectId) == false)
-            {
-                return null;
-            }
 
             var media = _mediaService.CreateMedia(createMediaOptions);
 
-            if(media != null)
+            if (media != null)
             {
                 project.Medias.Add(media);
             }
@@ -314,24 +313,118 @@ namespace Crowdfund.Services
                 return false;
             }
 
-           if( UserOwnsProject(userId, projectId) == false)
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
                 return false;
             }
-                                                      
-            var result = _mediaService.DeleteMedia(projectId, mediaId);
+
+            var mediaToDelete = project.Medias
+                .FirstOrDefault(m => m.MediaId == mediaId);
+
+            var result = _mediaService.DeleteMedia(mediaToDelete);
 
             return result;
         }
 
-        public bool UserOwnsProject(int? userId, int? projectId)
+        public Post AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId)
         {
-            var user = _context.Set<UserProjectReward>()
-                                   .Any(pj => pj.UserId == userId
-                                        && pj.ProjectId == projectId
-                                        && pj.IsOwner == true);
+            if (createPostOptions == null
+                || projectId == null
+                || userId == null)
+            {
+                return null;
+            }
 
-            return user == true ? true : false;
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return null;
+            }
+
+            var project = GetProjectById(projectId);
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            var post = _postService.CreatePost(createPostOptions);
+
+            if (post != null)
+            {
+                project.Posts.Add(post);
+            }
+
+            return _context.SaveChanges() > 0 ? post : null;
         }
-    }       
+
+
+        public Post UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions)
+        {
+            if (updatePostOptions == null || postId == null
+                                          || projectId == null
+                                          || userId == null)
+            {
+                return null;
+            }
+
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return null;
+            }
+
+            var project = GetProjectById(projectId);
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            var post = project.Posts.SingleOrDefault(p => p.PostId == postId);
+
+            if (post != null)
+            {
+                _postService.UpdatePost(post, updatePostOptions);
+            }
+
+            return _context.SaveChanges() > 0 ? post : null;
+        }
+
+        public bool DeletePost(int? postId, int? userId, int? projectId)
+        {
+            if (postId == null
+                || projectId == null
+                || userId == null)
+            {
+                return false;
+            }
+
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return false;
+            }
+            
+            var project = GetProjectById(projectId);
+
+            var postToDelete = project.Posts.SingleOrDefault(p => p.PostId == postId);
+
+            return _postService.DeletePost(postToDelete);
+        }
+        
+        public IList<Post> GetProjectPosts(int? projectId, int? userId)
+        {
+            if(projectId==null || userId == null)
+            {
+                return null;
+            }
+            
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
+            {
+                return null;
+            }
+            
+            var project = GetProjectById(projectId);
+
+            return project.Posts;
+        }
+    }
 }

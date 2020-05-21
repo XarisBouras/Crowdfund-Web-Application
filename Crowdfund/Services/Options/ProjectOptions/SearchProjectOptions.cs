@@ -7,8 +7,8 @@ namespace Crowdfund.Services.Options.ProjectOptions
 {
     public class SearchProjectOptions
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public IList<int> Category { get; set; } 
+        public string SearchString { get; set; }
+
+        public IList<int> CategoryIds { get; set; } 
     }
 }

@@ -13,7 +13,7 @@ namespace Crowdfund.Services
 {
     public class PostService : IPostService
     {
-        private DataContext _context;
+        private readonly DataContext _context;
         public PostService(DataContext context)
         {
             _context = context;
@@ -21,90 +21,45 @@ namespace Crowdfund.Services
 
         public Post CreatePost(CreatePostOptions options)
         {
-            if (options == null)
+            if (options == null || string.IsNullOrWhiteSpace(options.Title) || string.IsNullOrWhiteSpace(options.Text))
             {
                 return null;
             }
             var post = new Post()
             {
-                Text = options.text
+                Title = options.Title,
+                Text = options.Text
             };
+            
             _context.Add(post);
             return _context.SaveChanges() > 0 ? post : null;
         }
 
-        public Post UpdatePost(UpdatePostOptions options,int? postId)
+        public Post UpdatePost(Post postToUpdate, UpdatePostOptions options)
         {
-            if (options == null || postId==null)
+            
+            if (!string.IsNullOrWhiteSpace(options.Text))
             {
-                return null;
+                postToUpdate.Text = options.Text;
             }
-            var postToUpdate = _context.Set<Post>().Where(p => p.PostId == postId).SingleOrDefault();
-            if (!string.IsNullOrWhiteSpace(options.text))
+            
+            if (!string.IsNullOrWhiteSpace(options.Title))
             {
-                postToUpdate.Text = options.text;
+                postToUpdate.Title = options.Title;
             }
-            _context.SaveChanges();
+
             return postToUpdate;
         }
 
         public Post GetPostById(int? id)
         {
-            if(id==null)
-            {
-                return null;
-            }
-            var postIds = _context.Set<Post>().AsQueryable();
-            var post = postIds.Where(u => u.PostId == id).SingleOrDefault();
-            return post;
+            return id==null ? null : _context.Set<Post>().Find(id);
         }
 
-        public IList<Post> GetAllPosts(int? postId)
+        public bool DeletePost(Post postToDelete)
         {
-            if(postId==null)
-            {
-                return null;
-            }
-            var list = _context.Set<Post>().Where(p=>p.PostId==postId).ToList();
-            return list;
-        }
-
-        public bool DeletePost(int? projectId,int? postid)
-        {
-            if(projectId == null || postid ==null)
-            {
-                return false;
-            }
-            var PostToDeleteFromProject = _context.Set<Project>()
-                                       .Include(p => p.Posts)
-                                       .Where(p => p.ProjectId == projectId)
-                                       .SingleOrDefault();
-            if (PostToDeleteFromProject==null)
-            {
-                return false;
-            }
-            
-            foreach (var item in PostToDeleteFromProject.Posts)
-            {
-                if (postid == item.PostId)
-                {
-                    _context.Remove(item);
-                }
-            }
-
-            _context.SaveChanges();
-            
-            var checking= _context.Set<Post>().Where(p => p.PostId == postid).SingleOrDefault();
-            if (checking != null)
-            {
-                Console.WriteLine("The POST has not deleted");
-                return false;
-            }
-            else
-            {
-                Console.WriteLine("The POST has been successfully deleted");
-                return true;
-            }
+            _context.Remove(postToDelete);
+            return _context.SaveChanges() > 0;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Crowdfund.Services.Interfaces
     {
         RewardPackage CreateRewardPackage(CreateRewardPackageOptions createRewardPackageOptions);
 
-        RewardPackage UpdateRewardPackage(UpdateRewardPackageOptions updateRewardPackageOptions);
+        RewardPackage UpdateRewardPackage(RewardPackage rewardPackage ,UpdateRewardPackageOptions updateRewardPackageOptions);
 
-        bool DeleteRewardPackage(int? projectId, int? rewardPackageId);
+        bool DeleteRewardPackage(RewardPackage rewardPackage);
         
         RewardPackage GetRewardPackageById(int? packageId);
     }

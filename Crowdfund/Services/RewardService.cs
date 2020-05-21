@@ -18,51 +18,19 @@ namespace Crowdfund.Services
 
         public RewardPackage CreateRewardPackage(CreateRewardPackageOptions createRewardOptions)
         {
-            var rewardList = _context.Set<Project>()
-                                 .Include(p => p.RewardPackages)
-                                 .Where(p => p.ProjectId == createRewardOptions.ProjectId)
-                                 .SingleOrDefault();
-
-            if (rewardList != null)
-            {
-                foreach (var item in rewardList.RewardPackages)
-                {
-                    if (item.MinAmount == createRewardOptions.MinAmount)
-                    {
-                        return null;
-                    }
-                }
-            }
-
             var reward = new RewardPackage()
             {
                 Title = createRewardOptions.Title,
                 Description = createRewardOptions.Description,
-                MinAmount = createRewardOptions.MinAmount.Value,
+                MinAmount = createRewardOptions.MinAmount!.Value,
                 Quantity = createRewardOptions.Quantity
             };
 
             return reward;
         }
        
-        public RewardPackage UpdateRewardPackage(UpdateRewardPackageOptions updateRewardOptions)
+        public RewardPackage UpdateRewardPackage(RewardPackage packageToUpdate ,UpdateRewardPackageOptions updateRewardOptions)
         {
-
-            var rewardList = _context.Set<Project>()
-                                .Include(p => p.RewardPackages)
-                                .Where(p => p.ProjectId == updateRewardOptions.ProjectId)
-                                .SingleOrDefault();
-           
-            foreach (var item in rewardList.RewardPackages)
-            {
-                if (item.MinAmount == updateRewardOptions.MinAmount)
-                {
-                    return null;
-                }
-            }
-
-            var packageToUpdate = GetRewardPackageById(updateRewardOptions.RewardPackageId);
-
             if (packageToUpdate == null)
             {
                 return null;
@@ -91,28 +59,12 @@ namespace Crowdfund.Services
             return packageToUpdate;
         }
 
-        public bool DeleteRewardPackage(int? projectId, int? rewardPackageId)
+        public bool DeleteRewardPackage(RewardPackage rewardPackage)
         {
-            var rewardList = _context.Set<Project>()
-                                 .Include(p => p.RewardPackages)
-                                 .Where(p => p.ProjectId == projectId)
-                                 .SingleOrDefault();
+            
+            _context.Remove(rewardPackage);
 
-            if (rewardList == null)
-            {
-                return false;
-            }
-
-            var packageToDelete = GetRewardPackageById(rewardPackageId);
-
-            if (packageToDelete == null)
-            {
-                return false;
-            }
-
-            _context.Remove(packageToDelete);
-
-            return _context.SaveChanges() > 0 ? true : false;
+            return _context.SaveChanges() > 0;
         }
 
         public RewardPackage GetRewardPackageById(int? packageId)

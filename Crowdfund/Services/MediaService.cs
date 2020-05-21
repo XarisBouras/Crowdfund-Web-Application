@@ -2,18 +2,17 @@
 using Crowdfund.Models;
 using Crowdfund.Services.CreateOptions;
 using Crowdfund.Services.Interfaces;
-using Crowdfund.Services.Options.MediaOptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Linq;
 
 
 namespace Crowdfund.Services
 {
-    public class MediaService: IMediaService
+    public class MediaService : IMediaService
     {
-        private DataContext _context;
+        private readonly DataContext _context;
+
         public MediaService(DataContext context)
         {
             _context = context;
@@ -21,22 +20,23 @@ namespace Crowdfund.Services
 
         public Media CreateMedia(CreateMediaOptions options)
         {
-            if (options == null)
+            if (options == null || !Enum.IsDefined(typeof(MediaType), options.MediaTypeId) ||
+                string.IsNullOrWhiteSpace(options.MediaUrl))
             {
                 return null;
             }
 
-            var media = new Media()
+            var media = new Media
             {
-                MediaType = (MediaType)options.MediaType
-               
+                MediaType = (MediaType) options.MediaTypeId
             };
+            
             var urlChecking = options.MediaUrl;
-            if(media.MediaType == (MediaType)MediaType.Video)
+            
+            if (media.MediaType == (MediaType) MediaType.Video)
             {
-
                 urlChecking = urlChecking.Trim();
-                if(urlChecking.Contains("youtube.com"))
+                if (urlChecking.Contains("youtube.com"))
                 {
                     media.MediaUrl = urlChecking;
                     Console.WriteLine("valid Video");
@@ -52,41 +52,14 @@ namespace Crowdfund.Services
                 media.MediaUrl = urlChecking;
                 Console.WriteLine("Image");
             }
-            
+
             return media;
         }
 
-        public bool DeleteMedia(int? projectId, int? id)
+        public bool DeleteMedia(Media mediaToDelete)
         {
-
-            var MediaToDelete = _context.Set<Project>()
-                                        .Include(m=>m.Medias)
-                                        .Where(p => p.ProjectId == projectId)
-                                        .SingleOrDefault();
-
-            foreach(var item in MediaToDelete.Medias)
-            {
-                if (id == item.MediaId)
-                {
-                    _context.Remove(item);
-                }
-            }
-            
-            _context.SaveChanges();
-
-            var checking = _context.Set<Media>().Where(m => m.MediaId== id).SingleOrDefault();
-            if (checking != null)
-            {
-                Console.WriteLine("The Media has not deleted");
-                return false;
-            }
-            else
-            {
-                Console.WriteLine("The Media has been successfully deleted");
-                return true;
-            }
+            _context.Remove(mediaToDelete);
+            return _context.SaveChanges() > 0;
         }
-
-
     }
 }
