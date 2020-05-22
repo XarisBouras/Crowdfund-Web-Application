@@ -264,7 +264,31 @@ namespace Crowdfund.Services
             var rewardToDelete = project.RewardPackages
                 .FirstOrDefault(rp => rp.RewardPackageId == rewardPackageId);
 
-            return _rewardService.DeleteRewardPackage(rewardToDelete);
+            return rewardToDelete != null ? _rewardService.DeleteRewardPackage(rewardToDelete) : false;
+        }
+
+        public IList<Media> GetProjectPhotos(int? projectId)
+        {
+            if (projectId == null)
+            {
+                return null;
+            }
+
+            var project = GetProjectById(projectId);
+            
+            return project?.Medias.Where(p => p.MediaType == MediaType.Photo).ToList();
+        }
+        
+        public IList<Media> GetProjectVideos(int? projectId)
+        {
+            if (projectId == null)
+            {
+                return null;
+            }
+
+            var project = GetProjectById(projectId);
+            
+            return project?.Medias.Where(p => p.MediaType == MediaType.Video).ToList();
         }
 
         public Media AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId)
@@ -321,9 +345,7 @@ namespace Crowdfund.Services
             var mediaToDelete = project.Medias
                 .FirstOrDefault(m => m.MediaId == mediaId);
 
-            var result = _mediaService.DeleteMedia(mediaToDelete);
-
-            return result;
+            return mediaToDelete != null ? _mediaService.DeleteMedia(mediaToDelete) : false;
         }
 
         public Post AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId)
@@ -402,29 +424,24 @@ namespace Crowdfund.Services
             {
                 return false;
             }
-            
+
             var project = GetProjectById(projectId);
 
             var postToDelete = project.Posts.SingleOrDefault(p => p.PostId == postId);
 
-            return _postService.DeletePost(postToDelete);
+            return postToDelete != null ? _postService.DeletePost(postToDelete) : false;
         }
-        
-        public IList<Post> GetProjectPosts(int? projectId, int? userId)
+
+        public IList<Post> GetProjectPosts(int? projectId)
         {
-            if(projectId==null || userId == null)
+            if (projectId == null)
             {
                 return null;
             }
-            
-            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
-            {
-                return null;
-            }
-            
+
             var project = GetProjectById(projectId);
 
-            return project.Posts;
+            return project?.Posts.OrderByDescending(p => p.CreatedAt).ToList();
         }
     }
 }

@@ -19,17 +19,19 @@ namespace Crowdfund.Services
             _projectService = projectService;
         }
 
-        public bool CreateBacking(int userId, int projectId, int rewardPackageId, decimal amount)
+        public bool CreateBacking(int? userId, int? projectId, int rewardPackageId, decimal amount)
         {
+            if (userId == null || projectId == null) return false;
+            
             var user = _userService.GetUserById(userId);
             var project = _projectService.GetProjectById(projectId);
 
             if (user == null || project == null) return false;
 
-            var projectOwner = _context.Set<UserProjectReward>()
-                .Any(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == true);
+            /*var projectOwner = _context.Set<UserProjectReward>()
+                .Any(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == true);*/
             
-            if (projectOwner) return false;
+            if (Helpers.UserOwnsProject(_context, userId, projectId)) return false;
 
             var rewardPackage = project.RewardPackages
                 .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId);
@@ -48,5 +50,32 @@ namespace Crowdfund.Services
 
              return _context.SaveChanges() > 0;
         }
+
+        public decimal? GetProjectBackingsAmount(int? userId, int? projectId)
+        {
+            if (userId == null || projectId == null) return null;
+
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false) return null;
+
+            var backingsAmount = _context.Set<UserProjectReward>()
+                .Where(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == false)
+                .Sum(a => a.Amount);
+
+            return backingsAmount;
+        }
+        
+        public int? GetProjectBackings(int? userId, int? projectId)
+        {
+            if (userId == null || projectId == null) return null;
+
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false) return null;
+
+            var backings = _context.Set<UserProjectReward>()
+                .Count(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == false);
+
+            return backings;
+        }
+        
+        
     }
 }

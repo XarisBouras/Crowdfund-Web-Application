@@ -61,7 +61,6 @@ namespace Crowdfund.Services
 
         public bool DeleteRewardPackage(RewardPackage rewardPackage)
         {
-            
             _context.Remove(rewardPackage);
 
             return _context.SaveChanges() > 0;

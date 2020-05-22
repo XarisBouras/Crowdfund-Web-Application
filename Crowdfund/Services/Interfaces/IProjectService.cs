@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Crowdfund.Models;
 using Crowdfund.Services.Options.ProjectOptions;
 using Crowdfund.Services.Options.RewardPackageOptions;
@@ -27,6 +28,14 @@ namespace Crowdfund.Services.Interfaces
         Media AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId);
 
         bool DeleteMedia(int? userId, int? projectId, int? mediaId);
+
+        IList<Media> GetProjectPhotos(int? projectId);
+
+        IList<Media> GetProjectVideos(int? projectId);
+        
+        IList<Post> GetProjectPosts(int? projectId);
+
+        Post AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId);
 
         bool DeletePost(int? postId, int? userId, int? projectId);
 

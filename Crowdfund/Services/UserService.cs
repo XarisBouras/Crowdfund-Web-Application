@@ -20,17 +20,20 @@ namespace Crowdfund.Services
 
         public User CreateUser(CreateUserOptions createUserOptions)
         {
-            if (createUserOptions == null)
+            if (createUserOptions == null || string.IsNullOrWhiteSpace(createUserOptions.Email))
             {
                 return null;
             }
+            
             var user = new User()
             {
                 FirstName = createUserOptions.FirstName,
                 LastName = createUserOptions.LastName,
                 Address = createUserOptions.Address
             };
+            
             var validEmail = user.IsValidEmail(createUserOptions.Email);
+            
             if (validEmail)
             {
                 user.Email = createUserOptions.Email;
@@ -45,9 +48,9 @@ namespace Crowdfund.Services
             return _context.SaveChanges() > 0 ? user : null;
         }
 
-        public User GetUserById(int id)
+        public User GetUserById(int? id)
         {
-            return _context.Set<User>().SingleOrDefault(u => u.UserId == id);
+            return id != null ? _context.Set<User>().SingleOrDefault(u => u.UserId == id) : null;
         }
 
         public IQueryable<User> SearchUser(SearchUserOptions options)
@@ -102,7 +105,9 @@ namespace Crowdfund.Services
             {
                 return null;
             }
-            var user = _context.Set<User>().Where(u => u.UserId == options.UserId).SingleOrDefault();
+            var user = _context.Set<User>().SingleOrDefault(u => u.UserId == options.UserId);
+            
+            if (user == null) return null;
 
             if (!string.IsNullOrEmpty(options.FirstName))
             {
@@ -131,8 +136,8 @@ namespace Crowdfund.Services
             {
                 user.Address = options.Address;
             }
-            _context.SaveChanges();
-            return (user);
+            
+            return _context.SaveChanges() > 0 ? user : null;
         }
     }
 }
