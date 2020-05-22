@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Crowdfund.Data;
 using Crowdfund.Models;
@@ -75,7 +76,19 @@ namespace Crowdfund.Services
 
             return backings;
         }
-        
+
+        public IEnumerable<Project> TrendingProjects()
+        {
+            var projectBakings = _context.Set<UserProjectReward>()
+                .Include(p => p.Project)
+                .Where(u => u.IsOwner == false)
+                .GroupBy(p => new {p.ProjectId})
+                .Select(p => new {p.Key.ProjectId, Count = p.Count()})
+                .OrderByDescending(o => o.Count).Select(p => p.ProjectId)
+                .Take(10).ToList();
+            
+            return projectBakings.Select(id => _projectService.GetSingleProject(id));
+        }
         
     }
 }

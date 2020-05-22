@@ -30,9 +30,9 @@ namespace Crowdfund.Services
             _postService = postService;
         }
 
-        public Project CreateProject(CreateProjectOptions createProjectOptions)
+        public Project CreateProject(int? userId, CreateProjectOptions createProjectOptions)
         {
-            if (createProjectOptions == null
+            if (createProjectOptions == null || userId == null
                 || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId)
                 || createProjectOptions.Goal <= 0
                 || string.IsNullOrWhiteSpace(createProjectOptions.Title)
@@ -41,7 +41,9 @@ namespace Crowdfund.Services
                 return null;
             }
 
-            var project = new Project
+            if (_userService.GetUserById(userId) == null) return null;
+
+                var project = new Project
             {
                 Title = createProjectOptions.Title,
                 Category = (Category) createProjectOptions.CategoryId,
@@ -52,7 +54,7 @@ namespace Crowdfund.Services
 
             _context.Set<Project>().Add(project);
 
-            var user = _userService.GetUserById(createProjectOptions.UserId);
+            var user = _userService.GetUserById(userId);
             if (user == null)
             {
                 return null;
@@ -78,6 +80,19 @@ namespace Crowdfund.Services
                     .Include(p => p.Posts)
                     .FirstOrDefault(p => p.ProjectId == id)
                 : null;
+        }
+        
+        public Project GetSingleProject(int? id)
+        {
+            return id != null
+                ? _context.Set<Project>()
+                    .FirstOrDefault(p => p.ProjectId == id)
+                : null;
+        }
+
+        public IQueryable<Project> GetAllProjects()
+        {
+            return _context.Set<Project>();
         }
 
         public Project UpdateProject(UpdateProjectOptions updateProjectOptions)
@@ -122,7 +137,7 @@ namespace Crowdfund.Services
             return _context.SaveChanges() > 0 ? project : null;
         }
 
-        public IQueryable<Project> SearchProject(SearchProjectOptions searchProjectOptions)
+        public IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions)
         {
             if (searchProjectOptions == null)
             {

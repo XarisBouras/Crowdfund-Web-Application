@@ -9,13 +9,17 @@ namespace Crowdfund.Services.Interfaces
 {
     public interface IProjectService
     {
-        Project CreateProject(CreateProjectOptions createProjectOptions);
+        Project CreateProject(int? userId, CreateProjectOptions createProjectOptions);
         
         Project GetProjectById(int? id);
+        
+        Project GetSingleProject(int? id);
+
+        IQueryable<Project> GetAllProjects();
 
         Project UpdateProject(UpdateProjectOptions updateProjectOptions);
 
-        IQueryable<Project> SearchProject(SearchProjectOptions searchProjectOptions);
+        IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions);
 
         bool DeleteProject(int? userId, int? projectId);
 

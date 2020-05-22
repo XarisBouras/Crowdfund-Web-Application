@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Crowdfund.Data;
 using Crowdfund.Models;
 
@@ -10,5 +11,7 @@ namespace Crowdfund.Services.Interfaces
         decimal? GetProjectBackingsAmount(int? userId, int? projectId);
 
         int? GetProjectBackings(int? userId, int? projectId);
+
+        IEnumerable<Project> TrendingProjects();
     }
 }
