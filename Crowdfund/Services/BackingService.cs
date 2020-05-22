@@ -80,7 +80,6 @@ namespace Crowdfund.Services
         public IEnumerable<Project> TrendingProjects()
         {
             var projectBakings = _context.Set<UserProjectReward>()
-                .Include(p => p.Project)
                 .Where(u => u.IsOwner == false)
                 .GroupBy(p => new {p.ProjectId})
                 .Select(p => new {p.Key.ProjectId, Count = p.Count()})
