@@ -1,0 +1,71 @@
+﻿@model Crowdfund.Core.Models.Project
+@{
+    ViewData["Title"] = "Details";
+}
+
+    <table class="project_table table-striped" style="margin-bottom : 15px">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Due to</th>
+                <th scope="col">Goal</th>
+                <th scope="col">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">@Model.ProjectId</th>
+                <td>@Model.Title</td>
+                <td>@Model.Description</td>
+                <td>@Model.DueTo</td>
+                <td>@Model.Goal</td>
+                <td>@Model.Category</td>
+            </tr>   
+        </tbody>
+    </table>
+
+    <table class="post_table table-striped" style="margin-bottom : 15px">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Text</th>
+                <th scope="col">Created</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Posts)
+            {
+            <tr>
+                <th scope="row">@p.PostId</th>
+                <td>@p.Title</td>
+                <td>@p.Text</td>
+                <td>@p.CreatedAt</td>                
+            </tr>
+            }          
+        </tbody>
+    </table>
+
+    <table class="media_table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Media type</th>
+                <th scope="col">Url</th>              
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model.Medias)
+            {
+                <tr>
+                    <th scope="row">@m.MediaId</th>
+                    <td>@m.MediaType</td>
+                    <td>@m.MediaUrl</td>                   
+                </tr>
+            }
+        </tbody>
+    </table>
+
