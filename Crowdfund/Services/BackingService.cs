@@ -23,7 +23,7 @@ namespace Crowdfund.Services
         public bool CreateBacking(int? userId, int? projectId, int rewardPackageId, decimal amount)
         {
             if (userId == null || projectId == null) return false;
-            
+
             var user = _userService.GetUserById(userId);
             var project = _projectService.GetProjectById(projectId);
 
@@ -31,7 +31,7 @@ namespace Crowdfund.Services
 
             /*var projectOwner = _context.Set<UserProjectReward>()
                 .Any(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == true);*/
-            
+
             if (Helpers.UserOwnsProject(_context, userId, projectId)) return false;
 
             var rewardPackage = project.RewardPackages
@@ -46,10 +46,10 @@ namespace Crowdfund.Services
                 RewardPackage = rewardPackageId == 0 ? null : rewardPackage,
                 Amount = amount
             };
-            
-             user.UserProjectReward.Add(userProjectBacking);
 
-             return _context.SaveChanges() > 0;
+            user.UserProjectReward.Add(userProjectBacking);
+
+            return _context.SaveChanges() > 0;
         }
 
         public decimal? GetProjectBackingsAmount(int? userId, int? projectId)
@@ -64,7 +64,7 @@ namespace Crowdfund.Services
 
             return backingsAmount;
         }
-        
+
         public int? GetProjectBackings(int? userId, int? projectId)
         {
             if (userId == null || projectId == null) return null;
@@ -82,12 +82,11 @@ namespace Crowdfund.Services
             var projectBakings = _context.Set<UserProjectReward>()
                 .Where(u => u.IsOwner == false)
                 .GroupBy(p => new {p.ProjectId})
-                .Select(p => new {p.Key.ProjectId, Count = p.Count()})
-                .OrderByDescending(o => o.Count).Select(p => p.ProjectId)
+                .Select(p => new {p.Key.ProjectId, Sum = p.Sum(s => s.Amount)})
+                .OrderByDescending(o => o.Sum).Select(p => p.ProjectId)
                 .Take(10).ToList();
-            
+
             return projectBakings.Select(id => _projectService.GetSingleProject(id));
         }
-        
     }
 }
