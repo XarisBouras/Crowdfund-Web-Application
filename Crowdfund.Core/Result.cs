@@ -7,7 +7,7 @@
         public StatusCode ErrorCode { get; set; }
         public bool Success => ErrorCode == StatusCode.OK;
 
-        public static Result<T> CreateSuccessful(T data)
+        public static Result<T> Succeed(T data)
         {
             return new Result<T>
             {
@@ -16,7 +16,7 @@
             };
         }
 
-        public static Result<T> CreateFailed(StatusCode code,
+        public static Result<T> Failed(StatusCode code,
             string text)
         {
             return new Result<T>
