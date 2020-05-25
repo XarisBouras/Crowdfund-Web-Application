@@ -5,11 +5,15 @@ namespace Crowdfund.Core.Services.Interfaces
 {
     public interface IBackingService
     {
-        bool CreateBacking(int? userId, int? projectId, int rewardPackageId, decimal amount);
+        Result<bool> CreateBacking(int? userId, int? projectId, int rewardPackageId, decimal amount);
 
-        decimal? GetProjectBackingsAmount(int? userId, int? projectId);
+        Result<decimal> GetUserProjectBackingsAmount(int? userId, int? projectId);
+        
+        Result<decimal> GetProjectBackingsAmount(int? projectId);
 
-        int? GetProjectBackings(int? userId, int? projectId);
+        Result<int> GetUserProjectBackings(int? userId, int? projectId);
+
+        Result<int> GetProjectBackings(int? projectId);
 
         IEnumerable<Project> TrendingProjects();
     }
