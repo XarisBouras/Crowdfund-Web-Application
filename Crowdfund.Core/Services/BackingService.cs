@@ -4,6 +4,7 @@ using Crowdfund.Core.Models;
 using Crowdfund.Core.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crowdfund.Core.Services
 {
@@ -28,9 +29,7 @@ namespace Crowdfund.Core.Services
             var project = _projectService.GetProjectById(projectId);
 
             if (user == null || project == null) return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
-
-            /*var projectOwner = _context.Set<UserProjectReward>()
-                .Any(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == true);*/
+            
 
             if (Helpers.UserOwnsProject(_context, userId, projectId)) return Result<bool>.Failed(StatusCode.BadRequest, "You cannot back your project");
 
@@ -59,9 +58,27 @@ namespace Crowdfund.Core.Services
             return rows <= 0 ? Result<bool>.Failed(StatusCode.InternalServerError, "Backing could not be created") : Result<bool>.Succeed(true);
         }
 
-        public Result<decimal> GetUserProjectBackingsAmount(int? userId, int? projectId)
+        public Result<IEnumerable<Project>> GetUserProjects(int? userId)
         {
-            if (userId == null || projectId == null) return Result<decimal>.Failed(StatusCode.BadRequest, "Null options");
+            if (userId == null) return Result<IEnumerable<Project>>.Failed(StatusCode.BadRequest, "Null options");
+            var user = _userService.GetUserById(userId);
+            
+            if (user == null) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "User Not Found");
+
+            var projectsIds = _context.Set<UserProjectReward>()
+                .Where(u => u.UserId == userId && u.IsOwner == true).Select(p => p.ProjectId)
+                .ToList();
+            
+            return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id)));
+        }
+
+        /*public Result<decimal> GetUserProjectBackingsAmount(int? userId)
+        {
+            if (userId == null) return Result<decimal>.Failed(StatusCode.BadRequest, "Null options");
+            var user = _userService.GetUserById(userId);
+            var project = _projectService.GetProjectById(projectId);
+
+            if (user == null || project == null) return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false) return Result<decimal>.Failed(StatusCode.BadRequest, "You do not own this project");
 
@@ -70,7 +87,7 @@ namespace Crowdfund.Core.Services
                 .Sum(a => a.Amount);
 
             return Result<decimal>.Succeed(backingsAmount ?? 0);
-        }
+        }*/
 
         public Result<decimal> GetProjectBackingsAmount(int? projectId)
         {
@@ -83,7 +100,7 @@ namespace Crowdfund.Core.Services
             return Result<decimal>.Succeed(backingsAmount ?? 0);
         }
 
-        public Result<int> GetUserProjectBackings(int? userId, int? projectId)
+        /*public Result<int> GetUserProjectBackings(int? userId, int? projectId)
         {
             if (userId == null || projectId == null) return Result<int>.Failed(StatusCode.BadRequest, "Null options");
 
@@ -93,7 +110,7 @@ namespace Crowdfund.Core.Services
                 .Count(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == false);
 
             return Result<int>.Succeed(backings);
-        }
+        }*/
         
         public Result<int> GetProjectBackings(int? projectId)
         {
