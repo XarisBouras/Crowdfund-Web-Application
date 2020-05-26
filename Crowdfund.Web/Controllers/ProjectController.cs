@@ -18,14 +18,12 @@ namespace Crowdfund.Web.Controllers
         private readonly IRewardService _rewardService;
         private readonly IMediaService _mediaService;
         private readonly IPostService _postService;
-        private readonly IProjectService projectService_;
+        private readonly IProjectService _projectService;
 
         public ProjectController()
         {
             _context = new DataContext();
-            projectService_ = new ProjectService(_context, _userService,
-             _rewardService, _mediaService, _postService);
-            
+            _projectService = new ProjectService(_context, _userService, _rewardService, _mediaService, _postService);
         }
 
         public IActionResult Index()
@@ -36,10 +34,9 @@ namespace Crowdfund.Web.Controllers
         [HttpGet("{id}")]
         public IActionResult Details(int id)
         {
-            var viewModel = projectService_.GetProjectById(id);
+            var viewModel = _projectService.GetProjectById(id);
 
             return View(viewModel);
         }
-
     }
 }

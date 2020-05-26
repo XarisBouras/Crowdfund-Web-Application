@@ -28,15 +28,18 @@ namespace Crowdfund.Core.Services
             var user = _userService.GetUserById(userId);
             var project = _projectService.GetProjectById(projectId);
 
-            if (user == null || project == null) return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
-            
+            if (user == null || project == null)
+                return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
 
-            if (Helpers.UserOwnsProject(_context, userId, projectId)) return Result<bool>.Failed(StatusCode.BadRequest, "You cannot back your project");
+
+            if (Helpers.UserOwnsProject(_context, userId, projectId))
+                return Result<bool>.Failed(StatusCode.BadRequest, "You cannot back your project");
 
             var rewardPackage = project.RewardPackages
                 .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId);
 
-            if (rewardPackage == null && rewardPackageId != 0) return Result<bool>.Failed(StatusCode.NotFound, "Reward Package Not Found");
+            if (rewardPackage == null && rewardPackageId != 0)
+                return Result<bool>.Failed(StatusCode.NotFound, "Reward Package Not Found");
 
             var userProjectBacking = new UserProjectReward
             {
@@ -47,70 +50,68 @@ namespace Crowdfund.Core.Services
             };
 
             user.UserProjectReward.Add(userProjectBacking);
-            
+
             var rows = 0;
 
-            try {
+            try
+            {
                 rows = _context.SaveChanges();
-            } catch(Exception ex) {
-                return Result<bool>.Failed( StatusCode.InternalServerError, ex.Message);
             }
-            return rows <= 0 ? Result<bool>.Failed(StatusCode.InternalServerError, "Backing could not be created") : Result<bool>.Succeed(true);
+            catch (Exception ex)
+            {
+                return Result<bool>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+
+            return rows <= 0
+                ? Result<bool>.Failed(StatusCode.InternalServerError, "Backing could not be created")
+                : Result<bool>.Succeed(true);
         }
+        
 
         public Result<IEnumerable<Project>> GetUserProjects(int? userId)
         {
             if (userId == null) return Result<IEnumerable<Project>>.Failed(StatusCode.BadRequest, "Null options");
-            var user = _userService.GetUserById(userId);
-            
-            if (user == null) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "User Not Found");
+            var user = Helpers.UserExists(_context, userId);
+
+            if (user == false) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "User Not Found");
 
             var projectsIds = _context.Set<UserProjectReward>()
                 .Where(u => u.UserId == userId && u.IsOwner == true).Select(p => p.ProjectId)
                 .ToList();
-            
+
             return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id)));
         }
 
-        /*public Result<decimal> GetUserProjectBackingsAmount(int? userId)
+        public Result<IEnumerable<Project>> GetBackedProjects(int? backerId)
         {
-            if (userId == null) return Result<decimal>.Failed(StatusCode.BadRequest, "Null options");
-            var user = _userService.GetUserById(userId);
-            var project = _projectService.GetProjectById(projectId);
+            if (backerId == null) return Result<IEnumerable<Project>>.Failed(StatusCode.BadRequest, "Null options");
+            var backer = Helpers.UserExists(_context, backerId);
+            
+            if (backer == false) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "User Not Found");
+            
+            var projectsIds = _context.Set<UserProjectReward>()
+                .Where(u => u.UserId == backerId && u.IsOwner == false).Select(p => p.ProjectId)
+                .ToList();
 
-            if (user == null || project == null) return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
-
-            if (Helpers.UserOwnsProject(_context, userId, projectId) == false) return Result<decimal>.Failed(StatusCode.BadRequest, "You do not own this project");
-
-            var backingsAmount = _context.Set<UserProjectReward>()
-                .Where(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == false)
-                .Sum(a => a.Amount);
-
-            return Result<decimal>.Succeed(backingsAmount ?? 0);
-        }*/
+            return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id)));
+        }
+        
 
         public Result<decimal> GetProjectBackingsAmount(int? projectId)
         {
-            if (projectId == null) return Result<decimal>.Failed(StatusCode.BadRequest, "Null option");;
+            if (projectId == null) return Result<decimal>.Failed(StatusCode.BadRequest, "Null option");
             
+            if (Helpers.ProjectExists(_context, projectId) == false)
+            {
+                return Result<decimal>.Failed(StatusCode.NotFound, "Project not found");
+            }
+
             var backingsAmount = _context.Set<UserProjectReward>()
-                .Where(u =>  u.ProjectId == projectId && u.IsOwner == false)
+                .Where(u => u.ProjectId == projectId && u.IsOwner == false)
                 .Sum(a => a.Amount);
-            
+
             return Result<decimal>.Succeed(backingsAmount ?? 0);
         }
-
-        /*public Result<int> GetUserProjectBackings(int? userId, int? projectId)
-        {
-            if (userId == null || projectId == null) return Result<int>.Failed(StatusCode.BadRequest, "Null options");
-
-            if (Helpers.UserOwnsProject(_context, userId, projectId) == false) return Result<int>.Failed(StatusCode.BadRequest, "You do not own this project");
-
-            var backings = _context.Set<UserProjectReward>()
-                .Count(u => u.UserId == userId && u.ProjectId == projectId && u.IsOwner == false);
-
-            return Result<int>.Succeed(backings);
-        }*/
         
         public Result<int> GetProjectBackings(int? projectId)
         {

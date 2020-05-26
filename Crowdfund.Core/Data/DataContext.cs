@@ -9,7 +9,7 @@ namespace Crowdfund.Core.Data
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer("  ");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=crowdfund_db;Username=admin;Password=Adm1nPass");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -13,5 +13,17 @@ namespace Crowdfund.Core.Services
                            && pj.ProjectId == projectId
                            && pj.IsOwner == true);
         }
+        public static bool UserExists(DataContext dbCtx, int? userId)
+        {
+            return dbCtx.Set<User>().Any(u => u.UserId == userId);
+        }
+        
+        public static bool ProjectExists(DataContext dbCtx ,int? projectId)
+        {
+            return dbCtx.Set<Project>().Any(p => p.ProjectId == projectId);
+        }
+        
+        
+        
     }
 }
