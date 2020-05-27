@@ -16,11 +16,11 @@ namespace Crowdfund.Core.Services
             _context = context;
         }
 
-        public User CreateUser(CreateUserOptions createUserOptions)
+        public Result<User> CreateUser(CreateUserOptions createUserOptions)
         {
             if (createUserOptions == null || string.IsNullOrWhiteSpace(createUserOptions.Email))
             {
-                return null;
+                return Result<User>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
             
             var user = new User()
@@ -42,8 +42,19 @@ namespace Crowdfund.Core.Services
                 Console.WriteLine("Not valid Email, please try again!");
                 return null;
             }
-            _context.Add(user);       
-            return _context.SaveChanges() > 0 ? user : null;
+            _context.Add(user);
+
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<User>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<User>.Failed(StatusCode.InternalServerError, "User Could Not Be Created") : Result<User>.Succeed(user);
         }
 
         public User GetUserById(int? id)
@@ -97,15 +108,19 @@ namespace Crowdfund.Core.Services
 
         }
 
-        public User UpdateUser(UpdateUserOptions options)
+        public Result<User> UpdateUser(UpdateUserOptions options)
         {
             if (options == null)
             {
-                return null;
+                return Result<User>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
             var user = _context.Set<User>().SingleOrDefault(u => u.UserId == options.UserId);
-            
-            if (user == null) return null;
+
+            if (user == null)
+            {
+                return Result<User>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
+            }
 
             if (!string.IsNullOrEmpty(options.FirstName))
             {
@@ -134,8 +149,19 @@ namespace Crowdfund.Core.Services
             {
                 user.Address = options.Address;
             }
-            
-            return _context.SaveChanges() > 0 ? user : null;
+
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<User>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<User>.Failed(StatusCode.InternalServerError, "User Could Not Be Updated") : Result<User>.Succeed(user);
         }
+           
     }
 }

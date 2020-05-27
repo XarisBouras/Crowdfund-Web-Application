@@ -36,9 +36,15 @@ namespace Crowdfund.Web.Controllers
         [HttpGet("{id}")]
         public IActionResult Details(int id)
         {
-            var viewModel = projectService_.GetProjectById(id);
 
-            return View(viewModel);
+            var viewModel = projectService_.GetProjectById(id);
+            if (!viewModel.Success)
+            {
+                return StatusCode((int)viewModel.ErrorCode,
+                    viewModel.ErrorText);
+            }
+
+            return View(viewModel.Data);
         }
 
     }

@@ -34,7 +34,7 @@ namespace Crowdfund.Core.Services
 
             if (Helpers.UserOwnsProject(_context, userId, projectId)) return Result<bool>.Failed(StatusCode.BadRequest, "You cannot back your project");
 
-            var rewardPackage = project.RewardPackages
+            var rewardPackage = project.Data.RewardPackages
                 .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId);
 
             if (rewardPackage == null && rewardPackageId != 0) return Result<bool>.Failed(StatusCode.NotFound, "Reward Package Not Found");
@@ -42,7 +42,7 @@ namespace Crowdfund.Core.Services
             var userProjectBacking = new UserProjectReward
             {
                 IsOwner = false,
-                Project = project,
+                Project = project.Data,
                 RewardPackage = rewardPackageId == 0 ? null : rewardPackage,
                 Amount = amount
             };
