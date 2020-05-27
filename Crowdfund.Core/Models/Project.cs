@@ -13,6 +13,8 @@ namespace Crowdfund.Core.Models
         
         public DateTime? DueTo { get; set; }
         
+        public string MainImageUrl { get; set; }
+        
         public decimal Goal { get; set; }
         
         public IList<RewardPackage> RewardPackages { get; set; }

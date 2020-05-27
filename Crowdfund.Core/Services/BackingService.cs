@@ -79,7 +79,7 @@ namespace Crowdfund.Core.Services
                 .Where(u => u.UserId == userId && u.IsOwner == true).Select(p => p.ProjectId)
                 .ToList();
 
-            return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id)));
+            return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id).Data));
         }
 
         public Result<IEnumerable<Project>> GetBackedProjects(int? backerId)
@@ -93,7 +93,7 @@ namespace Crowdfund.Core.Services
                 .Where(u => u.UserId == backerId && u.IsOwner == false).Select(p => p.ProjectId)
                 .ToList();
 
-            return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id)));
+            return Result<IEnumerable<Project>>.Succeed(projectsIds.Select(id => _projectService.GetProjectById(id).Data));
         }
         
 
@@ -113,7 +113,7 @@ namespace Crowdfund.Core.Services
             return Result<decimal>.Succeed(backingsAmount ?? 0);
         }
         
-        public Result<int> GetProjectBackings(int? projectId)
+        public Result<int> GetProjectBackingsCount(int? projectId)
         {
             if (projectId == null) return Result<int>.Failed(StatusCode.BadRequest, "Null option");
 

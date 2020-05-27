@@ -8,6 +8,8 @@ namespace Crowdfund.Core.Services.Options.ProjectOptions
         public string Title { get; set; }
 
         public string Description { get; set; }
+        
+        public string MainImageUrl { get; set; }
 
         public DateTime? DueTo { get; set; }
 

@@ -24,7 +24,7 @@ namespace Crowdfund.Core.Services.Interfaces
 
         Result<bool> DeleteProject(int? userId, int? projectId);
 
-        Result<RewardPackage> AddRewardPackage(int? projectId, int? userId, CreateRewardPackageOptions createRewardPackageOptions);
+        Result<bool> AddRewardPackage(int? projectId, int? userId, CreateRewardPackageOptions createRewardPackageOptions);
 
         Result<RewardPackage> UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId, UpdateRewardPackageOptions updateRewardPackageOptions);
 

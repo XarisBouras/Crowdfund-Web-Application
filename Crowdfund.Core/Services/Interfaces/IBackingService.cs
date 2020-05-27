@@ -12,7 +12,7 @@ namespace Crowdfund.Core.Services.Interfaces
 
         Result<IEnumerable<Project>> GetUserProjects(int? userId);
 
-        Result<int> GetProjectBackings(int? projectId);
+        Result<int> GetProjectBackingsCount(int? projectId);
 
         IEnumerable<Project> TrendingProjects();
     }
