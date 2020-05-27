@@ -30,7 +30,7 @@ namespace Crowdfund.Core.Services
             _postService = postService;
         }
 
-        public Project CreateProject(int? userId, CreateProjectOptions createProjectOptions)
+        public Result<Project> CreateProject(int? userId, CreateProjectOptions createProjectOptions)
         {
             if (createProjectOptions == null || userId == null
                 || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId)
@@ -38,10 +38,14 @@ namespace Crowdfund.Core.Services
                 || string.IsNullOrWhiteSpace(createProjectOptions.Title)
                 || createProjectOptions.DueTo == null)
             {
-                return null;
+                return Result<Project>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
 
-            if (_userService.GetUserById(userId) == null) return null;
+            if (_userService.GetUserById(userId) == null)
+            {
+                return Result<Project>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
+            }
 
                 var project = new Project
             {
@@ -57,7 +61,8 @@ namespace Crowdfund.Core.Services
             var user = _userService.GetUserById(userId);
             if (user == null)
             {
-                return null;
+                return Result<Project>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
             var userProject = new UserProjectReward
@@ -68,18 +73,45 @@ namespace Crowdfund.Core.Services
 
             user.UserProjectReward.Add(userProject);
 
-            return _context.SaveChanges() > 0 ? project : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Project>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<Project>.Failed(StatusCode.InternalServerError, "Project Could Not Be Created") : Result<Project>.Succeed(project);
         }
 
-        public Project GetProjectById(int? id)
+        public Result<Project> GetProjectById(int? id)
         {
-            return id != null
-                ? _context.Set<Project>()
+            //return id != null
+            //    ? _context.Set<Project>()
+            //        .Include(p => p.RewardPackages)
+            //        .Include(p => p.Medias)
+            //        .Include(p => p.Posts)
+            //        .FirstOrDefault(p => p.ProjectId == id)
+            //    : null;
+
+
+            Project project ;
+
+            try
+            {
+                project = _context.Set<Project>()
                     .Include(p => p.RewardPackages)
                     .Include(p => p.Medias)
                     .Include(p => p.Posts)
-                    .FirstOrDefault(p => p.ProjectId == id)
-                : null;
+                    .FirstOrDefault(p => p.ProjectId == id);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return Result<Project>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return project == null  ? Result<Project>.Failed(StatusCode.NotFound, "Project Could Not Be Found") : Result<Project>.Succeed(project);
         }
         
         public Project GetSingleProject(int? id)
@@ -95,46 +127,58 @@ namespace Crowdfund.Core.Services
             return _context.Set<Project>();
         }
 
-        public Project UpdateProject(UpdateProjectOptions updateProjectOptions)
+        public Result<Project> UpdateProject(UpdateProjectOptions updateProjectOptions)
         {
             if (updateProjectOptions?.ProjectId == null || updateProjectOptions.UserId == null)
             {
-                return null;
+                return Result<Project>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
 
             var project = GetProjectById(updateProjectOptions.ProjectId);
 
             if (project == null)
             {
-                return null;
+                return Result<Project>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
             if (Helpers.UserOwnsProject(_context, updateProjectOptions.UserId, updateProjectOptions.ProjectId) == false)
             {
-                return null;
+                return Result<Project>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.Description))
             {
-                project.Description = updateProjectOptions.Description;
+                project.Data.Description = updateProjectOptions.Description;
             }
 
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.Title))
             {
-                project.Title = updateProjectOptions.Title;
+                project.Data.Title = updateProjectOptions.Title;
             }
 
             if (updateProjectOptions.DueTo != null)
             {
-                project.DueTo = updateProjectOptions.DueTo;
+                project.Data.DueTo = updateProjectOptions.DueTo;
             }
 
             if (updateProjectOptions.Goal != null)
             {
-                project.Goal = updateProjectOptions.Goal.Value;
+                project.Data.Goal = updateProjectOptions.Goal.Value;
             }
 
-            return _context.SaveChanges() > 0 ? project : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Project>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<Project>.Failed(StatusCode.InternalServerError, "Project Could Not Be Updated") : Result<Project>.Succeed(project.Data);
+            
         }
 
         public IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions)
@@ -163,65 +207,90 @@ namespace Crowdfund.Core.Services
             return query.Take(500);
         }
 
-        public bool DeleteProject(int? userId, int? projectId)
+        public Result<bool> DeleteProject(int? userId, int? projectId)
         {
             if (userId == null || projectId == null)
             {
-                return false;
+                return Result<bool>.Failed(StatusCode.BadRequest, "User Or Project Not Specified");
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return false;
+                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");               
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
-                return false;
+                return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
             _context.Remove(project);
 
-            return _context.SaveChanges() > 0;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<bool>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<bool>.Failed(StatusCode.InternalServerError, "Project Could Not Be Deleted") : Result<bool>.Succeed(true);
         }
 
-        public RewardPackage AddRewardPackage(int? projectId, int? userId,
+        public Result<RewardPackage> AddRewardPackage(int? projectId, int? userId,
             CreateRewardPackageOptions createRewardOptions)
         {
             if (projectId == null || userId == null || createRewardOptions.Quantity < 0 ||
                 createRewardOptions.MinAmount <= 0 || createRewardOptions.MinAmount == null)
             {
-                return null;
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Project or User Not Specified. Reward Package Options Not Valid");
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return null;
+                return Result<RewardPackage>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
-                return null;
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            if (project.RewardPackages.Any(r => r.MinAmount == createRewardOptions.MinAmount))
-                return null;
+            if (project.Data.RewardPackages.Any(r => r.MinAmount == createRewardOptions.MinAmount))
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Can Not Create A Reward Package With The Same Value");
+            }
+
 
             var reward = _rewardService.CreateRewardPackage(createRewardOptions);
 
             if (reward != null)
             {
-                project.RewardPackages.Add(reward);
+                project.Data.RewardPackages.Add(reward);
             }
 
-            return _context.SaveChanges() > 0 ? reward : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<RewardPackage>.Failed(StatusCode.InternalServerError, "Reward Package Could Not Be Created ") : Result<RewardPackage>.Succeed(reward);
         }
 
-        public RewardPackage UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId,
+        public Result<RewardPackage> UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId,
             UpdateRewardPackageOptions updateRewardOptions)
         {
             if (updateRewardOptions == null
@@ -231,35 +300,51 @@ namespace Crowdfund.Core.Services
                 || updateRewardOptions.Quantity < 0
                 || updateRewardOptions.MinAmount <= 0)
             {
-                return null;
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Project Or User Not Specified Or Update Options Not Valid");
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return null;
+               return Result<RewardPackage>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
+               
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
-                return null;
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            if (project.RewardPackages.Any(r => r.MinAmount == updateRewardOptions.MinAmount))
-                return null;
+            if (project.Data.RewardPackages.Any(r => r.MinAmount == updateRewardOptions.MinAmount))
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Can Not Update A Reward Package With The Same Value");
+            }
 
-            var rewardPackageToUpdate = project.RewardPackages
+
+            var rewardPackageToUpdate = project.Data.RewardPackages
                 .FirstOrDefault(rp => rp.RewardPackageId == rewardPackageId);
 
             var reward = _rewardService.UpdateRewardPackage(rewardPackageToUpdate, updateRewardOptions);
 
             if (reward == null)
             {
-                return null;
+                return Result<RewardPackage>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
-            return _context.SaveChanges() > 0 ? reward : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<RewardPackage>.Failed(StatusCode.InternalServerError, "Reward Package Could Not Be Updated ") : Result<RewardPackage>.Succeed(reward);
         }
 
         public bool DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId)
@@ -276,7 +361,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-            var rewardToDelete = project.RewardPackages
+            var rewardToDelete = project.Data.RewardPackages
                 .FirstOrDefault(rp => rp.RewardPackageId == rewardPackageId);
 
             return rewardToDelete != null ? _rewardService.DeleteRewardPackage(rewardToDelete) : false;
@@ -291,7 +376,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
             
-            return project?.Medias.Where(p => p.MediaType == MediaType.Photo).ToList();
+            return project.Data?.Medias.Where(p => p.MediaType == MediaType.Photo).ToList();
         }
         
         public IList<Media> GetProjectVideos(int? projectId)
@@ -303,28 +388,29 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
             
-            return project?.Medias.Where(p => p.MediaType == MediaType.Video).ToList();
+            return project.Data?.Medias.Where(p => p.MediaType == MediaType.Video).ToList();
         }
 
-        public Media AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId)
+        public Result<Media> AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId)
         {
             if (createMediaOptions == null
                 || projectId == null
                 || userId == null)
             {
-                return null;
+                return Result<Media>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
-                return null;
+                return Result<Media>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return null;
+                return Result<Media>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
 
@@ -332,10 +418,21 @@ namespace Crowdfund.Core.Services
 
             if (media != null)
             {
-                project.Medias.Add(media);
+                project.Data.Medias.Add(media);
             }
 
-            return _context.SaveChanges() > 0 ? media : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Media>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<Media>.Failed(StatusCode.InternalServerError, "Media Could Not Be Created") : Result<Media>.Succeed(media);
+            
         }
 
         public bool DeleteMedia(int? userId, int? projectId, int? mediaId)
@@ -357,73 +454,97 @@ namespace Crowdfund.Core.Services
                 return false;
             }
 
-            var mediaToDelete = project.Medias
+            var mediaToDelete = project.Data.Medias
                 .FirstOrDefault(m => m.MediaId == mediaId);
 
             return mediaToDelete != null ? _mediaService.DeleteMedia(mediaToDelete) : false;
         }
 
-        public Post AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId)
+        public Result<Post> AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId)
         {
             if (createPostOptions == null
                 || projectId == null
                 || userId == null)
             {
-                return null;
+                return Result<Post>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
-                return null;
+                return Result<Post>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return null;
+                return Result<Post>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
             var post = _postService.CreatePost(createPostOptions);
 
             if (post != null)
             {
-                project.Posts.Add(post);
+                project.Data.Posts.Add(post.Data);
             }
 
-            return _context.SaveChanges() > 0 ? post : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Post>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<Post>.Failed(StatusCode.InternalServerError, "Post Could Not Be Created") : Result<Post>.Succeed(post.Data);
+            
         }
 
 
-        public Post UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions)
+        public Result<Post> UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions)
         {
             if (updatePostOptions == null || postId == null
                                           || projectId == null
                                           || userId == null)
             {
-                return null;
+                return Result<Post>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
-                return null;
+                return Result<Post>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
             var project = GetProjectById(projectId);
 
             if (project == null)
             {
-                return null;
+                return Result<Post>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                    " you can find plenty of other things in our homepage");
             }
 
-            var post = project.Posts.SingleOrDefault(p => p.PostId == postId);
+            var post = project.Data.Posts.SingleOrDefault(p => p.PostId == postId);
 
             if (post != null)
             {
                 _postService.UpdatePost(post, updatePostOptions);
             }
 
-            return _context.SaveChanges() > 0 ? post : null;
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Post>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+            return rows <= 0 ? Result<Post>.Failed(StatusCode.InternalServerError, "Post Could Not Be Updated") : Result<Post>.Succeed(post);
+
         }
 
         public bool DeletePost(int? postId, int? userId, int? projectId)
@@ -442,7 +563,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-            var postToDelete = project.Posts.SingleOrDefault(p => p.PostId == postId);
+            var postToDelete = project.Data.Posts.SingleOrDefault(p => p.PostId == postId);
 
             return postToDelete != null ? _postService.DeletePost(postToDelete) : false;
         }
@@ -456,7 +577,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-            return project?.Posts.OrderByDescending(p => p.CreatedAt).ToList();
+            return project.Data?.Posts.OrderByDescending(p => p.CreatedAt).ToList();
         }
     }
 }
