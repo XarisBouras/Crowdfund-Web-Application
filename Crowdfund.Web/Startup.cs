@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Crowdfund.Core.Data;
+using Crowdfund.Core.Services;
+using Crowdfund.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +27,18 @@ namespace Crowdfund.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IBackingService, BackingService>();
+            services.AddScoped<IRewardService, RewardService>();
+            services.AddScoped<IMediaService, MediaService>();
+            services.AddScoped<IPostService, PostService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
