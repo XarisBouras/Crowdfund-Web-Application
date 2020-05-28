@@ -14,6 +14,6 @@ namespace Crowdfund.Core.Services.Interfaces
 
         Result<int> GetProjectBackingsCount(int? projectId);
 
-        IEnumerable<Project> TrendingProjects();
+        Result<IEnumerable<Project>> TrendingProjects();
     }
 }

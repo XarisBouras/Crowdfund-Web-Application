@@ -10,15 +10,15 @@ namespace Crowdfund.Core.Services.Interfaces
 {
     public interface IProjectService
     {
-        Result<Project> CreateProject(int? userId, CreateProjectOptions createProjectOptions);
+        Result<bool> CreateProject(int? userId, CreateProjectOptions createProjectOptions);
         
         Result<Project> GetProjectById(int? id);
         
-        Project GetSingleProject(int? id);
+        Result<Project> GetSingleProject(int? id);
 
         IQueryable<Project> GetAllProjects();
 
-        Result<Project> UpdateProject(UpdateProjectOptions updateProjectOptions);
+        Result<bool> UpdateProject(UpdateProjectOptions updateProjectOptions);
 
         IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions);
 
@@ -26,13 +26,13 @@ namespace Crowdfund.Core.Services.Interfaces
 
         Result<bool> AddRewardPackage(int? projectId, int? userId, CreateRewardPackageOptions createRewardPackageOptions);
 
-        Result<RewardPackage> UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId, UpdateRewardPackageOptions updateRewardPackageOptions);
+        Result<bool> UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId, UpdateRewardPackageOptions updateRewardPackageOptions);
 
-        bool DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId);
+        Result<bool> DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId);
 
-        Result<Media> AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId);
+        Result<bool> AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId);
 
-        bool DeleteMedia(int? userId, int? projectId, int? mediaId);
+        Result<bool> DeleteMedia(int? userId, int? projectId, int? mediaId);
 
         IList<Media> GetProjectPhotos(int? projectId);
 
@@ -40,11 +40,11 @@ namespace Crowdfund.Core.Services.Interfaces
         
         IList<Post> GetProjectPosts(int? projectId);
 
-        Result<Post> AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId);
+        Result<bool> AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId);
 
-        Result<Post> UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions);
+        Result<bool> UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions);
 
-        bool DeletePost(int? postId, int? userId, int? projectId);
+        Result<bool> DeletePost(int? postId, int? userId, int? projectId);
 
     }
 }

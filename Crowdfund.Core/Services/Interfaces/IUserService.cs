@@ -9,6 +9,6 @@ namespace Crowdfund.Core.Services.Interfaces
         Result<User> CreateUser(CreateUserOptions createUserOptions);
         User GetUserById(int? id);
         IQueryable<User> SearchUser(SearchUserOptions options);
-        Result<User> UpdateUser(UpdateUserOptions options);
+        Result<bool> UpdateUser(UpdateUserOptions options);
     }
 }

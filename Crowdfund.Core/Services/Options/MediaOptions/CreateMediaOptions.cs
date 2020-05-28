@@ -3,7 +3,6 @@
     public class CreateMediaOptions
     {
         public int MediaTypeId { get; set; }
-
         public string MediaUrl { get; set; }
     }
 }

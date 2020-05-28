@@ -20,6 +20,7 @@ namespace Crowdfund.Core.Services
             {
                 return Result<Post>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
+
             var post = new Post()
             {
                 Title = options.Title,
@@ -38,8 +39,9 @@ namespace Crowdfund.Core.Services
             {
                 return Result<Post>.Failed(StatusCode.InternalServerError, ex.Message);
             }
-            return rows <= 0 ? Result<Post>.Failed(StatusCode.InternalServerError, "Post Could Not Be Created") : Result<Post>.Succeed(post);
-           
+            return rows <= 0 ?
+                Result<Post>.Failed(StatusCode.InternalServerError, "Post Could Not Be Created")
+                : Result<Post>.Succeed(post);           
         }
 
         public Post UpdatePost(Post postToUpdate, UpdatePostOptions options)
