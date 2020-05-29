@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Crowdfund.Web.Controllers
 {
-    [Route("User/Dashboard")]
+    [Route("Dashboard/User")]
     public class DashboardController : Controller
     {
         private readonly IBackingService _backingService;
