@@ -16,12 +16,19 @@ namespace Crowdfund.Core.Services
             _context = context;
         }
 
-        public Result<User> CreateUser(CreateUserOptions createUserOptions)
+        public Result<int> LoginUser(CreateUserOptions createUserOptions)
         {
             if (createUserOptions == null || string.IsNullOrWhiteSpace(createUserOptions.Email))
             {
-                return Result<User>.Failed(StatusCode.BadRequest, "Options Not Valid");
+                return Result<int>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
+
+            var existingUser = SearchUser(new SearchUserOptions
+            {
+                Email = createUserOptions.Email
+            }).FirstOrDefault();
+
+            if (existingUser != null) return Result<int>.Succeed(existingUser.UserId);
 
             var user = new User()
             {
@@ -52,11 +59,11 @@ namespace Crowdfund.Core.Services
             }
             catch (Exception ex)
             {
-                return Result<User>.Failed(StatusCode.InternalServerError, ex.Message);
+                return Result<int>.Failed(StatusCode.InternalServerError, ex.Message);
             }
             return rows <= 0 ?
-                Result<User>.Failed(StatusCode.InternalServerError, "User Could Not Be Created")
-                : Result<User>.Succeed(user);
+                Result<int>.Failed(StatusCode.InternalServerError, "User Could Not Be Created")
+                : Result<int>.Succeed(user.UserId);
         }
 
         public User GetUserById(int? id)

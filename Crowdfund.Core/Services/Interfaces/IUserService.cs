@@ -6,7 +6,7 @@ namespace Crowdfund.Core.Services.Interfaces
 {
     public interface IUserService
     {
-        Result<User> CreateUser(CreateUserOptions createUserOptions);
+        Result<int> LoginUser(CreateUserOptions createUserOptions);
         User GetUserById(int? id);
         IQueryable<User> SearchUser(SearchUserOptions options);
         Result<bool> UpdateUser(UpdateUserOptions options);

@@ -1,0 +1,69 @@
+@model IEnumerable<DashboardViewModel>
+
+<div class="container">
+    <!-- Project Title & Foto-->
+    <div class="row">
+        <div class="col col-md-3">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <button class="btn btn-lg btn-warning mb-4 w-100">
+                        Create Project
+                    </button>
+                    <button class="btn btn-sm btn-secondary mb-4 w-100">
+                        Backed Project
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col col-md-9">
+            <div class="card w-100 h-100 scroll">
+                <div class="card-body">
+                    @foreach (var p in Model)
+                    {
+                        <div class="card mb-3 w-100">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <img src="https://via.placeholder.com/150x150" class="card-img img-thumbnail" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <h2>@p.Title</h2>
+                                        </h5>
+                                        <p class="card-text">
+                                            Your progress:
+                                        </p>
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar bg-success font-weight-bold" style="width:50%; height: 1rem;">
+                                                50%
+                                            </div>
+                                        </div>
+                                        <p class="card-text">
+                                            <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
+                                            <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
+                                        </p>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="card-text">
+                                                <small>@p.DueTo days to go</small>
+                                            </p>
+                                            <div class="button-group">
+                                                <button type="button" class="btn btn-sm btn-primary">Post Updates</button>
+                                                <button type="button" class="btn btn-sm btn-danger">Videos</button>
+                                                <button type="button" class="btn btn-sm btn-success">Images</button>
+                                                <button type="button" class="btn btn-sm btn-warning">Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

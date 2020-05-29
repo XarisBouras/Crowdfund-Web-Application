@@ -3,28 +3,51 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Crowdfund.Core.Services.Interfaces;
+using Crowdfund.Core.Services.Options.UserOptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Crowdfund.Web.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Crowdfund.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
+            HttpContext.Session.SetString("Test", "Session Test!");
+            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
             return View();
+        }
+        
+        [HttpPost]
+        public IActionResult Index(CreateUserOptions userOptions) {
+            var result = _userService.LoginUser(userOptions);
+            
+            if (!result.Success) {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+            HttpContext.Session.SetInt32("UserId", result.Data);
+            
+            return Redirect("/");
         }
 
         public IActionResult Privacy()
         {
+            ViewBag.Message = HttpContext.Session.GetString("Test");
+            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
             return View();
         }
 

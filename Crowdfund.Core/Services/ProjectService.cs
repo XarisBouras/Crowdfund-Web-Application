@@ -53,7 +53,7 @@ namespace Crowdfund.Core.Services
                 Title = createProjectOptions.Title,
                 Category = (Category)createProjectOptions.CategoryId,
                 Description = createProjectOptions.Description,
-                DueTo = createProjectOptions.DueTo,
+                DueTo = createProjectOptions.DueTo.Value,
                 MainImageUrl = createProjectOptions.MainImageUrl,
                 Goal = createProjectOptions.Goal
             };
@@ -166,7 +166,7 @@ namespace Crowdfund.Core.Services
 
             if (updateProjectOptions.DueTo != null)
             {
-                project.Data.DueTo = updateProjectOptions.DueTo;
+                project.Data.DueTo = updateProjectOptions.DueTo.Value;
             }
 
             if (updateProjectOptions.Goal != null)

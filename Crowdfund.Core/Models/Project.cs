@@ -11,7 +11,7 @@ namespace Crowdfund.Core.Models
         
         public string Description { get; set; }
         
-        public DateTime? DueTo { get; set; }
+        public DateTime DueTo { get; set; }
         
         public string MainImageUrl { get; set; }
         

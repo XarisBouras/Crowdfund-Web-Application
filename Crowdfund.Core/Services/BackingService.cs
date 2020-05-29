@@ -86,7 +86,7 @@ namespace Crowdfund.Core.Services
                     .ToList();
 
                 return Result<IEnumerable<Project>>
-                    .Succeed(projectsIds.Select(id => _projectService.GetProjectById(id).Data));
+                    .Succeed(projectsIds.Select(id => _projectService.GetSingleProject(id).Data));
             }
             catch (Exception ex)
             {

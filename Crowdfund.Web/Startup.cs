@@ -28,6 +28,9 @@ namespace Crowdfund.Web
         {
             services.AddControllersWithViews();
             
+            services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            services.AddSession();
+            
             services.AddDbContext<DataContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
@@ -57,6 +60,8 @@ namespace Crowdfund.Web
             app.UseRouting();
 
             app.UseAuthorization();
+            
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

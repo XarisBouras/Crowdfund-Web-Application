@@ -6,6 +6,7 @@ using Crowdfund.Core.Data;
 using Crowdfund.Core.Services;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Web.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crowdfund.Web.Controllers
@@ -44,7 +45,7 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)viewModel.ErrorCode,
                     viewModel.ErrorText);
             }
-
+            ViewBag.Message = HttpContext.Session.GetString("Test");
             return View(viewModel.Data);
         }
 
