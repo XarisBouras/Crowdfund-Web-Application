@@ -1,6 +1,6 @@
 using System;
 
-namespace Crowdfund.Web.Models
+namespace Crowdfund.Web.Models.Dashboard
 {
     public class DashboardViewModel
     {

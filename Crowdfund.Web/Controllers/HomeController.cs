@@ -27,7 +27,7 @@ namespace Crowdfund.Web.Controllers
         public IActionResult Index()
         {
             HttpContext.Session.SetString("Test", "Session Test!");
-            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
+            Globals.UserId = HttpContext.Session.GetInt32("UserId");
             return View();
         }
         

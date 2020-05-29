@@ -46,16 +46,16 @@
                         
                        @*<button class="btn btn-warning btn-lg text-nowrap" data-toggle="modal" data-target="#loginModal">Create Project</button>*@
                        
-                         @if (ViewBag.UserId == null)
+                         @if (Globals.UserId == null)
                          {
                            <button type="button" class="btn btn-warning btn-lg text-nowrap" data-toggle="modal" data-target="#loginModal">
                              Login
                            </button>    
                          }
                          
-                           @if (ViewBag.UserId != null)
+                           @if (Globals.UserId != null)
                            {
-                             <a asp-controller="Dashboard" asp-route-id="@ViewBag.UserId"  class="btn btn-warning btn-lg text-nowrap">Dashboard</a>    
+                             <a asp-controller="Dashboard" asp-route-id="@Globals.UserId"  class="btn btn-warning btn-lg text-nowrap">Dashboard</a>    
                            }
 
                     </li>
@@ -69,7 +69,12 @@
             @RenderBody()
         @*</main>
     </div>*@
-    
+     <footer class="page-footer font-small">
+          <div class="footer-copyright text-center py-3">© 2020 Copyright:
+             <a href="#">Croudfunding</a>
+          </div>
+       </footer>
+       
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -107,12 +112,6 @@
         </div>
       </div>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Crowdfund.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

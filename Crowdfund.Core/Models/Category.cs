@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Crowdfund.Core.Models
 {
     public enum Category
@@ -19,8 +17,6 @@ namespace Crowdfund.Core.Models
         Music,
         Photography,
         Publishing,
-        [Display(Name = "Product Design")]
-        ProductDesign,
         Software,
         Technology, 
         Theater

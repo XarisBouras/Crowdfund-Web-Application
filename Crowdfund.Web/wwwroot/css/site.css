@@ -3,6 +3,10 @@
   outline: transparent !important;
 }
 
+body {
+  padding-top: 70px;
+}
+
 .active {
   background-color: #fff !important;
 }

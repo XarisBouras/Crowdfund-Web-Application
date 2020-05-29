@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
+using Crowdfund.Core.Models;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.ProjectOptions;
-using Crowdfund.Web.Models;
+using Crowdfund.Web.Models.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crowdfund.Web.Controllers
@@ -48,14 +49,15 @@ namespace Crowdfund.Web.Controllers
         [HttpGet]
         public IActionResult CreateProject()
         {
+            ViewBag.Categories = (Category []) Enum.GetValues(typeof(Category));
             return View();
         }
 
 
         [HttpPost]
-        public IActionResult CreateProject(int id, CreateProjectOptions options)
+        public IActionResult CreateProject(CreateProjectOptions options)
         {
-            var result = _projectService.CreateProject(id, options);
+            var result = _projectService.CreateProject(Globals.UserId, options);
 
             if (!result.Success)
             {
@@ -63,8 +65,10 @@ namespace Crowdfund.Web.Controllers
                     result.ErrorText);
             }
 
-            return Ok(result.Data);
-            
+            return RedirectToAction("Index", new {id = Globals.UserId});
+
+            //return Ok(result.Data);
+
         }
     }
 }
