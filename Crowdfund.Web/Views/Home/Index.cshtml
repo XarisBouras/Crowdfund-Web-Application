@@ -1,72 +1,136 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    
-</div>
-
-<div class="container">
-  @if (ViewBag.UserId == null)
-  {
-    <button type="button" class="btn btn-info btn-round" data-toggle="modal" data-target="#loginModal">
-      Login
-    </button>    
-  }
-  
-    @if (ViewBag.UserId != null)
-    {
-      <a asp-controller="Dashboard" asp-route-id="@ViewBag.UserId"  class="btn btn-info btn-round">Dashboard</a>    
-    }
-  
-  
-</div>
-
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+﻿   <!--- Start Landing Page Section -->
+   <div class="jumbotron" id="jumbo1">
+      <div class="container vertical-center">
+         <h1 class="display-4 w-50 text-right">You Dream.</h1>
+         <h1 class="display-4 w-50 text-right">We fund.</h1>
+         <p class="lead w-50 text-right mt-5">
+            <a class="btn btn-warning btn-lg" href="#" role="button">Learn more</a>
+         </p>
       </div>
-      <div class="modal-body">
-        <div class="form-title text-center">
-          <h4>Login</h4>
-        </div>
-        <div class="d-flex flex-column text-center">
-          <form method="post">
-            <div class="form-group">
-              <input name="email" type="email" class="form-control" id="email" placeholder="Your email address...">
+   </div>
+
+   <!-- Start Featured Projects -->
+
+   <div class="album py-5 bg-light">
+      <div class="container">
+         <h2 class="text-muted text-center my-5">Trending Projects</h2>
+         <div class="row">
+            <div class="col-md-4">
+               <div class="card mb-4 box-shadow">
+                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
+                  <div class="card-body">
+                     <h2 class="text-center mb-2">Project</h2>
+                     <div class="text-center mb-2">
+                        <small class="text-muted">9 days to go</small>
+                     </div>
+                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                     <div class="progress mb-5">
+                        <div class="progress-bar bg-success font-weight-bold" style="width:50%; height: 1rem;">
+                           50%
+                        </div>           
+                     </div>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                           <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">100 / 1500 $</span>
+                           <small class="badge badge-pill badge-warning" style="font-size: .9rem">10 backers</small>                        
+                        </div>
+                        <button type="button" class="btn btn-md w-50 btn-success">View</button>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <button class="btn btn-info btn-block btn-round">Login</button>
-          </form>
-          
-          <div class="text-center text-muted delimiter">or use a social network</div>
-          <div class="d-flex justify-content-center social-buttons">
-            <button type="button" class="btn btn-secondary btn-round" data-toggle="tooltip" data-placement="top" title="Twitter">
-              <i class="fab fa-twitter"></i>
-            </button>
-            <button type="button" class="btn btn-secondary btn-round" data-toggle="tooltip" data-placement="top" title="Facebook">
-              <i class="fab fa-facebook"></i>
-            </button>
-            <button type="button" class="btn btn-secondary btn-round" data-toggle="tooltip" data-placement="top" title="Linkedin">
-              <i class="fab fa-linkedin"></i>
-            </button>
-          </div>
-        </div>
+            <div class="col-md-4">
+               <div class="card mb-4 box-shadow">
+                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
+                  <div class="card-body">
+                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                        </div>
+                        <small class="text-muted">9 mins</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-4">
+               <div class="card mb-4 box-shadow">
+                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
+                  <div class="card-body">
+                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                        </div>
+                        <small class="text-muted">9 mins</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-md-4">
+               <div class="card mb-4 box-shadow">
+                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
+                  <div class="card-body">
+                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                        </div>
+                        <small class="text-muted">9 mins</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-4">
+               <div class="card mb-4 box-shadow">
+                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
+                  <div class="card-body">
+                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                        </div>
+                        <small class="text-muted">9 mins</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-4">
+               <div class="card mb-4 box-shadow">
+                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
+                  <div class="card-body">
+                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                     <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                        </div>
+                        <small class="text-muted">9 mins</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<script>
-$(document).ready(function() {             
-  $('#loginModal').modal('show');
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-});
-</script>
+      <section class="cta__1 mt-5">
+         <div class="cta__center">
+            <h1 class="display-2 mb-2 text-light">We Bring</h1>
+            <h1 class="display-2 mb-2 text-light">Projects</h1>
+            <h1 class="display-2 mb-2 text-light">To Life</h1>
+            <br>
+            <button class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</button>
+         </div>
+      </section>
+   </div>

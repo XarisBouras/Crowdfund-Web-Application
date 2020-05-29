@@ -1,71 +1,140 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿*:focus,
+*:active {
+  outline: transparent !important;
+}
 
-a.navbar-brand {
-  white-space: normal;
+.active {
+  background-color: #fff !important;
+}
+/* 
+a:active, a:focus {
+  outline: 0;
+  border: none;
+  -moz-outline-style: none;
+} */
+
+.scroll {
+  max-height: 90vh;
+  overflow-y: scroll;
+}
+
+.navbar {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .1rem;
+}
+
+.img-project {
+  width: 100%;
+  object-fit: cover;
+}
+
+.container {
+  margin-top: 6rem;
+}
+
+.show {
   text-align: center;
-  word-break: break-all;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+.navbar-light .navbar-nav .nav-link {
+  color: black;
+  padding-top: 0.8rem;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.navbar-form {
+  -webkit-flex-basis: 100%;
+  -moz-flex-basis: 100%;
+  -ms-flex-basis: 100%;
+  -o-flex-basis: 100%;
+  flex-basis: -moz-available;
+  flex-basis: 100%;
+  justify-content: space-around;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.input-group-search {
+  width: 100% !important;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
+.card{
+  width: fit-content;
+  box-sizing: border-box;
+
 }
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
+
+.card-header{
+  text-align: center;
+  font-weight: 700;
+  background-color: #ffc107;
+  height: 4rem;
+}
+
+.jumbotron {
+  background: url('../img/Bulb.png') no-repeat center;
+  background-size: cover;
+  margin-bottom: 0;
+}
+
+.vertical-center {
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+
+.cta__1 {
+  display: flex;
+  height: 50vw;
+  background-image: url("../img/funding.jpg");
+  background-size: cover;
+  background-position: top;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cta__center {
+  width: 60%;
+  line-height: 1; }
+
+
+
+@media(min-width:576px) {
+  .jumbotron {
+    height: 90vh;
+  }
+  .navbar-expand-sm .input-group-search {
+    width: 100% !important;
   }
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+@media(min-width:768px) {
+  .project-container {
+    margin-top: 10rem;
+  }
+  .jumbotron {
+    height: 95vh;
+  }
+  .navbar-expand-md .input-group-search {
+    width: 70% !important;
+  }
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+@media(min-width:992px) {
+  .jumbotron {
+    height: 100vh;
+  }
+  .navbar-expand-lg .input-group-search {
+    width: 80% !important;
+  }
 }
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+@media(min-width:1200px) {
+  .navbar-expand-xl .input-group-search {
+    width: 70% !important;
+  }
 }
