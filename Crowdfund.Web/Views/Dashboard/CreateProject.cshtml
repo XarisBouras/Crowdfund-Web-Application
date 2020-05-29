@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewData["Title"] = "CreateProject";
+}
+
+<h1>CreateProject</h1>
+
+
+<div class="container project-container">
+
+    <!-- Project Title & Foto-->
+    <div class="row">
+        <div class="col col-md-3">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <button class="btn btn-lg btn-warning mb-4 w-100">
+                        Create Project
+                    </button>
+                    <button class="btn btn-sm btn-secondary mb-4 w-100">
+                        Backed Project
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col col-md-9">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="project-title">Project Title</label>
+                            <input type="text" class="form-control" id="project-title">
+                        </div>
+                        <div class="form-group">
+                            <label for="project-category">Category</label>
+                            <select class="form-control" id="project-category">
+                                <option value="0">Art</option>
+                                <option value="1">Lifestyle</option>
+                                <option value="2">Technology</option>
+                                <option value="3">Hardware</option>
+                                <option value="4">Gadgets</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-image">Image Url</label>
+                            <input type="text" class="form-control" id="project-image">
+                        </div>
+                        <div class="form-group">
+                            <label for="project-dueto">Due To</label>
+                            <input type="date" class="form-control" id="project-dueto">
+                        </div>
+                        <div class="form-group">
+                            <label for="project-descr">Description</label>
+                            <textarea class="form-control" id="project-descr" rows="8"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
