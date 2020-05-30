@@ -33,7 +33,7 @@ namespace Crowdfund.Web
             
             services.AddDbContext<DataContext>(opt =>
             {
-                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddScoped<IUserService, UserService>();
