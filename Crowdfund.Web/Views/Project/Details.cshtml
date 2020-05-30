@@ -7,7 +7,7 @@
 <div class="container " style="margin-top: 40px;">
 
     <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: @((Model.BackingsAmount/Model.Goal)*100)%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-success" role="progressbar" style="width: @((Model.BackingsAmount/Model.Goal)*100)%" aria-valuenow="@((Model.BackingsAmount/Model.Goal)*100)" aria-valuemin="0" aria-valuemax="100">@((Model.BackingsAmount/Model.Goal)*100)</div>
     </div>
     <div class="row mt-1 mb-1">
         <div class="col col-md-2 "><h5>Amount: @Model.BackingsAmount</h5>  </div>
@@ -20,7 +20,7 @@
     <!-- Project Title & Foto-->
     <div class="row">
         <div class="col col-md-8 col-sm-12 ">
-            <div class="card w-100 text-center js-project" data-projectId="@Model.ProjectId">
+            <div class="card w-100 text-center " >
                 <div class="card-header">
                     <ul class="nav nav-pills  nav-justified">
                         <!--card-header-pills-->
@@ -60,17 +60,17 @@
                             <div id="carouselPictures" class="carousel slide" data-ride="carousel">
 
                                 @foreach (var img in Model.Medias)
-                                {
+                                 {
                                     @if (img.MediaType == Crowdfund.Core.Models.MediaType.Photo)
-                                    {
+                                     {
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
                                                 <img src="~@img.MediaUrl" class="img-fluid d-block w-100 h-100 ">
                                             </div>
                                         </div>
-                                    }
+                                     }
 
-                                }
+                                 }
                                 <a class="carousel-control-prev" href="#carouselPictures" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
@@ -87,15 +87,15 @@
                         <div class="tab-pane fade mt-3 scroll justify-content-xl-around" id="Videos">
 
                             @foreach (var vid in Model.Medias)
-                            {
+                             {
                                 @if (vid.MediaType == Crowdfund.Core.Models.MediaType.Video)
-                                {
+                                 {
                                     <div class="embed-responsive embed-responsive-16by9 mb-1">
                                         <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
                                     </div>
-                                }
+                                 }
 
-                            }
+                             }
 
                         </div>
 
@@ -103,7 +103,7 @@
                         <div class="tab-pane fade active mt-3 scroll" id="Post">
 
                             @foreach (var p in Model.Posts)
-                            {
+                             {
                                 <div class="card border-info mb-3 mr-1" style="width:auto">
                                     <div class="card-header text-center" style="background-color: darkseagreen;"><h3>@p.Title</h3></div>
                                     <div class="card-body text-info">
@@ -111,7 +111,7 @@
                                         <p class="card-text">@p.Text</p>
                                     </div>
                                 </div>
-                            }
+                             }
 
                         </div>
 
@@ -128,7 +128,7 @@
                 </div>
                 <div class="card-body scroll">
 
-                    <div class="card mb-4 box-shadow w-auto js-reward" data-rewardId="0">
+                    <div class="card mb-4 box-shadow w-auto " data-rewardId="0">
                         <div class="card-body text-center">
                             <button class="btn btn-success mb-4 w-100" disabled style="font-size: 1.1rem;">
                                 Back It because you believe It
@@ -139,6 +139,8 @@
                                     <span class="input-group-text">$</span>
                                 </div>
                                 <input type="text" class="form-control js-amount" aria-label="Amount (to the nearest dollar)">
+                                <input type="hidden" class="form-control js-reward" value="0">
+                                <input type="hidden" class="form-control js-project" value="@Model.ProjectId">
                             </div>
                             <p class="card-text">Get a Thank you email</p>
                             <div class="mb-2">
@@ -151,8 +153,8 @@
                     </div>
 
                     @foreach (var rew in Model.RewardPackages)
-                    {
-                        <div class="card mb-4 box-shadow w-auto js-reward" data-rewardId="@rew.RewardPackageId">
+                     {
+                        <div class="card mb-4 box-shadow w-auto" >
                             <div class="card-body text-center">
                                 <button class="btn btn-outline-success mb-4 w-100" style="font-size: 1.1rem;">
                                     <strong>@rew.MinAmount or more</strong>
@@ -163,6 +165,8 @@
                                         <span class="input-group-text">$</span>
                                     </div>
                                     <input type="text" class="form-control js-amount" aria-label="Amount (to the nearest dollar)">
+                                    <input type="hidden" class="form-control js-reward" value="@rew.RewardPackageId">
+                                    <input type="hidden" class="form-control js-project" value="@Model.ProjectId">
                                 </div>
                                 <p class="card-text">
                                     @rew.Description
@@ -175,7 +179,7 @@
                                 </div>
                             </div>
                         </div>
-                    }
+                     }
 
                 </div>
             </div>
@@ -210,8 +214,9 @@
                             </p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-
+                                    <a asp-action="Details" asp-route-id="@proj.ProjectId" class="btn btn-lg btn-warning mb-4 w-100">
+                                        View
+                                    </a>                                   
                                 </div>
                                 <small class="text-muted">9 mins</small>
                             </div>

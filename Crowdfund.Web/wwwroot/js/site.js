@@ -10,17 +10,17 @@ let button = $('.js-backit');
 
 button.on('click', () => {
     let amount = $('.js-amount').val();
-    let rewardPackageId = $('.js-reward').data("rewardId");
-    let projectId = $('.js-project').data("projectdId");
+    let rewardPackageId = $('.js-reward').val();
+    let projectId = $('.js-project').val();
 
     alert('click');
     
     let data = {
-        amount,      
-        rewardPackageId,
-        projectId
+        "Amount": parseFloat(amount),
+        "RewardPackageId": parseInt(rewardPackageId),
+        "ProjectId": parseInt(projectId)
     };
-
+    alert(JSON.stringify(data));
     $.ajax({
         type: 'POST',
         url: '/Project',

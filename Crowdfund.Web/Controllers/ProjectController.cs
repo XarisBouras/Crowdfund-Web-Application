@@ -53,6 +53,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectToView = new DetailsViewModel()
             {
+                ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,
                 Description = project.Data.Description,
                 category = project.Data.Category,
@@ -67,7 +68,6 @@ namespace Crowdfund.Web.Controllers
                 InterestingProjects = _projectService.GetAllProjects().Where(p => p.ProjectId != id).Take(3)
             };
             
-
             return View(projectToView);
 
         }
@@ -80,6 +80,5 @@ namespace Crowdfund.Web.Controllers
 
             return Json(backResult.Data);
         }
-
     }
 }
