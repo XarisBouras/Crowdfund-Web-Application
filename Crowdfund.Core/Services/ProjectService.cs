@@ -129,9 +129,20 @@ namespace Crowdfund.Core.Services
             }
         }
 
-        public IQueryable<Project> GetAllProjects()
+        public Result<IEnumerable<Project>>  GetAllProjects()
         {
-            return _context.Set<Project>();
+            try
+            {
+                var projects = _context.Set<Project>()
+                    .ToList();
+
+                return Result<IEnumerable<Project>>
+                    .Succeed(projects);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<Project>>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
         }
 
         public Result<bool> UpdateProject(UpdateProjectOptions updateProjectOptions)

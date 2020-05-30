@@ -1,142 +1,66 @@
-﻿   <!--- Start Landing Page Section -->
-   <div class="jumbotron" id="jumbo1">
-      <div class="container vertical-center">
-         <h1 class="display-4 w-50 text-right">You Dream.</h1>
-         <h1 class="display-4 w-50 text-right">We fund.</h1>
-         <p class="lead w-50 text-right mt-5">
-            <a class="btn btn-warning btn-lg" href="#" role="button">Learn more</a>
-         </p>
-      </div>
-   </div>
+﻿@model IEnumerable<Crowdfund.Web.Models.Trendings.TrendingsViewModel>
+<!--- Start Landing Page Section -->
+<div class="jumbotron" id="jumbo1">
+    <div class="container vertical-center">
+        <h1 class="display-4 w-50 text-right">You Dream.</h1>
+        <h1 class="display-4 w-50 text-right">We fund.</h1>
+        <p class="lead w-50 text-right mt-5">
+            <a asp-controller="Dashboard" asp-action="CreateProject" asp-route-id="@Globals.UserId" class="btn btn-warning btn-lg" role="button">Create Project</a>
+        </p>
+    </div>
+</div>
 
-   <!-- Start Featured Projects -->
+<!-- Start Featured Projects -->
 
-   <div class="album py-5 bg-light">
-      <div class="container">
-         <h2 class="text-muted text-center my-5">Trending Projects</h2>
-         <div class="row">
-            <div class="col-md-4">
-               <div class="card mb-4 box-shadow">
-                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
-                  <div class="card-body">
-                     <h2 class="text-center mb-2">Project</h2>
-                     <div class="text-center mb-2">
-                        <small class="text-muted">9 days to go</small>
-                     </div>
-                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                     <div class="progress mb-5">
-                        <div class="progress-bar bg-success font-weight-bold" style="width:50%; height: 1rem;">
-                           50%
-                        </div>           
-                     </div>
-                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                           <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">100 / 1500 $</span>
-                           <small class="badge badge-pill badge-warning" style="font-size: .9rem">10 backers</small>                        
+<div class="album py-5 bg-light">
+    <div class="container">
+        <h2 class="text-muted text-center my-5">Trending Projects</h2>
+        <div class="row">
+            @foreach (var pr in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <img class="card-img-top" src="~/img/future.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h2 class="text-center mb-2">@pr.Title</h2>
+                            <div class="text-center mb-2">
+                                <small class="text-muted">@pr.DueTo days to go</small>
+                            </div>
+                            <p class="card-text">
+
+                            </p>
+                            <div class="progress mb-5">
+                                <div class="progress-bar bg-success font-weight-bold" style="width: @pr.Progress %; height: 1rem;">
+                                </div>
+                                <p>@pr.Progress%</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@pr.BackingsAmount / @pr.Goal $</span>
+                                    <small class="badge badge-pill badge-warning" style="font-size: .9rem">@pr.Backers  backers</small>
+                                </div>
+                                <a asp-controller="Project" asp-action="@pr.ProjectId" type="button" class="btn btn-md w-50 btn-success" >View</a>
+                            </div>
                         </div>
-                        <button type="button" class="btn btn-md w-50 btn-success">View</button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-4">
-               <div class="card mb-4 box-shadow">
-                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
-                  <div class="card-body">
-                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-4">
-               <div class="card mb-4 box-shadow">
-                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
-                  <div class="card-body">
-                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col-md-4">
-               <div class="card mb-4 box-shadow">
-                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
-                  <div class="card-body">
-                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-4">
-               <div class="card mb-4 box-shadow">
-                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
-                  <div class="card-body">
-                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-md-4">
-               <div class="card mb-4 box-shadow">
-                  <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Card image cap">
-                  <div class="card-body">
-                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                           <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                           <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <section class="cta__1 mt-5">
-         <div class="cta__center">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <section class="cta__1 mt-5">
+        <div class="cta__center">
             <h1 class="display-2 mb-2 text-light">We Bring</h1>
             <h1 class="display-2 mb-2 text-light">Projects</h1>
             <h1 class="display-2 mb-2 text-light">To Life</h1>
             <br>
-            <button class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</button>
-         </div>
-      </section>
-   </div>
-   
-   <script>
-   $(document).ready(function() {
-       $('#loginModal').modal('show');
-   });
-   </script>
+            <a asp-controller="Dashboard" asp-action="CrateProject" asp-route-id="@Globals.UserId"class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</a>
+            
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#loginModal').modal('show');
+    });
+</script>
