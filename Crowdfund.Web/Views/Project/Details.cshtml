@@ -1,71 +1,226 @@
-﻿@model Crowdfund.Core.Models.Project
+﻿@model Crowdfund.Web.Models.ProjectModel.DetailsViewModel
 @{
     ViewData["Title"] = "Details";
 }
- <p>@ViewBag.Message</p>
-<table class="project_table table-striped" style="margin-bottom : 15px">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Description</th>
-            <th scope="col">Due to</th>
-            <th scope="col">Goal</th>
-            <th scope="col">Category</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">@Model.ProjectId</th>
-            <td>@Model.Title</td>
-            <td>@Model.Description</td>
-            <td>@Model.DueTo</td>
-            <td>@Model.Goal</td>
-            <td>@Model.Category</td>
-        </tr>
-    </tbody>
-</table>
 
-<table class="post_table table-striped" style="margin-bottom : 15px">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Text</th>
-            <th scope="col">Created</th>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model.Posts)
-        {
-            <tr>
-                <th scope="row">@p.PostId</th>
-                <td>@p.Title</td>
-                <td>@p.Text</td>
-                <td>@p.CreatedAt</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container " style="margin-top: 40px;">
 
-<table class="media_table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Media type</th>
-            <th scope="col">Url</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var m in Model.Medias)
-        {
-            <tr>
-                <th scope="row">@m.MediaId</th>
-                <td>@m.MediaType</td>
-                <td>@m.MediaUrl</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: @((Model.BackingsAmount/Model.Goal)*100)%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="row mt-1 mb-1">
+        <div class="col col-md-2 "><h5>Amount: @Model.BackingsAmount</h5>  </div>
+        <div class="col col-md-3 "><h5>Pledged For: @Model.Goal</h5> </div>
+        <div class="col col-md-3 "><h5>Backers: @Model.Backers</h5> </div>
+        <div class="col col-md-2 "><h5>Due To: @Model.DueTo</h5> </div>
+        <div class="col col-md-2"><h5>Category: @Model.category</h5> </div>
+    </div>
+
+    <!-- Project Title & Foto-->
+    <div class="row">
+        <div class="col col-md-8 col-sm-12 ">
+            <div class="card w-100 text-center js-project" data-projectId="@Model.ProjectId">
+                <div class="card-header">
+                    <ul class="nav nav-pills  nav-justified">
+                        <!--card-header-pills-->
+                        <li class="nav-item">
+                            <a class="nav-link active text-secondary" data-toggle="tab" href="#Campaign">Campaign</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary" data-toggle="tab" href="#Images">Images</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary" data-toggle="tab" href="#Videos">Videos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary" data-toggle="tab" href="#Post">Post Updates</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <!--Campaign-->
+                        <div class="tab-pane show active mt-3  scroll " id="Campaign" role="tabpanel" aria-labelledby="Campaing-tab">
+
+                            <img class="img-fluid w-100 mr-1" src="~@Model.MainImageUrl" alt="" />
+
+                            <div class="text-center text-wrap font-weight-bolder">
+                                <p><h1>@Model.Title</h1></p>
+                            </div>
+                            <div class="text-justify text-wrap mr-2 ">
+                                <p>
+                                    @Model.Description
+                                </p>
+                            </div>
+                        </div>
+
+                        <!--Images-->
+                        <div class="tab-pane fade mt-3 container-fluid px-0 mx-0" id="Images">
+                            <div id="carouselPictures" class="carousel slide" data-ride="carousel">
+
+                                @foreach (var img in Model.Medias)
+                                {
+                                    @if (img.MediaType == Crowdfund.Core.Models.MediaType.Photo)
+                                    {
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                                <img src="~@img.MediaUrl" class="img-fluid d-block w-100 h-100 ">
+                                            </div>
+                                        </div>
+                                    }
+
+                                }
+                                <a class="carousel-control-prev" href="#carouselPictures" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselPictures" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <!--Videos-->
+                        <div class="tab-pane fade mt-3 scroll justify-content-xl-around" id="Videos">
+
+                            @foreach (var vid in Model.Medias)
+                            {
+                                @if (vid.MediaType == Crowdfund.Core.Models.MediaType.Video)
+                                {
+                                    <div class="embed-responsive embed-responsive-16by9 mb-1">
+                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                                    </div>
+                                }
+
+                            }
+
+                        </div>
+
+                        <!--Posts-->
+                        <div class="tab-pane fade active mt-3 scroll" id="Post">
+
+                            @foreach (var p in Model.Posts)
+                            {
+                                <div class="card border-info mb-3 mr-1" style="width:auto">
+                                    <div class="card-header text-center" style="background-color: darkseagreen;"><h3>@p.Title</h3></div>
+                                    <div class="card-body text-info">
+                                        <p class="card-text">@p.CreatedAt</p>
+                                        <p class="card-text">@p.Text</p>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Reward packages-->
+        <div class="col col-md-4 col-sm-12 h-auto">
+
+            <div class="card  ">
+                <div class="card-header">
+                    <h4 class="mt-1 text-muted">Rewards</h4>
+                </div>
+                <div class="card-body scroll">
+
+                    <div class="card mb-4 box-shadow w-auto js-reward" data-rewardId="0">
+                        <div class="card-body text-center">
+                            <button class="btn btn-success mb-4 w-100" disabled style="font-size: 1.1rem;">
+                                Back It because you believe It
+                            </button>
+                            <h2 class="mb-2">Reward</h2>
+                            <div class="input-group my-4">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control js-amount" aria-label="Amount (to the nearest dollar)">
+                            </div>
+                            <p class="card-text">Get a Thank you email</p>
+                            <div class="mb-2">
+                                <p><strong>Unlimited</strong></p>
+                            </div>
+                            <div class="my-2">
+                                <button type="button" class="btn btn-md w-50 btn-warning js-backit">Back It</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @foreach (var rew in Model.RewardPackages)
+                    {
+                        <div class="card mb-4 box-shadow w-auto js-reward" data-rewardId="@rew.RewardPackageId">
+                            <div class="card-body text-center">
+                                <button class="btn btn-outline-success mb-4 w-100" style="font-size: 1.1rem;">
+                                    <strong>@rew.MinAmount or more</strong>
+                                </button>
+                                <h2 class="mb-2">@rew.Title</h2>
+                                <div class="input-group my-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="text" class="form-control js-amount" aria-label="Amount (to the nearest dollar)">
+                                </div>
+                                <p class="card-text">
+                                    @rew.Description
+                                </p>
+                                <div class="mb-2">
+                                    <p><strong>@rew.Quantity left</strong></p>
+                                </div>
+                                <div class="text-center my-2">
+                                    <button type="button" class="btn btn-md w-50 btn-warning js-backit">Back It</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Interesting Projects-->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xl" style="font-size: x-large; font-weight: 600; text-align: center;">
+                Projects you may find Interesting
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl" style="fill:#ffc107 ; border: 1rem solid #ffc107;">
+            </div>
+        </div>
+
+        <div class="row">
+
+            @foreach (var proj in Model.InterestingProjects)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow mt-3">
+                        <img class="card-img-top" src="~@proj.MainImageUrl" alt="Card image cap">
+                        <div class="card-body">
+                            <h2 class="mb-2">@proj.Title</h2>
+                            <p class="card-text">
+                                @proj.Description
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+
+                                </div>
+                                <small class="text-muted">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
 
