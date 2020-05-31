@@ -7,14 +7,14 @@
 <div class="container " style="margin-top: 40px;">
 
     <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: @((Model.BackingsAmount/Model.Goal)*100)%" aria-valuenow="@((Model.BackingsAmount/Model.Goal)*100)" aria-valuemin="0" aria-valuemax="100">@((Model.BackingsAmount/Model.Goal)*100)</div>
+        <div class="progress-bar bg-success" role="progressbar" style="width: @Decimal.Round((Model.BackingsAmount/Model.Goal)*100)%" aria-valuenow="@Decimal.Round((Model.BackingsAmount/Model.Goal)*100)" aria-valuemin="0" aria-valuemax="100">@Decimal.Round((Model.BackingsAmount/Model.Goal)*100)%</div>
     </div>
     <div class="row mt-1 mb-1">
-        <div class="col col-md-2 "><h5>Amount: @Model.BackingsAmount</h5>  </div>
-        <div class="col col-md-3 "><h5>Pledged For: @Model.Goal</h5> </div>
-        <div class="col col-md-3 "><h5>Backers: @Model.Backers</h5> </div>
-        <div class="col col-md-2 "><h5>Due To: @Model.DueTo</h5> </div>
-        <div class="col col-md-2"><h5>Category: @Model.category</h5> </div>
+        <div class="col col-md-3 "><h6>Amount: @Model.BackingsAmount</h6>  </div>
+        <div class="col col-md-3 "><h6>Pledged For: @Model.Goal</h6> </div>
+        <div class="col col-md-2 "><h6>Backers: @Model.Backers</h6> </div>
+        <div class="col col-md-2 "><h6>Days To Go: @Model.DaysToGo</h6> </div>
+        <div class="col col-md-2"><h6>Category: @Model.category</h6> </div>
     </div>
 
     <!-- Project Title & Foto-->
@@ -43,8 +43,7 @@
                         <!--Campaign-->
                         <div class="tab-pane show active mt-3  scroll " id="Campaign" role="tabpanel" aria-labelledby="Campaing-tab">
 
-                            <img class="img-fluid w-100 mr-1" src="~@Model.MainImageUrl" alt="" />
-
+                            <img class="img-fluid w-100 mr-1" src="~/@Html.DisplayFor(Model =>Model.MainImageUrl)" alt="" />
                             <div class="text-center text-wrap font-weight-bolder">
                                 <p><h1>@Model.Title</h1></p>
                             </div>
@@ -65,7 +64,7 @@
                                      {
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
-                                                <img src="~@img.MediaUrl" class="img-fluid d-block w-100 h-100 ">
+                                                <img src="~/@img.MediaUrl" class="img-fluid d-block w-100 h-100 ">
                                             </div>
                                         </div>
                                      }
@@ -205,26 +204,25 @@
             @foreach (var proj in Model.InterestingProjects)
             {
                 <div class="col-md-4">
-                    <div class="card mb-4 box-shadow mt-3">
+                    <div class="card mb-4 mx-auto box-shadow mt-3">
                         <img class="card-img-top" src="~@proj.MainImageUrl" alt="Card image cap">
                         <div class="card-body">
-                            <h2 class="mb-2">@proj.Title</h2>
+                            <h2 class="mb-1">@proj.Title</h2>
                             <p class="card-text">
                                 @proj.Description
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-center align-items-center">
                                 <div class="btn-group">
-                                    <a asp-action="Details" asp-route-id="@proj.ProjectId" class="btn btn-lg btn-warning mb-4 w-100">
+                                    <a asp-action="Details" asp-route-id="@proj.ProjectId" class="btn btn-lg btn-warning mb-1 w-100">
                                         View
                                     </a>                                   
                                 </div>
-                                <small class="text-muted">9 mins</small>
+                               
                             </div>
                         </div>
                     </div>
                 </div>
             }
-
         </div>
     </div>
 </div>

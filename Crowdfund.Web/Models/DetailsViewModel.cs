@@ -14,7 +14,7 @@ namespace Crowdfund.Web.Models.ProjectModel
 
         public string Description { get; set; }
 
-        public int DueTo { get; set; }
+        public int DaysToGo { get; set; }
 
         public string MainImageUrl { get; set; }
 

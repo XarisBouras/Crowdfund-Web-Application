@@ -57,7 +57,7 @@ namespace Crowdfund.Web.Controllers
                 Title = project.Data.Title,
                 Description = project.Data.Description,
                 category = project.Data.Category,
-                DueTo = (project.Data.DueTo - DateTime.Now).Days,
+                DaysToGo = (project.Data.DueTo - DateTime.Now).Days,
                 Goal = project.Data.Goal,
                 MainImageUrl = project.Data.MainImageUrl,
                 Medias = project.Data.Medias,
@@ -77,6 +77,11 @@ namespace Crowdfund.Web.Controllers
         {
             var backResult = _backingService.CreateBacking(Globals.UserId, options.ProjectId,
                 options.RewardPackageId, options.Amount);
+            if(!backResult.Success)
+            {
+                return StatusCode((int)backResult.ErrorCode,
+                    backResult.ErrorText);
+            }
 
             return Json(backResult.Data);
         }
