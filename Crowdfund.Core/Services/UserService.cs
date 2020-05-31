@@ -117,14 +117,14 @@ namespace Crowdfund.Core.Services
 
         }
 
-        public Result<bool> UpdateUser(UpdateUserOptions options)
+        public Result<bool> UpdateUser(int? userId, UpdateUserOptions options)
         {
             if (options == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
 
-            var user = _context.Set<User>().SingleOrDefault(u => u.UserId == options.UserId);
+            var user = _context.Set<User>().SingleOrDefault(u => u.UserId == userId);
 
             if (user == null)
             {

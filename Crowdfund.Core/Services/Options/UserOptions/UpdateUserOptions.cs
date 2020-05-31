@@ -6,7 +6,7 @@ namespace Crowdfund.Core.Services.Options.UserOptions
 {
     public class UpdateUserOptions
     {
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         public string Email { get; set; }
 
@@ -15,11 +15,11 @@ namespace Crowdfund.Core.Services.Options.UserOptions
         public string LastName { get; set; }
 
         public string Address { get; set; }
-        public IList<UserProjectReward> UserProjectReward { get; set; }
+       // public IList<UserProjectReward> UserProjectReward { get; set; }
 
-        public UpdateUserOptions()
-        {
-            UserProjectReward = new List<UserProjectReward>();
-        }
+        //public UpdateUserOptions()
+        //{
+        //    UserProjectReward = new List<UserProjectReward>();
+        //}
     }
 }
