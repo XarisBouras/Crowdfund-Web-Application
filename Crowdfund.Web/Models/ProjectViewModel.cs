@@ -1,8 +1,8 @@
 using System;
 
-namespace Crowdfund.Web.Models.Dashboard
+namespace Crowdfund.Web.Models
 {
-    public class DashboardViewModel
+    public class ProjectViewModel
     {
         public int ProjectId { get; set; }
 
@@ -10,7 +10,7 @@ namespace Crowdfund.Web.Models.Dashboard
 
         public string Description { get; set; }
 
-        public int DueTo { get; set; }
+        public int DaysToGo { get; set; }
 
         public string MainImageUrl { get; set; }
 

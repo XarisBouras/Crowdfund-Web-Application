@@ -1,12 +1,12 @@
-@model IEnumerable<Crowdfund.Web.Models.Dashboard.DashboardViewModel>
+@model IEnumerable<ProjectViewModel>
 
 <div class="container">
-    <!-- Project Title & Foto-->
+    <!-- Project Title & Photo-->
     <div class="row">
         <div class="col col-md-3">
             <div class="card w-100 h-100">
                 <div class="card-body">
-                    <a asp-action="CreateProject" class="btn btn-lg btn-warning mb-4 w-100">
+                    <a asp-controller="Dashboard" asp-action="CreateProject" class="btn btn-lg btn-warning mb-4 w-100">
                         Create Project
                     </a>
                     <button class="btn btn-sm btn-secondary mb-4 w-100">
@@ -29,9 +29,15 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
-                                        <h5 class="card-title">
-                                            <h2>@p.Title</h2>
-                                        </h5>
+                                        <div class="card-title">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h2>@p.Title</h2>
+                                                <p class="card-text">
+                                                    <small>@p.DaysToGo days to go</small>
+                                                </p>
+                                                <button class="btn btn-warning">View</button>
+                                            </div>
+                                        </div>
                                         <p class="card-text">
                                             Your progress:
                                         </p>
@@ -40,22 +46,17 @@
                                                 50%
                                             </div>
                                         </div>
-                                        <p class="card-text">
-                                            <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
-                                            <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
-                                        </p>
 
-                                        <div class="d-flex justify-content-between align-items-center">
+
                                             <p class="card-text">
-                                                <small>@p.DueTo days to go</small>
+                                                <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
+                                                <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
                                             </p>
-                                            <div class="button-group">
-                                                <button type="button" class="btn btn-sm btn-primary">Post Updates</button>
-                                                <button type="button" class="btn btn-sm btn-danger">Videos</button>
-                                                <button type="button" class="btn btn-sm btn-success">Images</button>
-                                                <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-sm btn-warning">Edit</a>
-                                            </div>
-                                        </div>
+                                        
+                                            <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
+                                            <button type="button" class="btn btn-sm btn-danger">Videos</button>
+                                            <button type="button" class="btn btn-sm btn-success">Images</button>
+                                            <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-sm btn-warning">Edit</a>
                                     </div>
                                 </div>
                             </div>

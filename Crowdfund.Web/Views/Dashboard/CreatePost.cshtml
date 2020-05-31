@@ -1,0 +1,43 @@
+@model Crowdfund.Web.Models.Dashboard.CreatePostViewModel
+@{
+    ViewData["Title"] = "CreatePost";
+}
+<div class="container project-container">
+ <div class="row">
+        <div class="col col-md-3">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <a asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-warning mb-4 w-100">
+                        Back
+                    </a>
+                    <button class="btn btn-sm btn-secondary mb-4 w-100">
+                        Backed Project
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col col-md-9">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Project: @Model.ProjectTitle</h5>
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="title">Post Title</label>
+                            <input type="text" name="title" class="form-control" id="title">
+                            <input type="hidden" name="projectId" value="@Model.ProjectId"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="text">Description</label>
+                            <textarea name="text" class="form-control" id="text" rows="8"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-warning">Create</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
