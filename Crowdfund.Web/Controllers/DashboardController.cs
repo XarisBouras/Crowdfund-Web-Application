@@ -135,5 +135,40 @@ namespace Crowdfund.Web.Controllers
 
             return RedirectToAction("Index", new { id = Globals.UserId });
         }
+
+        [HttpGet]
+        [Route("project/edit/{id}")]
+        public IActionResult UpdateProject(int id)
+        {
+            var project = _projectService.GetSingleProject(id).Data;
+           
+            return View(project);
+        }
+
+        [HttpPost]
+        [Route("project/edit/{id}")]
+        public IActionResult UpdateProject(UpdateProjectFormOptions options)
+        {
+            var editProjectOptions = new UpdateProjectOptions()
+            {
+                ProjectId = options.ProjectId,
+                Title = options.Title,
+                Description = options.Description,
+                MainImageUrl = options.MainImageUrl,
+                DueTo = options.DueTo,
+                Goal = options.Goal
+            };
+
+            var result = _projectService.UpdateProject
+                (Globals.UserId, editProjectOptions.ProjectId, editProjectOptions);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("UpdateProject", options.ProjectId);
+        }
     }
 }
