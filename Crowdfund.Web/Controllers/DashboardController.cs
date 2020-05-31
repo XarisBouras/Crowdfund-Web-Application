@@ -4,6 +4,7 @@ using Crowdfund.Core.Models;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.PostOptions;
 using Crowdfund.Core.Services.Options.ProjectOptions;
+using Crowdfund.Core.Services.Options.UserOptions;
 using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.Dashboard;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,14 @@ namespace Crowdfund.Web.Controllers
     {
         private readonly IBackingService _backingService;
         private readonly IProjectService _projectService;
+        private readonly IUserService _userService;
 
-        public DashboardController(IBackingService backingService, IProjectService projectService)
+        public DashboardController(IBackingService backingService,
+            IProjectService projectService, IUserService userService)
         {
             _backingService = backingService;
             _projectService = projectService;
+            _userService = userService;
         }
 
         // GET Dashboard/User/1
@@ -57,7 +61,6 @@ namespace Crowdfund.Web.Controllers
             ViewBag.Categories = (Category[]) Enum.GetValues(typeof(Category));
             return View();
         }
-
 
         [HttpPost]
         [Route("project/create")]
@@ -108,6 +111,29 @@ namespace Crowdfund.Web.Controllers
             }
 
             return RedirectToAction("CreatePost", options.ProjectId);
+        }
+
+        [HttpGet]
+        [Route("edit/{id}")]
+        public IActionResult UpdateUser(int id)
+        {
+            var user = _userService.GetUserById(id);
+            return View(user);
+        }
+
+        [HttpPost]
+        [Route("edit/{id}")]
+        public IActionResult UpdateUser(UpdateUserOptions options)
+        {
+            var result = _userService.UpdateUser(Globals.UserId, options);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("Index", new { id = Globals.UserId });
         }
     }
 }
