@@ -423,7 +423,7 @@ namespace Crowdfund.Core.Services
 
             return project.Data.Medias.Where(p => p.MediaType == MediaType.Video).ToList();
         }
-
+        
         public Result<bool> AddMedia(IEnumerable<CreateMediaOptions> createMediaOptions, int? userId, int? projectId)
         {
             if (createMediaOptions == null
@@ -442,18 +442,18 @@ namespace Crowdfund.Core.Services
 
             foreach (var option in createMediaOptions)
             {
-                option.MediaUrl = option.MediaUrl.Trim();
                 var mediaResult = _mediaService.CreateMedia(option);
+                
                 if (mediaResult.Success)
                 {
-                    var media = _mediaService.CreateMedia(option).Data;
-                    project.Data.Medias.Add(media);
+                    project.Data.Medias.Add(mediaResult.Data);
                 }
                 else
                 {
                     return Result<bool>.Failed(mediaResult.ErrorCode, mediaResult.ErrorText);
                 }
             }
+            
 
             var rows = 0;
 
