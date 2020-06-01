@@ -54,6 +54,32 @@ namespace Crowdfund.Web.Controllers
         
                     return View(projectsToView);
                 }
+                
+                [HttpGet("{id}/backed")]
+                public IActionResult BackedProjects(int id)
+                {
+                    var projects = _backingService.GetBackedProjects(id);
+        
+                    if (!projects.Success)
+                    {
+                        return StatusCode((int) projects.ErrorCode,
+                            projects.ErrorText);
+                    }
+        
+                    var projectsToView = projects.Data.Select(p => new ProjectViewModel
+                    {
+                        ProjectId = p.ProjectId,
+                        Title = p.Title,
+                        Description = p.Description,
+                        MainImageUrl = p.MainImageUrl,
+                        DaysToGo = (p.DueTo - DateTime.Now).Days,
+                        Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                        BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                        Goal = p.Goal
+                    });
+        
+                    return View(projectsToView);
+                }
         
                 [HttpGet]
                 [Route("project/create")]

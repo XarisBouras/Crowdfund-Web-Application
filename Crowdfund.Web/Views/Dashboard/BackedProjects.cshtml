@@ -9,7 +9,7 @@
                     <a asp-controller="Dashboard" asp-action="CreateProject" class="btn btn-lg btn-warning mb-4 w-100">
                         Create Project
                     </a>
-                    <a asp-controller="Dashboard" asp-action="BackedProjects" asp-route-id="@Globals.UserId" class="btn btn-sm btn-secondary mb-4 w-100">Backed Projects</a>
+                    <a asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-sm btn-success mb-4 w-100">Your Projects</a>
                     <a asp-controller="Dashboard" asp-action="UpdateUser" asp-route-id="@Globals.UserId" class="btn btn-lg btn-info mb-4 w-100">
                         Profile
                     </a>
@@ -21,7 +21,7 @@
         <div class="col col-md-9">
             <div class="card w-100 h-100 scroll">
                 <div class="card-body">
-                    <h5 class="card-title">Your Projects</h5>
+                <h5 class="card-title">Projects you have backed</h5>
                     @foreach (var p in Model)
                     {
                         <div class="card mb-3 w-100">
