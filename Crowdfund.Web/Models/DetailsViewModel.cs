@@ -20,11 +20,13 @@ namespace Crowdfund.Web.Models.ProjectModel
 
         public decimal Goal { get; set; }
 
-        public Category category { get; set; }
+        public Category Category { get; set; }
 
         public int Backers { get; set; }
 
         public decimal BackingsAmount { get; set; }
+
+        public int Progress { get; set; }
         public IList<RewardPackage> RewardPackages { get; set; }
 
         public IList<Post> Posts { get; set; }

@@ -56,7 +56,7 @@ namespace Crowdfund.Web.Controllers
                 ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,
                 Description = project.Data.Description,
-                category = project.Data.Category,
+                Category = project.Data.Category,
                 DaysToGo = (project.Data.DueTo - DateTime.Now).Days,
                 Goal = project.Data.Goal,
                 MainImageUrl = project.Data.MainImageUrl,
@@ -65,6 +65,7 @@ namespace Crowdfund.Web.Controllers
                 RewardPackages = project.Data.RewardPackages,
                 Backers = _backingService.GetProjectBackingsCount(id).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(id).Data,
+                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(id).Data/ project.Data.Goal)*100),
                 InterestingProjects = _projectService.GetAllProjects().Where(p => p.ProjectId != id).Take(3)
             };
             

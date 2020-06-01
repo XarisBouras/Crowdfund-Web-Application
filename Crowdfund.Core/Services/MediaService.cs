@@ -16,42 +16,53 @@ namespace Crowdfund.Core.Services
             _context = context;
         }
 
-        public Media CreateMedia(CreateMediaOptions options)
+        public Result<Media> CreateMedia(CreateMediaOptions options)
         {
-            if (options == null || !Enum.IsDefined(typeof(MediaType), options.MediaTypeId) ||
-                string.IsNullOrWhiteSpace(options.MediaUrl))
+            if (options == null || string.IsNullOrWhiteSpace(options.MediaUrl))
             {
                 return null;
             }
 
-            var media = new Media
+            var url = options.MediaUrl.Trim();
+
+            if (options.MediaType == (MediaType) MediaType.Video)
             {
-                MediaType = (MediaType) options.MediaTypeId
-            };
-            
-            var urlChecking = options.MediaUrl;
-            
-            if (media.MediaType == (MediaType) MediaType.Video)
-            {
-                urlChecking = urlChecking.Trim();
-                if (urlChecking.Contains("youtube.com"))
+                if (!url.Contains("youtube.com"))
                 {
-                    media.MediaUrl = urlChecking;
-                    Console.WriteLine("valid Video");
-                }
-                else
-                {
-                    Console.WriteLine("Not valid Video");
-                    return null;
+                    return Result<Media>.Failed(StatusCode.BadRequest, "Only youtube videos supported");
                 }
             }
             else
             {
-                media.MediaUrl = urlChecking;
-                Console.WriteLine("Image");
+                if (!url.Contains(".png") && !url.Contains(".jpg") && !url.Contains(".jpeg") && !url.Contains(".gif"))
+                {
+                    return Result<Media>.Failed(StatusCode.BadRequest, "Unsupported image type");
+                }
             }
 
-            return media;
+
+            var media = new Media
+            {
+                MediaUrl = url,
+                MediaType = options.MediaType
+            };
+
+            _context.Add(media);
+
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Media>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
+
+            return rows <= 0
+                ? Result<Media>.Failed(StatusCode.InternalServerError, "Media Could Not Be Created")
+                : Result<Media>.Succeed(media);
         }
 
         public bool DeleteMedia(Media mediaToDelete)

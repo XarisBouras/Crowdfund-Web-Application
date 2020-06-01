@@ -1,5 +1,5 @@
-﻿@{
-    ViewData["Title"] = "CreateProject";
+@{
+    ViewBag.Title = "title";
 }
 
 <div class="container project-container">
@@ -12,6 +12,9 @@
                     <a asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-warning mb-4 w-100">
                         Back
                     </a>
+                    <a asp-controller="Dashboard" asp-action="UpdateUser" asp-route-id="@Globals.UserId" class="btn btn-lg btn-info mb-4 w-100">
+                        Profile
+                    </a>
                 </div>
             </div>
         </div>
@@ -20,41 +23,29 @@
         <div class="col col-md-9">
             <div class="card w-100 h-100">
                 <div class="card-body">
+                    <h5 class="card-title">Project: @Model.ProjectTitle</h5>
                     <form method="post">
                         <div class="form-group">
-                            <label for="title">Project Title</label>
+                            <label for="title">Title</label>
                             <input type="text" name="title" class="form-control" id="title">
                         </div>
                         <div class="form-group">
-                            <label for="categoryId">Category</label>
-                            <select class="form-control" name="categoryId" id="categoryId">
-                                @foreach (var category in ViewBag.Categories)
-                                {
-                                    <option value='@((int) category)'>@category</option>
-                                }
-                            </select>
+                            <label for="minAmount">Amount</label>
+                            <input type="number" name="minAmount" class="form-control" id="minAmount">
                         </div>
                         <div class="form-group">
-                            <label for="mainImageUrl">Image Url</label>
-                            <input type="text" name="mainImageUrl" class="form-control" id="mainImageUrl">
-                        </div>
-                        <div class="form-group">
-                            <label for="dueTo">Due To</label>
-                            <input type="date" name="dueTo" class="form-control" id="dueTo">
-                        </div>
-                        <div class="form-group">
-                            <label for="goal">Goal</label>
-                            <input type="number" name="goal" class="form-control" id="goal">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" id="quantity" placeholder="Leave empty for unlimited">
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea name="description" class="form-control" id="description" rows="8"></textarea>
                         </div>
+                        <input type="hidden" name="projectId" value="@Model.ProjectId"/>
                         <button type="submit" class="btn btn-lg btn-warning">Create</button>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
