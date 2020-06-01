@@ -12,7 +12,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white" style="border-bottom: 1px solid #333;">
-              <a class="navbar-brand" href="/"><img src="~/img/Logo.png"></a>
+              <a class="navbar-brand" href="/"><img src="/img/Logo.png"></a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                  <span class="navbar-toggler-icon"></span>
@@ -57,7 +57,7 @@
                          
                            @if (Globals.UserId != null)
                            {
-                             <a asp-controller="Dashboard" asp-route-id="@Globals.UserId"  class="btn btn-warning btn-lg text-nowrap">Dashboard</a>    
+                             <a asp-controller="Dashboard" asp-action="Index" asp-route-id="@Globals.UserId"  class="btn btn-warning btn-lg text-nowrap">Dashboard</a>    
                            }
 
                     </li>
