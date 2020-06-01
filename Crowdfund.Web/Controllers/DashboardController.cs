@@ -91,7 +91,7 @@ namespace Crowdfund.Web.Controllers
         
                 [HttpPost]
                 [Route("project/create")]
-                public IActionResult CreateProject([FromBody] CreateProjectOptions options)
+                public IActionResult CreateProject(CreateProjectOptions options)
                 {
                     var result = _projectService.CreateProject(Globals.UserId, options);
         
@@ -242,7 +242,7 @@ namespace Crowdfund.Web.Controllers
                         return StatusCode((int) result.ErrorCode,
                             result.ErrorText);
                     }
-        
+                    
                     return RedirectToAction("AddVideos", options.ProjectId);
                 }
 

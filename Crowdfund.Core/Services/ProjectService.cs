@@ -172,9 +172,9 @@ namespace Crowdfund.Core.Services
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;
             }
 
-            if (updateProjectOptions.Goal != null)
+            if (updateProjectOptions.Goal > 0)
             {
-                project.Data.Goal = updateProjectOptions.Goal.Value;
+                project.Data.Goal = updateProjectOptions.Goal;
             }
 
             var rows = 0;
@@ -450,7 +450,7 @@ namespace Crowdfund.Core.Services
                 }
                 else
                 {
-                    Result<bool>.Failed(mediaResult.ErrorCode, mediaResult.ErrorText);
+                    return Result<bool>.Failed(mediaResult.ErrorCode, mediaResult.ErrorText);
                 }
             }
 

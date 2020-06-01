@@ -23,16 +23,23 @@ namespace Crowdfund.Core.Services
                 return null;
             }
 
-            var url = options.MediaUrl;
+            var url = options.MediaUrl.Trim();
 
             if (options.MediaType == (MediaType) MediaType.Video)
             {
-                url = url.Trim();
                 if (!url.Contains("youtube.com"))
                 {
                     return Result<Media>.Failed(StatusCode.BadRequest, "Only youtube videos supported");
                 }
             }
+            else
+            {
+                if (!url.Contains(".png") && !url.Contains(".jpg") && !url.Contains(".jpeg") && !url.Contains(".gif"))
+                {
+                    return Result<Media>.Failed(StatusCode.BadRequest, "Unsupported image type");
+                }
+            }
+
 
             var media = new Media
             {
