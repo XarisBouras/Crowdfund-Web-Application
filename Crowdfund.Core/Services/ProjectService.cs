@@ -442,6 +442,7 @@ namespace Crowdfund.Core.Services
 
             foreach (var option in createMediaOptions)
             {
+                option.MediaUrl = option.MediaUrl.Trim();
                 var mediaResult = _mediaService.CreateMedia(option);
                 if (mediaResult.Success)
                 {
