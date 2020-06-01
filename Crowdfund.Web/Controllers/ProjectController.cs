@@ -51,12 +51,12 @@ namespace Crowdfund.Web.Controllers
                     project.ErrorText);
             }
 
-            var projectToView = new DetailsViewModel()
+            var projectToView = new DetailsViewModel
             {
                 ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,
                 Description = project.Data.Description,
-                category = project.Data.Category,
+                Category = project.Data.Category,
                 DaysToGo = (project.Data.DueTo - DateTime.Now).Days,
                 Goal = project.Data.Goal,
                 MainImageUrl = project.Data.MainImageUrl,
