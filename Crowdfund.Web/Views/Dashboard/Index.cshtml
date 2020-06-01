@@ -51,15 +51,16 @@
                                         </div>
 
 
-                                            <p class="card-text">
-                                                <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
-                                                <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
-                                            </p>
-                                        
-                                            <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
-                                            <button type="button" class="btn btn-sm btn-danger">Videos</button>
-                                            <button type="button" class="btn btn-sm btn-success">Images</button>
-                                            <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-sm btn-warning">Edit</a>
+                                        <p class="card-text">
+                                            <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
+                                            <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
+                                        </p>
+
+                                        <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
+                                        <button type="button" class="btn btn-sm btn-danger">Videos</button>
+                                        <a asp-action="CreateImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
+                                        <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info">Add Reward</a>
+                                        <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-sm btn-warning">Edit</a>
                                     </div>
                                 </div>
                             </div>
