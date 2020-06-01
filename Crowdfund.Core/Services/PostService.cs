@@ -16,7 +16,10 @@ namespace Crowdfund.Core.Services
 
         public Result<Post> CreatePost(CreatePostOptions options)
         {
-            if (options == null || string.IsNullOrWhiteSpace(options.Title) || string.IsNullOrWhiteSpace(options.Text))
+            options.Title = options.Title?.Trim();
+            options.Text = options.Text?.Trim();
+            
+            if (string.IsNullOrWhiteSpace(options.Title) || string.IsNullOrWhiteSpace(options.Text))
             {
                 return Result<Post>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
@@ -28,24 +31,14 @@ namespace Crowdfund.Core.Services
             };
             
             _context.Add(post);
-
-            var rows = 0;
-
-            try
-            {
-                rows = _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                return Result<Post>.Failed(StatusCode.InternalServerError, ex.Message);
-            }
-            return rows <= 0 ?
-                Result<Post>.Failed(StatusCode.InternalServerError, "Post Could Not Be Created")
-                : Result<Post>.Succeed(post);           
+            
+            return Result<Post>.Succeed(post);
         }
 
         public Post UpdatePost(Post postToUpdate, UpdatePostOptions options)
         {
+            options.Title = options.Title?.Trim();
+            options.Text = options.Text?.Trim();
             
             if (!string.IsNullOrWhiteSpace(options.Text))
             {

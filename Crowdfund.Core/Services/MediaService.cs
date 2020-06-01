@@ -18,9 +18,10 @@ namespace Crowdfund.Core.Services
 
         public Result<Media> CreateMedia(CreateMediaOptions options)
         {
-            if (options == null || string.IsNullOrWhiteSpace(options.MediaUrl))
+            options.MediaUrl = options.MediaUrl?.Trim();
+            if (string.IsNullOrWhiteSpace(options.MediaUrl))
             {
-                return null;
+                return Result<Media>.Failed(StatusCode.BadRequest, "Empty media URL");
             }
 
             var url = options.MediaUrl.Trim();
