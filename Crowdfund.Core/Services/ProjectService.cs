@@ -227,12 +227,11 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "User Or Project Not Specified");
             }
 
-            var project = GetProjectById(projectId);
+            var project = GetSingleProject(projectId);
 
-            if (project == null)
+            if (!project.Success)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(project.ErrorCode, project.ErrorText);
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
@@ -240,7 +239,7 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            _context.Remove(project);
+            _context.Remove(project.Data);
 
             var rows = 0;
 
