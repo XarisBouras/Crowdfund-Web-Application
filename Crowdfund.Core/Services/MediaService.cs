@@ -30,7 +30,7 @@ namespace Crowdfund.Core.Services
                 url = url.Trim();
                 if (!url.Contains("youtube.com"))
                 {
-                    return null;
+                    return Result<Media>.Failed(StatusCode.BadRequest, "Only youtube videos supported");
                 }
             }
 

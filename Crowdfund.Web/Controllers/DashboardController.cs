@@ -177,7 +177,7 @@ namespace Crowdfund.Web.Controllers
                 }
         
                 [HttpGet("images/project/{id}")]
-                public IActionResult CreateImages(int id)
+                public IActionResult AddImages(int id)
                 {
                     var projectTitle = _projectService.GetSingleProject(id).Data.Title;
                     var projectInfoViewModel = new ProjectInfoViewModel
@@ -191,7 +191,7 @@ namespace Crowdfund.Web.Controllers
         
                 [HttpPost]
                 [Route("images/project/{id}")]
-                public IActionResult CreateImages(MediaFormOptions options)
+                public IActionResult AddImages(MediaFormOptions options)
                 {
                     var createMediaOptions = options.Url.Select
                     (url => new CreateMediaOptions
@@ -208,7 +208,42 @@ namespace Crowdfund.Web.Controllers
                             result.ErrorText);
                     }
         
-                    return RedirectToAction("CreateImages", options.ProjectId);
+                    return RedirectToAction("AddImages", options.ProjectId);
+                }
+                
+                [HttpGet("videos/project/{id}")]
+                public IActionResult AddVideos(int id)
+                {
+                    var projectTitle = _projectService.GetSingleProject(id).Data.Title;
+                    var projectInfoViewModel = new ProjectInfoViewModel
+                    {
+                        ProjectId = id,
+                        ProjectTitle = projectTitle
+                    };
+        
+                    return View(projectInfoViewModel);
+                }
+        
+                [HttpPost]
+                [Route("videos/project/{id}")]
+                public IActionResult AddVideos(MediaFormOptions options)
+                {
+                    var createMediaOptions = options.Url.Select
+                    (url => new CreateMediaOptions
+                    {
+                        MediaType = MediaType.Video,
+                        MediaUrl = url,
+                    });
+        
+                    var result = _projectService.AddMedia(createMediaOptions, Globals.UserId, options.ProjectId);
+                    
+                    if (!result.Success)
+                    {
+                        return StatusCode((int) result.ErrorCode,
+                            result.ErrorText);
+                    }
+        
+                    return RedirectToAction("AddVideos", options.ProjectId);
                 }
 
 

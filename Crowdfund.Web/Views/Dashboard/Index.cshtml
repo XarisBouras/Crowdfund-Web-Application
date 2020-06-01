@@ -56,8 +56,8 @@
                                         </p>
 
                                         <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
-                                        <button type="button" class="btn btn-sm btn-danger">Videos</button>
-                                        <a asp-action="CreateImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
+                                        <a asp-action="AddVideos" asp-route-id="@p.ProjectId" class="btn btn-sm btn-danger">Videos</a>
+                                        <a asp-action="AddImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
                                         <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info">Add Reward</a>
                                         <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-sm btn-warning">Edit</a>
                                     </div>
