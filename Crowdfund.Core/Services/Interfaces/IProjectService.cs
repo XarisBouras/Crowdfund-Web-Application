@@ -30,7 +30,7 @@ namespace Crowdfund.Core.Services.Interfaces
 
         Result<bool> DeleteRewardPackage(int? userId, int? projectId, int? rewardPackageId);
 
-        Result<bool> AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId);
+        Result<bool> AddMedia(IEnumerable<CreateMediaOptions> createMediaOptions, int? userId, int? projectId);
 
         Result<bool> DeleteMedia(int? userId, int? projectId, int? mediaId);
 

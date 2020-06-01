@@ -16,42 +16,46 @@ namespace Crowdfund.Core.Services
             _context = context;
         }
 
-        public Media CreateMedia(CreateMediaOptions options)
+        public Result<Media> CreateMedia(CreateMediaOptions options)
         {
-            if (options == null || !Enum.IsDefined(typeof(MediaType), options.MediaTypeId) ||
-                string.IsNullOrWhiteSpace(options.MediaUrl))
+            if (options == null || string.IsNullOrWhiteSpace(options.MediaUrl))
             {
                 return null;
             }
 
-            var media = new Media
+            var url = options.MediaUrl;
+
+            if (options.MediaType == (MediaType) MediaType.Video)
             {
-                MediaType = (MediaType) options.MediaTypeId
-            };
-            
-            var urlChecking = options.MediaUrl;
-            
-            if (media.MediaType == (MediaType) MediaType.Video)
-            {
-                urlChecking = urlChecking.Trim();
-                if (urlChecking.Contains("youtube.com"))
+                url = url.Trim();
+                if (!url.Contains("youtube.com"))
                 {
-                    media.MediaUrl = urlChecking;
-                    Console.WriteLine("valid Video");
-                }
-                else
-                {
-                    Console.WriteLine("Not valid Video");
                     return null;
                 }
             }
-            else
+
+            var media = new Media
             {
-                media.MediaUrl = urlChecking;
-                Console.WriteLine("Image");
+                MediaUrl = url,
+                MediaType = options.MediaType
+            };
+
+            _context.Add(media);
+
+            var rows = 0;
+
+            try
+            {
+                rows = _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result<Media>.Failed(StatusCode.InternalServerError, ex.Message);
             }
 
-            return media;
+            return rows <= 0
+                ? Result<Media>.Failed(StatusCode.InternalServerError, "Media Could Not Be Created")
+                : Result<Media>.Succeed(media);
         }
 
         public bool DeleteMedia(Media mediaToDelete)

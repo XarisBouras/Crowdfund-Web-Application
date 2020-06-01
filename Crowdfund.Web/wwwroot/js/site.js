@@ -4,6 +4,22 @@
 
 
 // Write your JavaScript code.
+$("#addMedia").click(function () {
+    let html = '';
+    html += '<div id="inputFormRow">';
+    html += '<div class="input-group mb-3">';
+    html += '<input type="text" name="url[]" class="form-control m-input" placeholder="Enter URL">';
+    html += '<div class="input-group-append">';
+    html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+    html += '</div>';
+    html += '</div>';
+
+    $('#newRow').append(html);
+});
+
+$(document).on('click', '#removeRow', function () {
+    $(this).closest('#inputFormRow').remove();
+});
 
 //--------------------Project Page JS-------------------------//
 let button = $('.js-backit');

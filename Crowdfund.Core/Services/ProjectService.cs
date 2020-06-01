@@ -413,7 +413,7 @@ namespace Crowdfund.Core.Services
             return project.Data.Medias.Where(p => p.MediaType == MediaType.Video).ToList();
         }
 
-        public Result<bool> AddMedia(CreateMediaOptions createMediaOptions, int? userId, int? projectId)
+        public Result<bool> AddMedia(IEnumerable<CreateMediaOptions> createMediaOptions, int? userId, int? projectId)
         {
             if (createMediaOptions == null
                 || projectId == null
@@ -429,13 +429,16 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-
-            var media = _mediaService.CreateMedia(createMediaOptions);
-
-            if (media != null)
+            foreach (var option in createMediaOptions)
             {
-                project.Data.Medias.Add(media);
+                var media = _mediaService.CreateMedia(option).Data;
+                
+                if (media != null)
+                {
+                    project.Data.Medias.Add(media);
+                }
             }
+            
 
             var rows = 0;
 
@@ -447,8 +450,9 @@ namespace Crowdfund.Core.Services
             {
                 return Result<bool>.Failed(StatusCode.InternalServerError, ex.Message);
             }
-            return rows <= 0 ?
-                Result<bool>.Failed(StatusCode.InternalServerError, "Media Could Not Be Created")
+
+            return rows <= 0
+                ? Result<bool>.Failed(StatusCode.InternalServerError, "Media Could Not Be Created")
                 : Result<bool>.Succeed(true);
         }
 

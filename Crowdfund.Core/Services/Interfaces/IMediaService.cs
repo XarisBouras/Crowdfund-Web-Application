@@ -5,7 +5,7 @@ namespace Crowdfund.Core.Services.Interfaces
 {
     public interface IMediaService
     {
-        Media CreateMedia(CreateMediaOptions options);
+        Result<Media> CreateMedia(CreateMediaOptions options);
         bool DeleteMedia(Media media);
     }
 }
