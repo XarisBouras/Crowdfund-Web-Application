@@ -16,9 +16,9 @@ namespace Crowdfund.Core.Services.Interfaces
         
         Result<Project> GetSingleProject(int? id);
 
-        Result<IEnumerable<Project>>  GetAllProjects();
+        Result<IEnumerable<Project>> GetAllProjects();
 
-         Result<bool> UpdateProject(UpdateProjectOptions updateProjectOptions);
+        Result<bool> UpdateProject(int? userId, int? projectId, UpdateProjectOptions updateProjectOptions);
 
         IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions);
 

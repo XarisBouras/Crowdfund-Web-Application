@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Crowdfund.Core.Data;
 using Crowdfund.Core.Services;
 using Crowdfund.Core.Services.Interfaces;
+using Crowdfund.Core.Services.Options.BackingOptions;
 using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.AllProjects;
+using Crowdfund.Web.Models.ProjectModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +21,7 @@ namespace Crowdfund.Web.Controllers
 
         private readonly IProjectService _projectService;
         private readonly IBackingService _backingService;
+
         //private readonly DataContext _context;
         /*private readonly IUserService _userService;
         private readonly IRewardService _rewardService;
@@ -41,16 +44,49 @@ namespace Crowdfund.Web.Controllers
         [HttpGet("{id}")]
         public IActionResult Details(int id)
         {
+            var project = _projectService.GetProjectById(id);
 
-            var viewModel = _projectService.GetProjectById(id);
-            if (!viewModel.Success)
+            if (!project.Success)
             {
-                return StatusCode((int)viewModel.ErrorCode,
-                    viewModel.ErrorText);
+                return StatusCode((int)project.ErrorCode,
+                    project.ErrorText);
             }
-            ViewBag.Message = HttpContext.Session.GetString("Test");
-            return View(viewModel.Data);
+
+            var projectToView = new DetailsViewModel()
+            {
+                ProjectId = project.Data.ProjectId,
+                Title = project.Data.Title,
+                Description = project.Data.Description,
+                category = project.Data.Category,
+                DaysToGo = (project.Data.DueTo - DateTime.Now).Days,
+                Goal = project.Data.Goal,
+                MainImageUrl = project.Data.MainImageUrl,
+                Medias = project.Data.Medias,
+                Posts = project.Data.Posts,
+                RewardPackages = project.Data.RewardPackages,
+                Backers = _backingService.GetProjectBackingsCount(id).Data,
+                BackingsAmount = _backingService.GetProjectBackingsAmount(id).Data,
+                InterestingProjects = _projectService.GetAllProjects().Data.Where(p => p.ProjectId != id).Take(3)
+            };
+            
+            return View(projectToView);
+
         }
+
+        [HttpPost]
+        public IActionResult Back([FromBody] CreateBackingOptions options)
+        {
+            var backResult = _backingService.CreateBacking(Globals.UserId, options.ProjectId,
+                options.RewardPackageId, options.Amount);
+            if(!backResult.Success)
+            {
+                return StatusCode((int)backResult.ErrorCode,
+                    backResult.ErrorText);
+            }
+
+            return Json(backResult.Data);
+        }
+
         [HttpGet]
         public IActionResult All()
         {
@@ -73,7 +109,7 @@ namespace Crowdfund.Web.Controllers
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100, 2)
-            }) ;
+            });
 
             return View(projectsToView);
 

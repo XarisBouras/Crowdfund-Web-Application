@@ -20,19 +20,14 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="~/img/future.jpg" alt="Card image cap">
+                        <img class="card-img-top" src="~/@pr.MainImageUrl" alt="Card image cap">
                         <div class="card-body">
-                            <h2 class="text-center mb-2">@pr.Title</h2>
+                            <h3 class="text-center mb-2">@pr.Title</h3>
                             <div class="text-center mb-2">
                                 <small class="text-muted">@pr.DueTo days to go</small>
                             </div>
-                            <p class="card-text">
-
-                            </p>
                             <div class="progress mb-5">
-                                <div class="progress-bar bg-success font-weight-bold" style="width: @pr.Progress %; height: 1rem;">
-                                </div>
-                                <p>@pr.Progress%</p>
+                                <div class="progress-bar bg-success " role="progressbar" aria-valuenow="@pr.Progress" aria-valuemin="0" aria-valuemax="100" style="width:@pr.Progress%" >@pr.Progress%</div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>

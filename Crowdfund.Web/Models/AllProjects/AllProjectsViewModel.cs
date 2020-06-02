@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crowdfund.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,4 +25,5 @@ namespace Crowdfund.Web.Models.AllProjects
         public decimal BackingsAmount { get; set; }
         public decimal Progress { get; set; }
     }
+        
 }

@@ -29,13 +29,14 @@ a:active, a:focus {
   letter-spacing: .1rem;
 }
 
-.img-project {
-  
-  object-fit: cover;
-  max-height:600px;
-  max-width:400px;
+.card-img-top {
+    width: 100%;
+    height: 40vh;
+    object-fit: cover;
 }
-
+.card-text {
+    text-align: justify;
+}
 
 .container {
     margin-top: 6rem;
@@ -64,10 +65,10 @@ a:active, a:focus {
   width: 100% !important;
 }
 
-.card{
-  width: fit-content;
-  box-sizing: border-box;
-
+.card {
+    max-width: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
 }
 
 .card-header{
@@ -85,7 +86,6 @@ a:active, a:focus {
 
 .vertical-center {
   min-height: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: center;

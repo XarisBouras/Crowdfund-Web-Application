@@ -2,9 +2,13 @@ using System;
 using System.Linq;
 using Crowdfund.Core.Models;
 using Crowdfund.Core.Services.Interfaces;
+using Crowdfund.Core.Services.Options.PostOptions;
 using Crowdfund.Core.Services.Options.ProjectOptions;
+using Crowdfund.Core.Services.Options.UserOptions;
+using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.Dashboard;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace Crowdfund.Web.Controllers
 {
@@ -13,51 +17,115 @@ namespace Crowdfund.Web.Controllers
     {
         private readonly IBackingService _backingService;
         private readonly IProjectService _projectService;
+        private readonly IUserService _userService;
 
-        public DashboardController(IBackingService backingService, IProjectService projectService)
+        public DashboardController(IBackingService backingService,
+            IProjectService projectService, IUserService userService)
         {
             _backingService = backingService;
             _projectService = projectService;
+            _userService = userService;
         }
-        // GET
+
+        // GET Dashboard/User/1
         [HttpGet("{id}")]
         public IActionResult Index(int id)
         {
             var projects = _backingService.GetUserProjects(id);
-            
+
             if (!projects.Success)
             {
-                return StatusCode((int)projects.ErrorCode,
+                return StatusCode((int) projects.ErrorCode,
                     projects.ErrorText);
             }
 
-            var projectsToView = projects.Data.Select(p => new DashboardViewModel
+            var projectsToView = projects.Data.Select(p => new ProjectViewModel
             {
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
-                DueTo = (p.DueTo - DateTime.Now).Days,
+                DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal
             });
-            
+
             return View(projectsToView);
         }
 
         [HttpGet]
+        [Route("project/create")]
         public IActionResult CreateProject()
         {
-            ViewBag.Categories = (Category []) Enum.GetValues(typeof(Category));
+            ViewBag.Categories = (Category[]) Enum.GetValues(typeof(Category));
             return View();
         }
 
-
         [HttpPost]
+        [Route("project/create")]
         public IActionResult CreateProject(CreateProjectOptions options)
         {
             var result = _projectService.CreateProject(Globals.UserId, options);
+
+            if (!result.Success)
+            {
+                return StatusCode((int) result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("Index", new {id = Globals.UserId});
+
+            //return Ok(result.Data);
+        }
+
+        [HttpGet("post/project/{id}")]
+        public IActionResult CreatePost(int id)
+        {
+            var projectTitle = _projectService.GetSingleProject(id).Data.Title;
+            var createPostViewModel = new CreatePostViewModel
+            {
+                ProjectId = id,
+                ProjectTitle = projectTitle
+            };
+            
+            return View(createPostViewModel);
+        }
+        
+        [HttpPost]
+        [Route("post/project/{id}")]
+        public IActionResult CreatePost(CreatePostFormOptions options)
+        {
+            var postOptions = new CreatePostOptions
+            {
+                Title = options.Title,
+                Text = options.Text
+            };
+            
+            var result = _projectService.AddPost(postOptions, Globals.UserId, options.ProjectId);
+            
+            if (!result.Success)
+            {
+                return StatusCode((int) result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("CreatePost", options.ProjectId);
+        }
+
+        [HttpGet]
+        [Route("edit/{id}")]
+        public IActionResult UpdateUser(int id)
+        {
+            var user = _userService.GetUserById(id);
+            return View(user);
+        }
+
+        [HttpPost]
+        [Route("edit/{id}")]
+        public IActionResult UpdateUser(UpdateUserOptions options)
+        {
+            var result = _userService.UpdateUser(Globals.UserId, options);
 
             if (!result.Success)
             {
@@ -65,10 +133,42 @@ namespace Crowdfund.Web.Controllers
                     result.ErrorText);
             }
 
-            return RedirectToAction("Index", new {id = Globals.UserId});
+            return RedirectToAction("Index", new { id = Globals.UserId });
+        }
 
-            //return Ok(result.Data);
+        [HttpGet]
+        [Route("project/edit/{id}")]
+        public IActionResult UpdateProject(int id)
+        {
+            var project = _projectService.GetSingleProject(id).Data;
+           
+            return View(project);
+        }
 
+        [HttpPost]
+        [Route("project/edit/{id}")]
+        public IActionResult UpdateProject(UpdateProjectFormOptions options)
+        {
+            var editProjectOptions = new UpdateProjectOptions()
+            {
+                ProjectId = options.ProjectId,
+                Title = options.Title,
+                Description = options.Description,
+                MainImageUrl = options.MainImageUrl,
+                DueTo = options.DueTo,
+                Goal = options.Goal
+            };
+
+            var result = _projectService.UpdateProject
+                (Globals.UserId, editProjectOptions.ProjectId, editProjectOptions);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("UpdateProject", options.ProjectId);
         }
     }
 }

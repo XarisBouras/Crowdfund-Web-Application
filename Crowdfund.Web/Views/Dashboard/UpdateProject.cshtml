@@ -1,0 +1,61 @@
+﻿@model Crowdfund.Core.Models.Project
+@{
+    ViewData["Title"] = "UpdateProject";
+}
+
+<div class="container updateproject-container">
+
+    <!-- Project Title & Foto-->
+    <div class="row">
+        <div class="col col-md-3">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <a asp-controller="Dashboard" asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-warning mb-4 w-100">
+                        Back
+                    </a>
+                    <button class="btn btn-sm btn-secondary mb-4 w-100">
+                        Backed Projects
+                    </button>
+                    <a asp-controller="Dashboard" asp-action="UpdateUser" asp-route-id="@Globals.UserId" class="btn btn-lg btn-info mb-4 w-100">
+                        Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col col-md-9">
+            <div class="card w-100 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Edit your Project: @Model.Title</h5>
+                    <form method="post">
+                        <div class="form-group">
+                            <input type="hidden" name="projectId" value="@Model.ProjectId" />
+                            <label for="title">Title</label>
+                            <input type="text" name="@Html.NameFor(nm => nm.Title)" class="form-control" id="title" value="@Model.Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" rows="3" name="@Html.NameFor(nm => nm.Description)" id="description" >@Model.Description</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="mainImageUrl">Main Image URL</label>
+                            <input type="text" name="@Html.NameFor(nm => nm.MainImageUrl)" class="form-control" id="mainImageUrl" value="@Model.MainImageUrl">
+                        </div>
+                        <div class="form-group">
+                            <label for="dueTo">Due To</label>
+                            <input type="date" name="@Html.NameFor(nm => nm.DueTo)" class="form-control" id="dueTo" value="@Model.DueTo.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="form-group">
+                            <label for="goal">Goal</label>
+                            <input type="number" name="@Html.NameFor(nm => nm.Goal)" class="form-control" id="goal" value="@Model.Goal.ToString("0,00")"> 
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-warning">Save</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

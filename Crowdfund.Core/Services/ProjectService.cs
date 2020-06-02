@@ -145,14 +145,14 @@ namespace Crowdfund.Core.Services
             }
         }
 
-        public Result<bool> UpdateProject(UpdateProjectOptions updateProjectOptions)
+        public Result<bool> UpdateProject(int? userId, int? projectId, UpdateProjectOptions updateProjectOptions)
         {
-            if (updateProjectOptions?.ProjectId == null || updateProjectOptions.UserId == null)
+            if (projectId == null || userId == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
 
-            var project = GetProjectById(updateProjectOptions.ProjectId);
+            var project = GetProjectById(projectId);
 
             if (project == null)
             {
@@ -160,7 +160,7 @@ namespace Crowdfund.Core.Services
                     " you can find plenty of other things in our homepage");
             }
 
-            if (Helpers.UserOwnsProject(_context, updateProjectOptions.UserId, updateProjectOptions.ProjectId) == false)
+            if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
@@ -168,6 +168,11 @@ namespace Crowdfund.Core.Services
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.Description))
             {
                 project.Data.Description = updateProjectOptions.Description;
+            }
+
+            if (!string.IsNullOrWhiteSpace(updateProjectOptions.MainImageUrl))
+            {
+                project.Data.MainImageUrl = updateProjectOptions.MainImageUrl;
             }
 
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.Title))
