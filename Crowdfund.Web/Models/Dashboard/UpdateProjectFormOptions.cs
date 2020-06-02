@@ -16,6 +16,6 @@ namespace Crowdfund.Web.Models.Dashboard
 
         public DateTime DueTo { get; set; }
 
-        public decimal Goal { get; set; }
+        public int Goal { get; set; }
     }
 }

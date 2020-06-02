@@ -20,7 +20,7 @@ namespace Crowdfund.Core.Models
         
         public bool IsOwner { get; set; }
         
-        public decimal? Amount { get; set; }
+        public int? Amount { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

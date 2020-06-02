@@ -9,7 +9,7 @@
                     <a asp-controller="Dashboard" asp-action="CreateProject" class="btn btn-lg btn-warning mb-4 w-100">
                         Create Project
                     </a>
-                    <a asp-controller="Dashboard" asp-action="BackedProjects" asp-route-id="@Globals.UserId" class="btn btn-sm btn-secondary mb-4 w-100">Backed Projects</a>
+                    <a asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-sm btn-success mb-4 w-100">Your Projects</a>
                     <a asp-controller="Dashboard" asp-action="UpdateUser" asp-route-id="@Globals.UserId" class="btn btn-lg btn-info mb-4 w-100">
                         Profile
                     </a>
@@ -21,13 +21,13 @@
         <div class="col col-md-9">
             <div class="card w-100 h-100 scroll">
                 <div class="card-body">
-                    <h5 class="card-title">Your Projects</h5>
+                <h5 class="card-title">Projects you have backed</h5>
                     @foreach (var p in Model)
                     {
                         <div class="card mb-3 w-100">
                             <div class="row no-gutters">
                                 <div class="col-md-4">
-                                    <img src="@p.MainImageUrl" class="card-img h-100" alt="imageUrl">
+                                    <img src="@p.MainImageUrl" class="card-img img-thumbnail" alt="...">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -44,7 +44,7 @@
                                             Your progress:
                                         </p>
                                         <div class="progress mb-2">
-                                            <div class="progress-bar bg-success font-weight-bold" style="width:@p.Progress%; height: 1rem;" aria-valuenow="@p.Progress%">
+                                            <div class="progress-bar bg-success font-weight-bold" style="width:@p.Progress%; height: 1rem;" aria-valuenow="@p.Progress">
                                                 @p.Progress%
                                             </div>
                                         </div>
@@ -53,13 +53,7 @@
                                         <p class="card-text">
                                             <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
                                             <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
-                                        </p>
-
-                                        <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
-                                        <a asp-action="AddVideos" asp-route-id="@p.ProjectId" class="btn btn-sm btn-danger">Videos</a>
-                                        <a asp-action="AddImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
-                                        <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info">Add Reward</a>
-                                        <a asp-action="UpdateProject" asp-route-id="@p.ProjectId" class="btn btn-sm btn-secondary">Edit</a>
+                                        </p>         
                                     </div>
                                 </div>
                             </div>

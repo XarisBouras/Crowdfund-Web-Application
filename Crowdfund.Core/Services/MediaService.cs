@@ -16,42 +16,41 @@ namespace Crowdfund.Core.Services
             _context = context;
         }
 
-        public Media CreateMedia(CreateMediaOptions options)
+        public Result<Media> CreateMedia(CreateMediaOptions options)
         {
-            if (options == null || !Enum.IsDefined(typeof(MediaType), options.MediaTypeId) ||
-                string.IsNullOrWhiteSpace(options.MediaUrl))
+            options.MediaUrl = options.MediaUrl?.Trim();
+            if (string.IsNullOrWhiteSpace(options.MediaUrl))
             {
-                return null;
+                return Result<Media>.Failed(StatusCode.BadRequest, "Empty media URL");
+            }
+
+            var url = options.MediaUrl.Trim();
+
+            if (options.MediaType == (MediaType) MediaType.Video)
+            {
+                if (!url.Contains("youtube.com"))
+                {
+                    return Result<Media>.Failed(StatusCode.BadRequest, "Only youtube videos supported");
+                }
+            }
+            
+            if (options.MediaType == (MediaType) MediaType.Photo)
+            {
+                if (!url.Contains(".png") && !url.Contains(".jpg") && !url.Contains(".jpeg") && !url.Contains(".gif"))
+                {
+                    return Result<Media>.Failed(StatusCode.BadRequest, "Unsupported image type");
+                }
             }
 
             var media = new Media
             {
-                MediaType = (MediaType) options.MediaTypeId
+                MediaUrl = url,
+                MediaType = options.MediaType
             };
-            
-            var urlChecking = options.MediaUrl;
-            
-            if (media.MediaType == (MediaType) MediaType.Video)
-            {
-                urlChecking = urlChecking.Trim();
-                if (urlChecking.Contains("youtube.com"))
-                {
-                    media.MediaUrl = urlChecking;
-                    Console.WriteLine("valid Video");
-                }
-                else
-                {
-                    Console.WriteLine("Not valid Video");
-                    return null;
-                }
-            }
-            else
-            {
-                media.MediaUrl = urlChecking;
-                Console.WriteLine("Image");
-            }
 
-            return media;
+            _context.Add(media);
+
+            return Result<Media>.Succeed(media);
         }
 
         public bool DeleteMedia(Media mediaToDelete)

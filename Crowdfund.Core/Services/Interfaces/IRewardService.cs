@@ -5,7 +5,7 @@ namespace Crowdfund.Core.Services.Interfaces
 {
     public interface IRewardService
     {
-        RewardPackage CreateRewardPackage(CreateRewardPackageOptions createRewardPackageOptions);
+        Result<RewardPackage> CreateRewardPackage(CreateRewardPackageOptions createRewardPackageOptions);
 
         RewardPackage UpdateRewardPackage(RewardPackage rewardPackage ,UpdateRewardPackageOptions updateRewardPackageOptions);
 

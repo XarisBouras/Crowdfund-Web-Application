@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Crowdfund.Web.Models.ProjectModel
+namespace Crowdfund.Web.Models
 {
     public class DetailsViewModel
     {
@@ -20,11 +20,13 @@ namespace Crowdfund.Web.Models.ProjectModel
 
         public decimal Goal { get; set; }
 
-        public Category category { get; set; }
+        public Category Category { get; set; }
 
         public int Backers { get; set; }
 
         public decimal BackingsAmount { get; set; }
+        public int Progress { get; set; }
+        public bool IsFirstImage { get; set; } 
         public IList<RewardPackage> RewardPackages { get; set; }
 
         public IList<Post> Posts { get; set; }
@@ -37,7 +39,7 @@ namespace Crowdfund.Web.Models.ProjectModel
         {
             RewardPackages = new List<RewardPackage>();
             Posts = new List<Post>();
-            Medias = new List<Media>();           
+            Medias = new List<Media>();
         }
     }
 }

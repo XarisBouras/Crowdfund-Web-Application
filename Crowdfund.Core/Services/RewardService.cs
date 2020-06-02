@@ -14,45 +14,56 @@ namespace Crowdfund.Core.Services
             _context = context;
         }
 
-        public RewardPackage CreateRewardPackage(CreateRewardPackageOptions createRewardOptions)
+        public Result<RewardPackage> CreateRewardPackage(CreateRewardPackageOptions options)
         {
-            var reward = new RewardPackage()
+            options.Title = options.Title?.Trim();
+            options.Description = options.Description?.Trim();
+            
+            if (string.IsNullOrWhiteSpace(options.Title) || options.Quantity < 0 || options.MinAmount <= 0)
             {
-                Title = createRewardOptions.Title,
-                Description = createRewardOptions.Description,
-                MinAmount = createRewardOptions.MinAmount!.Value,
-                Quantity = createRewardOptions.Quantity
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Options Not Valid");
+            }
+            
+            var reward = new RewardPackage
+            {
+                Title = options.Title,
+                Description = options.Description,
+                MinAmount = options.MinAmount,
+                Quantity = options.Quantity
             };
 
-            return reward;
+            return Result<RewardPackage>.Succeed(reward);
         }
        
-        public RewardPackage UpdateRewardPackage(RewardPackage packageToUpdate ,UpdateRewardPackageOptions updateRewardOptions)
+        public RewardPackage UpdateRewardPackage(RewardPackage packageToUpdate ,UpdateRewardPackageOptions options)
         {
-            if (packageToUpdate == null)
+            
+            options.Title = options.Title?.Trim();
+            options.Description = options.Description?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(options.Title))
             {
-                return null;
+                packageToUpdate.Title = options.Title;
             }
 
-            if (!string.IsNullOrWhiteSpace(updateRewardOptions.Title))
+            if (!string.IsNullOrWhiteSpace(options.Description))
             {
-                packageToUpdate.Title = updateRewardOptions.Title;
+                packageToUpdate.Description = options.Description;
             }
 
-            if (!string.IsNullOrWhiteSpace(updateRewardOptions.Description))
+            if (options.Quantity != null)
             {
-                packageToUpdate.Description = updateRewardOptions.Description;
+                packageToUpdate.Quantity = options.Quantity;
             }
 
-            if (updateRewardOptions.Quantity != null)
+            if (options.MinAmount != null || options.MinAmount <= 0)
             {
-                packageToUpdate.Quantity = updateRewardOptions.Quantity;
+                packageToUpdate.MinAmount = options.MinAmount.Value;
             }
-
-            if (updateRewardOptions.MinAmount != null)
-            {
-                packageToUpdate.MinAmount = updateRewardOptions.MinAmount.Value;
-            }
+            //if (options.MinAmount <= 0)
+            //{
+            //    return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Date");
+            //}
 
             return packageToUpdate;
         }
@@ -66,12 +77,7 @@ namespace Crowdfund.Core.Services
 
         public RewardPackage GetRewardPackageById(int? packageId)
         {
-            if (packageId == null)
-            {
-                return null;
-            }
-
-            return _context.Set<RewardPackage>().Find(packageId);
+            return packageId == null ? null : _context.Set<RewardPackage>().Find(packageId);
         }
     }
 }

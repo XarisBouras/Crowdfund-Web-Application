@@ -24,11 +24,12 @@
                           type="button" value="ALL" data-toggle="dropdown" aria-haspopup="true"
                           aria-expanded="false">ALL</button>
                        <div id="search-dropdown" class="dropdown-menu">
-                          <a class="dropdown-item" href="#">BLOG</a>
-                          <a class="dropdown-item" href="#">DOCS</a>
-                          <a class="dropdown-item" href="#">FORUM</a>
-                          <div role="separator" class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">ALL</a>
+                           @foreach (var category in Globals.Categories)
+                           {
+                                <a class="dropdown-item" href="/">@category</a>
+                           }
+                           <div role="separator" class="dropdown-divider"></div>
+                           <a class="dropdown-item" asp-controller="Project" asp-action="All">ALL</a>
                        </div>
                     </div>
                     <input type="search" class="form-control" placeholder="Search..." aria-label="Search"
@@ -42,7 +43,7 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                  <ul class="navbar-nav">
                     <li class="nav-item mr-2">
-                       <a class="nav-link" href="/project">Projects</a>
+                       <a class="nav-link" asp-controller="Project" asp-action="All">Projects</a>
                     </li>
                     <li class="nav-item">
                         

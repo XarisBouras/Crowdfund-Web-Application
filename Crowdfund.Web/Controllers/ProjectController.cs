@@ -8,7 +8,7 @@ using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.BackingOptions;
 using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.AllProjects;
-using Crowdfund.Web.Models.ProjectModel;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,23 +52,26 @@ namespace Crowdfund.Web.Controllers
                     project.ErrorText);
             }
 
-            var projectToView = new DetailsViewModel()
+            var projectToView = new DetailsViewModel
             {
                 ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,
                 Description = project.Data.Description,
-                category = project.Data.Category,
+                Category = project.Data.Category,
                 DaysToGo = (project.Data.DueTo - DateTime.Now).Days,
                 Goal = project.Data.Goal,
                 MainImageUrl = project.Data.MainImageUrl,
                 Medias = project.Data.Medias,
                 Posts = project.Data.Posts,
                 RewardPackages = project.Data.RewardPackages,
+                IsFirstImage = true,
                 Backers = _backingService.GetProjectBackingsCount(id).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(id).Data,
+                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(id).Data / project.Data.Goal) * 100),
                 InterestingProjects = _projectService.GetAllProjects().Data.Where(p => p.ProjectId != id).Take(3)
             };
-            
+
+
             return View(projectToView);
 
         }
@@ -108,7 +111,7 @@ namespace Crowdfund.Web.Controllers
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100, 2)
+                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100)
             });
 
             return View(projectsToView);

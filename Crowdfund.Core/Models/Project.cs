@@ -15,7 +15,7 @@ namespace Crowdfund.Core.Models
         
         public string MainImageUrl { get; set; }
         
-        public decimal Goal { get; set; }
+        public int Goal { get; set; }
         
         public IList<RewardPackage> RewardPackages { get; set; }
         

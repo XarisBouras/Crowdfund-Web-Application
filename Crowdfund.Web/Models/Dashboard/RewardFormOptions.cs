@@ -1,8 +1,11 @@
-namespace Crowdfund.Core.Services.Options.RewardPackageOptions
+namespace Crowdfund.Web.Models.Dashboard
 {
-    public class CreateRewardPackageOptions
+    public class RewardFormOptions
     {
+        public int? ProjectId { get; set; }
+        
         public string Title { get; set; }
+
         public string Description { get; set; }
 
         public int MinAmount { get; set; }

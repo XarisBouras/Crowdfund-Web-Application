@@ -21,9 +21,9 @@ namespace Crowdfund.Core.Services
             _projectService = projectService;
         }
 
-        public Result<bool> CreateBacking(int? userId, int? projectId, int rewardPackageId, decimal amount)
+        public Result<bool> CreateBacking(int? userId, int? projectId, int rewardPackageId, int? amount)
         {
-            if (userId == null || projectId == null) return Result<bool>.Failed(StatusCode.BadRequest, "Null options");
+            if (userId == null || projectId == null || amount == null || amount <= 0) return Result<bool>.Failed(StatusCode.BadRequest, "Null options");
 
             var user = _userService.GetUserById(userId);
             var project = _projectService.GetProjectById(projectId);

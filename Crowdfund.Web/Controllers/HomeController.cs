@@ -48,7 +48,7 @@ namespace Crowdfund.Web.Controllers
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100, 2)
+                Progress =(int) Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100)
             });
 
             return View(trendingProjectsToView);
