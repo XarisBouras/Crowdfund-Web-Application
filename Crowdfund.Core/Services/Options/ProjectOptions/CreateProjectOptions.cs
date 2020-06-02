@@ -4,7 +4,6 @@ namespace Crowdfund.Core.Services.Options.ProjectOptions
 {
     public class CreateProjectOptions
     {
-        public int UserId { get; set; }
         public string Title { get; set; }
 
         public string Description { get; set; }

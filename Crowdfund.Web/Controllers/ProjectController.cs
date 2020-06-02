@@ -51,7 +51,7 @@ namespace Crowdfund.Web.Controllers
                     project.ErrorText);
             }
 
-            var projectToView = new DetailsViewModel()
+            var projectToView = new DetailsViewModel
             {
                 ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,

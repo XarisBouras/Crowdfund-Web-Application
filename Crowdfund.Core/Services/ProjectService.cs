@@ -32,12 +32,16 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> CreateProject(int? userId, CreateProjectOptions createProjectOptions)
         {
-            if (createProjectOptions == null || userId == null
-                                             || string.IsNullOrWhiteSpace(createProjectOptions.MainImageUrl)
-                                             || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId)
-                                             || createProjectOptions.Goal <= 0
-                                             || string.IsNullOrWhiteSpace(createProjectOptions.Title)
-                                             || createProjectOptions.DueTo == null)
+            createProjectOptions.MainImageUrl = createProjectOptions.MainImageUrl?.Trim();
+            createProjectOptions.Title = createProjectOptions.Title?.Trim();
+            createProjectOptions.Description = createProjectOptions.Description?.Trim();
+
+            if (userId == null
+                || string.IsNullOrWhiteSpace(createProjectOptions.MainImageUrl)
+                || !Enum.IsDefined(typeof(Category), createProjectOptions.CategoryId)
+                || createProjectOptions.Goal <= 0
+                || string.IsNullOrWhiteSpace(createProjectOptions.Title)
+                || createProjectOptions.DueTo == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
@@ -195,10 +199,7 @@ namespace Crowdfund.Core.Services
 
         public IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions)
         {
-            if (searchProjectOptions == null)
-            {
-                return null;
-            }
+            searchProjectOptions.SearchString = searchProjectOptions.SearchString?.Trim();
 
             var query = _context
                 .Set<Project>()
@@ -226,12 +227,11 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "User Or Project Not Specified");
             }
 
-            var project = GetProjectById(projectId);
+            var project = GetSingleProject(projectId);
 
-            if (project == null)
+            if (!project.Success)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(project.ErrorCode, project.ErrorText);
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
@@ -239,7 +239,7 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            _context.Remove(project);
+            _context.Remove(project.Data);
 
             var rows = 0;
 
@@ -260,8 +260,7 @@ namespace Crowdfund.Core.Services
         public Result<bool> AddRewardPackage(int? projectId, int? userId,
             CreateRewardPackageOptions createRewardOptions)
         {
-            if (projectId == null || userId == null || createRewardOptions.Quantity < 0 ||
-                createRewardOptions.MinAmount <= 0 || createRewardOptions.MinAmount == null)
+            if (projectId == null || userId == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
                     "Project or User Not Specified. Reward Package Options Not Valid");
@@ -287,11 +286,16 @@ namespace Crowdfund.Core.Services
             }
 
 
-            var reward = _rewardService.CreateRewardPackage(createRewardOptions);
+            var rewardResult = _rewardService.CreateRewardPackage(createRewardOptions);
 
-            if (reward != null)
+            if (rewardResult.Success)
             {
-                project.Data.RewardPackages.Add(reward);
+                project.Data.RewardPackages.Add(rewardResult.Data);
+            }
+            else
+            {
+                return Result<bool>.Failed(StatusCode.BadRequest,
+                    "Invalid Reward Package options");
             }
 
             var rows = 0;
@@ -313,8 +317,7 @@ namespace Crowdfund.Core.Services
         public Result<bool> UpdateRewardPackage(int? projectId, int? userId, int? rewardPackageId,
             UpdateRewardPackageOptions updateRewardOptions)
         {
-            if (updateRewardOptions == null
-                || projectId == null
+            if (projectId == null
                 || userId == null
                 || rewardPackageId == null
                 || updateRewardOptions.Quantity < 0
@@ -426,8 +429,7 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> AddMedia(IEnumerable<CreateMediaOptions> createMediaOptions, int? userId, int? projectId)
         {
-            if (createMediaOptions == null
-                || projectId == null
+            if (projectId == null
                 || userId == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
@@ -443,16 +445,17 @@ namespace Crowdfund.Core.Services
             foreach (var option in createMediaOptions)
             {
                 var mediaResult = _mediaService.CreateMedia(option);
+
                 if (mediaResult.Success)
                 {
-                    var media = _mediaService.CreateMedia(option).Data;
-                    project.Data.Medias.Add(media);
+                    project.Data.Medias.Add(mediaResult.Data);
                 }
                 else
                 {
                     return Result<bool>.Failed(mediaResult.ErrorCode, mediaResult.ErrorText);
                 }
             }
+
 
             var rows = 0;
 
@@ -501,9 +504,7 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> AddPost(CreatePostOptions createPostOptions, int? userId, int? projectId)
         {
-            if (createPostOptions == null
-                || projectId == null
-                || userId == null)
+            if (projectId == null || userId == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
@@ -541,9 +542,9 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions)
         {
-            if (updatePostOptions == null || postId == null
-                                          || projectId == null
-                                          || userId == null)
+            if (postId == null
+                || projectId == null
+                || userId == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }

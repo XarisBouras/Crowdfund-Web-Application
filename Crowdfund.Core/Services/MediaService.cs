@@ -18,9 +18,10 @@ namespace Crowdfund.Core.Services
 
         public Result<Media> CreateMedia(CreateMediaOptions options)
         {
-            if (options == null || string.IsNullOrWhiteSpace(options.MediaUrl))
+            options.MediaUrl = options.MediaUrl?.Trim();
+            if (string.IsNullOrWhiteSpace(options.MediaUrl))
             {
-                return null;
+                return Result<Media>.Failed(StatusCode.BadRequest, "Empty media URL");
             }
 
             var url = options.MediaUrl.Trim();
@@ -32,14 +33,14 @@ namespace Crowdfund.Core.Services
                     return Result<Media>.Failed(StatusCode.BadRequest, "Only youtube videos supported");
                 }
             }
-            else
+            
+            if (options.MediaType == (MediaType) MediaType.Photo)
             {
                 if (!url.Contains(".png") && !url.Contains(".jpg") && !url.Contains(".jpeg") && !url.Contains(".gif"))
                 {
                     return Result<Media>.Failed(StatusCode.BadRequest, "Unsupported image type");
                 }
             }
-
 
             var media = new Media
             {
@@ -49,20 +50,7 @@ namespace Crowdfund.Core.Services
 
             _context.Add(media);
 
-            var rows = 0;
-
-            try
-            {
-                rows = _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                return Result<Media>.Failed(StatusCode.InternalServerError, ex.Message);
-            }
-
-            return rows <= 0
-                ? Result<Media>.Failed(StatusCode.InternalServerError, "Media Could Not Be Created")
-                : Result<Media>.Succeed(media);
+            return Result<Media>.Succeed(media);
         }
 
         public bool DeleteMedia(Media mediaToDelete)

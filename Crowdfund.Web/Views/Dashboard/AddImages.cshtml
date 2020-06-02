@@ -31,7 +31,6 @@
                             <form method="post">
                                 <div id="inputFormRow">
                                     <div class="input-group mb-3">
-                                        <input type="hidden" name="projectId" value="@Model.ProjectId"/>
                                         <input type="text" name="url[]" class="form-control m-input" placeholder="Enter URL">
                                         <div class="input-group-append">
                                             <button id="removeRow" type="button" class="btn btn-danger">Remove</button>
@@ -39,6 +38,7 @@
                                     </div>
                                 </div>
                                 <div id="newRow"></div>
+                                <input type="hidden" name="projectId" value="@Model.ProjectId"/>
                                 <button type="submit" class="btn btn-lg btn-warning">Save Images</button>
                             </form>
                         </div>
