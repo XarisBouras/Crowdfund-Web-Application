@@ -37,15 +37,15 @@
                                                 <p class="card-text">
                                                     <small>@p.DaysToGo days to go</small>
                                                 </p>
-                                                <button class="btn btn-warning">View</button>
+                                                <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-warning">View</a>
                                             </div>
                                         </div>
                                         <p class="card-text">
                                             Your progress:
                                         </p>
                                         <div class="progress mb-2">
-                                            <div class="progress-bar bg-success font-weight-bold" style="width:50%; height: 1rem;">
-                                                50%
+                                            <div class="progress-bar bg-success font-weight-bold" style="width:@p.Progress%; height: 1rem;" aria-valuenow="@p.Progress">
+                                                @p.Progress%
                                             </div>
                                         </div>
 
@@ -53,13 +53,7 @@
                                         <p class="card-text">
                                             <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@p.BackingsAmount / @p.Goal $</span>
                                             <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
-                                        </p>
-
-                                        <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
-                                        <button type="button" class="btn btn-sm btn-danger">Videos</button>
-                                        <a asp-action="AddImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
-                                        <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info">Add Reward</a>
-                                        <a asp-controller="Project" asp-action="Details" asp-route-id="@p.ProjectId" class="btn btn-sm btn-warning">Edit</a>
+                                        </p>         
                                     </div>
                                 </div>
                             </div>

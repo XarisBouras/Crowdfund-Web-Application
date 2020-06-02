@@ -171,6 +171,11 @@ namespace Crowdfund.Core.Services
                 project.Data.Title = updateProjectOptions.Title;
             }
 
+            if (!string.IsNullOrWhiteSpace(updateProjectOptions.MainImageUrl))
+            {
+                project.Data.MainImageUrl = updateProjectOptions.MainImageUrl;
+            }
+
             if (updateProjectOptions.DueTo != null)
             {
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;

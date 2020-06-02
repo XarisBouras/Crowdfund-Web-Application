@@ -29,222 +29,238 @@ namespace Crowdfund.Web.Controllers
             _userService = userService;
         }
 
-                [HttpGet("{id}")]
-                public IActionResult Index(int id)
-                {
-                    var projects = _backingService.GetUserProjects(id);
-        
-                    if (!projects.Success)
-                    {
-                        return StatusCode((int) projects.ErrorCode,
-                            projects.ErrorText);
-                    }
-        
-                    var projectsToView = projects.Data.Select(p => new ProjectViewModel
-                    {
-                        ProjectId = p.ProjectId,
-                        Title = p.Title,
-                        Description = p.Description,
-                        MainImageUrl = p.MainImageUrl,
-                        DaysToGo = (p.DueTo - DateTime.Now).Days,
-                        Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                        BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
-                        Goal = p.Goal
-                    });
-        
-                    return View(projectsToView);
-                }
-                
-                [HttpGet("{id}/backed")]
-                public IActionResult BackedProjects(int id)
-                {
-                    var projects = _backingService.GetBackedProjects(id);
-        
-                    if (!projects.Success)
-                    {
-                        return StatusCode((int) projects.ErrorCode,
-                            projects.ErrorText);
-                    }
-        
-                    var projectsToView = projects.Data.Select(p => new ProjectViewModel
-                    {
-                        ProjectId = p.ProjectId,
-                        Title = p.Title,
-                        Description = p.Description,
-                        MainImageUrl = p.MainImageUrl,
-                        DaysToGo = (p.DueTo - DateTime.Now).Days,
-                        Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                        BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
-                        Goal = p.Goal
-                    });
-        
-                    return View(projectsToView);
-                }
-        
-                [HttpGet]
-                [Route("project/create")]
-                public IActionResult CreateProject()
-                {
-                    ViewBag.Categories = (Category[]) Enum.GetValues(typeof(Category));
-                    return View();
-                }
-        
-                [HttpPost]
-                [Route("project/create")]
-                public IActionResult CreateProject(CreateProjectOptions options)
-                {
-                    var result = _projectService.CreateProject(Globals.UserId, options);
-        
-                    if (!result.Success)
-                    {
-                        return StatusCode((int) result.ErrorCode,
-                            result.ErrorText);
-                    }
-        
-                    return RedirectToAction("Index", new {id = Globals.UserId});
-        
-                    //return Ok();
-                }
-        
-                [HttpGet("post/project/{id}")]
-                public IActionResult CreatePost(int id)
-                {
-                    var projectTitle = _projectService.GetSingleProject(id).Data.Title;
-                    var projectInfoViewModel = new ProjectInfoViewModel
-                    {
-                        ProjectId = id,
-                        ProjectTitle = projectTitle
-                    };
-        
-                    return View(projectInfoViewModel);
-                }
-        
-                [HttpPost]
-                [Route("post/project/{id}")]
-                public IActionResult CreatePost(PostFormOptions options)
-                {
-                    var postOptions = new CreatePostOptions
-                    {
-                        Title = options.Title,
-                        Text = options.Text
-                    };
-        
-                    var result = _projectService.AddPost(postOptions, Globals.UserId, options.ProjectId);
-        
-                    if (!result.Success)
-                    {
-                        return StatusCode((int) result.ErrorCode,
-                            result.ErrorText);
-                    }
-        
-                    return RedirectToAction("CreatePost", options.ProjectId);
-                }
-        
-                [HttpGet("reward/project/{id}")]
-                public IActionResult CreateRewardPackage(int id)
-                {
-                    var projectTitle = _projectService.GetSingleProject(id).Data.Title;
-                    var projectInfoViewModel = new ProjectInfoViewModel
-                    {
-                        ProjectId = id,
-                        ProjectTitle = projectTitle
-                    };
-        
-                    return View(projectInfoViewModel);
-                }
-        
-                [HttpPost]
-                [Route("reward/project/{id}")]
-                public IActionResult CreateRewardPackage(RewardFormOptions options)
-                {
-                    var rewardPackageOptions = new CreateRewardPackageOptions
-                    {
-                        Title = options.Title,
-                        Description = options.Description,
-                        MinAmount = options.MinAmount,
-                        Quantity = options.Quantity
-                    };
-        
-                    var result = _projectService.AddRewardPackage(options.ProjectId, Globals.UserId, rewardPackageOptions);
-        
-                    if (!result.Success)
-                    {
-                        return StatusCode((int) result.ErrorCode,
-                            result.ErrorText);
-                    }
-        
-                    return RedirectToAction("CreateRewardPackage", options.ProjectId);
-                }
-        
-                [HttpGet("images/project/{id}")]
-                public IActionResult AddImages(int id)
-                {
-                    var projectTitle = _projectService.GetSingleProject(id).Data.Title;
-                    var projectInfoViewModel = new ProjectInfoViewModel
-                    {
-                        ProjectId = id,
-                        ProjectTitle = projectTitle
-                    };
-        
-                    return View(projectInfoViewModel);
-                }
-        
-                [HttpPost]
-                [Route("images/project/{id}")]
-                public IActionResult AddImages(MediaFormOptions options)
-                {
-                    var createMediaOptions = options.Url.Select
-                    (url => new CreateMediaOptions
-                    {
-                        MediaType = MediaType.Photo,
-                        MediaUrl = url,
-                    });
-        
-                    var result = _projectService.AddMedia(createMediaOptions, Globals.UserId, options.ProjectId);
-                    
-                    if (!result.Success)
-                    {
-                        return StatusCode((int) result.ErrorCode,
-                            result.ErrorText);
-                    }
-        
-                    return RedirectToAction("AddImages", options.ProjectId);
-                }
-                
-                [HttpGet("videos/project/{id}")]
-                public IActionResult AddVideos(int id)
-                {
-                    var projectTitle = _projectService.GetSingleProject(id).Data.Title;
-                    var projectInfoViewModel = new ProjectInfoViewModel
-                    {
-                        ProjectId = id,
-                        ProjectTitle = projectTitle
-                    };
-        
-                    return View(projectInfoViewModel);
-                }
-        
-                [HttpPost]
-                [Route("videos/project/{id}")]
-                public IActionResult AddVideos(MediaFormOptions options)
-                {
-                    var createMediaOptions = options.Url.Select
-                    (url => new CreateMediaOptions
-                    {
-                        MediaType = MediaType.Video,
-                        MediaUrl = url,
-                    });
-        
-                    var result = _projectService.AddMedia(createMediaOptions, Globals.UserId, options.ProjectId);
-                    
-                    if (!result.Success)
-                    {
-                        return StatusCode((int) result.ErrorCode,
-                            result.ErrorText);
-                    }
-                    
-                    return RedirectToAction("AddVideos", options.ProjectId);
-                }
+        [HttpGet("{id}")]
+        public IActionResult Index(int id)
+        {
+            var projects = _backingService.GetUserProjects(id);
+
+            if (!projects.Success)
+            {
+                return StatusCode((int)projects.ErrorCode,
+                    projects.ErrorText);
+            }
+
+            var projectsToView = projects.Data.Select(p => new ProjectViewModel
+            {
+                ProjectId = p.ProjectId,
+                Title = p.Title,
+                Description = p.Description,
+                MainImageUrl = p.MainImageUrl,
+                DaysToGo = (p.DueTo - DateTime.Now).Days,
+                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                Goal = p.Goal,
+                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal)*100)
+            });
+
+            return View(projectsToView);
+        }
+
+
+
+        [HttpGet("{id}/backed")]
+        public IActionResult BackedProjects(int id)
+        {
+            var projects = _backingService.GetBackedProjects(id);
+
+            if (!projects.Success)
+            {
+                return StatusCode((int)projects.ErrorCode,
+                    projects.ErrorText);
+            }
+
+            var projectsToView = projects.Data.Select(p => new ProjectViewModel
+            {
+                ProjectId = p.ProjectId,
+                Title = p.Title,
+                Description = p.Description,
+                MainImageUrl = p.MainImageUrl,
+                DaysToGo = (p.DueTo - DateTime.Now).Days,
+                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                Goal = p.Goal,
+                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal)*100)
+            });
+
+            return View(projectsToView);
+        }
+
+
+
+        [HttpGet]
+        [Route("project/create")]
+        public IActionResult CreateProject()
+        {
+            ViewBag.Categories = (Category[])Enum.GetValues(typeof(Category));
+            return View();
+        }
+
+
+        [HttpPost]
+        [Route("project/create")]
+        public IActionResult CreateProject(CreateProjectOptions options)
+        {
+            var result = _projectService.CreateProject(Globals.UserId, options);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("Index", new { id = Globals.UserId });
+
+            //return Ok();
+        }
+
+
+
+        [HttpGet("post/project/{id}")]
+        public IActionResult CreatePost(int id)
+        {
+            var projectTitle = _projectService.GetSingleProject(id).Data.Title;
+            var projectInfoViewModel = new ProjectInfoViewModel
+            {
+                ProjectId = id,
+                ProjectTitle = projectTitle
+            };
+
+            return View(projectInfoViewModel);
+        }
+
+        [HttpPost]
+        [Route("post/project/{id}")]
+        public IActionResult CreatePost(PostFormOptions options)
+        {
+            var postOptions = new CreatePostOptions
+            {
+                Title = options.Title,
+                Text = options.Text
+            };
+
+            var result = _projectService.AddPost(postOptions, Globals.UserId, options.ProjectId);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("CreatePost", options.ProjectId);
+        }
+
+
+
+        [HttpGet("reward/project/{id}")]
+        public IActionResult CreateRewardPackage(int id)
+        {
+            var projectTitle = _projectService.GetSingleProject(id).Data.Title;
+            var projectInfoViewModel = new ProjectInfoViewModel
+            {
+                ProjectId = id,
+                ProjectTitle = projectTitle
+            };
+
+            return View(projectInfoViewModel);
+        }
+
+        [HttpPost]
+        [Route("reward/project/{id}")]
+        public IActionResult CreateRewardPackage(RewardFormOptions options)
+        {
+            var rewardPackageOptions = new CreateRewardPackageOptions
+            {
+                Title = options.Title,
+                Description = options.Description,
+                MinAmount = options.MinAmount,
+                Quantity = options.Quantity
+            };
+
+            var result = _projectService.AddRewardPackage(options.ProjectId, Globals.UserId, rewardPackageOptions);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("CreateRewardPackage", options.ProjectId);
+        }
+
+
+
+        [HttpGet("images/project/{id}")]
+        public IActionResult AddImages(int id)
+        {
+            var projectTitle = _projectService.GetSingleProject(id).Data.Title;
+            var projectInfoViewModel = new ProjectInfoViewModel
+            {
+                ProjectId = id,
+                ProjectTitle = projectTitle
+            };
+
+            return View(projectInfoViewModel);
+        }
+
+        [HttpPost]
+        [Route("images/project/{id}")]
+        public IActionResult AddImages(MediaFormOptions options)
+        {
+            var createMediaOptions = options.Url.Select
+            (url => new CreateMediaOptions
+            {
+                MediaType = MediaType.Photo,
+                MediaUrl = url,
+            });
+
+            var result = _projectService.AddMedia(createMediaOptions, Globals.UserId, options.ProjectId);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("AddImages", options.ProjectId);
+        }
+
+
+
+        [HttpGet("videos/project/{id}")]
+        public IActionResult AddVideos(int id)
+        {
+            var projectTitle = _projectService.GetSingleProject(id).Data.Title;
+            var projectInfoViewModel = new ProjectInfoViewModel
+            {
+                ProjectId = id,
+                ProjectTitle = projectTitle
+            };
+
+            return View(projectInfoViewModel);
+        }
+
+        [HttpPost]
+        [Route("videos/project/{id}")]
+        public IActionResult AddVideos(MediaFormOptions options)
+        {
+            var createMediaOptions = options.Url.Select
+            (url => new CreateMediaOptions
+            {
+                MediaType = MediaType.Video,
+                MediaUrl = url,
+            });
+
+            var result = _projectService.AddMedia(createMediaOptions, Globals.UserId, options.ProjectId);
+
+            if (!result.Success)
+            {
+                return StatusCode((int)result.ErrorCode,
+                    result.ErrorText);
+            }
+
+            return RedirectToAction("AddVideos", options.ProjectId);
+        }
+
 
 
         [HttpGet]
@@ -270,12 +286,14 @@ namespace Crowdfund.Web.Controllers
             return RedirectToAction("Index", new { id = Globals.UserId });
         }
 
+
+
         [HttpGet]
         [Route("project/edit/{id}")]
         public IActionResult UpdateProject(int id)
         {
             var project = _projectService.GetSingleProject(id).Data;
-           
+
             return View(project);
         }
 

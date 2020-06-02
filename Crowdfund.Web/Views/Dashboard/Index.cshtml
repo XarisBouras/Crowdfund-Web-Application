@@ -44,8 +44,8 @@
                                             Your progress:
                                         </p>
                                         <div class="progress mb-2">
-                                            <div class="progress-bar bg-success font-weight-bold" style="width:50%; height: 1rem;">
-                                                50%
+                                            <div class="progress-bar bg-success font-weight-bold" style="width:@p.Progress%; height: 1rem;" aria-valuenow="@p.Progress%">
+                                                @p.Progress%
                                             </div>
                                         </div>
 
@@ -59,6 +59,7 @@
                                         <a asp-action="AddVideos" asp-route-id="@p.ProjectId" class="btn btn-sm btn-danger">Videos</a>
                                         <a asp-action="AddImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
                                         <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info">Add Reward</a>
+                                        <a asp-action="UpdateProject" asp-route-id="@p.ProjectId" class="btn btn-sm btn-secondary">Edit</a>
                                     </div>
                                 </div>
                             </div>

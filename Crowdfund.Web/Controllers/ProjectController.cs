@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Crowdfund.Core.Data;
-using Crowdfund.Core.Services;
+﻿using Crowdfund.Core.Data;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.BackingOptions;
 using Crowdfund.Web.Models;
-using Crowdfund.Web.Models.ProjectModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace Crowdfund.Web.Controllers
 {
@@ -63,6 +58,7 @@ namespace Crowdfund.Web.Controllers
                 Medias = project.Data.Medias,
                 Posts = project.Data.Posts,
                 RewardPackages = project.Data.RewardPackages,
+                IsFirstImage = true,
                 Backers = _backingService.GetProjectBackingsCount(id).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(id).Data,
                 Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(id).Data/ project.Data.Goal)*100),
