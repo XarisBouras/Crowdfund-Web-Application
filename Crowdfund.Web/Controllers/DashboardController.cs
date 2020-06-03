@@ -308,7 +308,8 @@ namespace Crowdfund.Web.Controllers
                 Description = options.Description,
                 MainImageUrl = options.MainImageUrl,
                 DueTo = options.DueTo,
-                Goal = options.Goal
+                Goal = options.Goal,
+                CategoryId = options.CategoryId
             };
 
             var result = _projectService.UpdateProject

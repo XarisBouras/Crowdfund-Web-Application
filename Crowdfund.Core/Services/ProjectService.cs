@@ -150,11 +150,11 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
 
-            var project = GetProjectById(projectId);
+            var project = GetSingleProject(projectId);
 
-            if (project == null)
+            if (!project.Success)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
+                return Result<bool>.Failed(project.ErrorCode, project.ErrorText);
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
@@ -186,15 +186,23 @@ namespace Crowdfund.Core.Services
             {
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;
             }
-            if(updateProjectOptions.DueTo > DateTime.Now)
+            
+            if(updateProjectOptions.DueTo < DateTime.Now)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Date");
             }
 
-            if (updateProjectOptions.Goal > 0)
+            if (updateProjectOptions.DueTo != null && updateProjectOptions.Goal > 0)
             {
                 project.Data.Goal = updateProjectOptions.Goal;
             }
+            
+            if (updateProjectOptions.Goal <= 0)
+            {
+                return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid goal");
+            }
+
+            project.Data.Category = (Category) updateProjectOptions.CategoryId;
 
             var rows = 0;
 

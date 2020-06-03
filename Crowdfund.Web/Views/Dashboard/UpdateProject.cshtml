@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <a asp-controller="Dashboard" asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-warning mb-4 w-100">
                         Back
-                    </a>                   
+                    </a>
                 </div>
             </div>
         </div>
@@ -24,9 +24,18 @@
                     <h5 class="card-title">Edit your Project: @Model.Title</h5>
                     <form method="post">
                         <div class="form-group">
-                            <input type="hidden" name="projectId" value="@Model.ProjectId" />
+                            <input type="hidden" name="projectId" value="@Model.ProjectId"/>
                             <label for="title">Title</label>
                             <input type="text" name="@Html.NameFor(nm => nm.Title)" class="form-control" id="title" value="@Model.Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryId">Category</label>
+                            <select class="form-control" name="categoryId" id="categoryId">
+                                @foreach (var category in Globals.Categories)
+                                {
+                                    <option selected="@((int) category == (int) Model.Category)"  value='@((int) category)'>@category</option>
+                                }
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
@@ -42,7 +51,7 @@
                         </div>
                         <div class="form-group">
                             <label for="goal">Goal</label>
-                            <input type="number" name="@Html.NameFor(nm => nm.Goal)" class="form-control" id="goal" value="@Model.Goal.ToString("0,00")"> 
+                            <input type="number" min="1" step="1" name="@Html.NameFor(nm => nm.Goal)" class="form-control" id="goal" value="@Model.Goal">
                         </div>
                         <button type="submit" class="btn btn-lg btn-warning">Save</button>
                     </form>
@@ -52,4 +61,3 @@
         </div>
     </div>
 </div>
-
