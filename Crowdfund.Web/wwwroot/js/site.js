@@ -50,3 +50,52 @@ button.on('click', () => {
         
     });
 });                     //  data: JSON.stringify(data)
+
+
+//-------------Update User Profile--------------//
+
+let userSuccessAlert = $('.js-user-profile-success-alert');
+userSuccessAlert.hide();
+
+let userFailAlert = $('.js-user-profile-fail-alert');
+userFailAlert.hide();
+
+let saveUserProfileButton = $('.js-user-profile-save');
+
+saveUserProfileButton.on('click', () => {
+    let userFirstName = $('.js-firstName').val();
+    let userLastName = $('.js-lastName').val();
+    let userAddress = $('.js-address').val();
+    let userEmail = $('.js-email').val();
+    let userId = $('.js-user-id').val();
+
+    alert('click');
+    userSuccessAlert.hide();
+    userFailAlert.hide();
+
+    if (userEmail == '') {
+        userFailAlert.show();
+        return;
+    }
+
+    let userData = {
+        "Email": userEmail,
+        "FirstName": userFirstName,
+        "LastName": userLastName,
+        "Address": userAddress
+    };
+    debugger;
+    alert(JSON.stringify(userData));
+    $.ajax({
+        type: 'POST',
+        url: `/Dashboard/User/edit/${userId}`,
+        contentType: 'application/json',
+        data: JSON.stringify(userData)
+    }).done(data => {
+        alert(data);
+       // successAlert.html('User options saved successfully.');
+        userSuccessAlert.show();
+    }).fail(failureResponse => {
+        userFailAlert.show();
+    });
+});

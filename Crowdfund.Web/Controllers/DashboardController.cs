@@ -273,7 +273,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("edit/{id}")]
-        public IActionResult UpdateUser(UpdateUserOptions options)
+        public IActionResult UpdateUser([FromBody] UpdateUserOptions options)
         {
             var result = _userService.UpdateUser(Globals.UserId, options);
 
@@ -283,7 +283,8 @@ namespace Crowdfund.Web.Controllers
                     result.ErrorText);
             }
 
-            return RedirectToAction("Index", new { id = Globals.UserId });
+            return Ok();
+           // return RedirectToAction("Index", new { id = Globals.UserId });
         }
 
 

@@ -108,6 +108,14 @@ a:active, a:focus {
   width: 60%;
   line-height: 1; }
 
+.field-validation-error {
+    color: red;
+}
+
+.input-validation-error {
+    border-color: red;
+}
+
 
 
 @media(min-width:576px) {

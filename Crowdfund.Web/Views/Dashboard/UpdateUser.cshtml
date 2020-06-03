@@ -22,24 +22,49 @@
                 <div class="card w-100 h-100">
                     <div class="card-body">
                         <h5 class="card-title">Edit your Profile</h5>
+                        <input type="hidden" class="form-control js-user-id" value="@Globals.UserId">
                         <form method="post">
+
                             <div class="form-group">
                                 <label for="firstName">First Name</label>
-                                <input type="text" name="@Html.NameFor(nm => nm.FirstName)" class="form-control" id="firstName" value="@Model.FirstName">
+                                <input type="text" name="@Html.NameFor(nm => nm.FirstName)" class="form-control js-firstName" value="@Model.FirstName"
+                                       data-val="true" data-val-required="Required field">
+                                @Html.ValidationMessageFor(nm => nm.FirstName)
                             </div>
+
                             <div class="form-group">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" name="@Html.NameFor(nm => nm.LastName)" class="form-control" id="lastName" value="@Model.LastName">
+                                <input type="text" name="@Html.NameFor(nm => nm.LastName)" class="form-control js-lastName" value="@Model.LastName"
+                                       data-val="true" data-val-required="Required field" placeholder="Please enter your last name" >
+                                @Html.ValidationMessageFor(nm => nm.LastName)
                             </div>
+
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <input type="text" name="@Html.NameFor(nm => nm.Address)" class="form-control" id="address" value="@Model.Address">
+                                <input type="text" name="@Html.NameFor(nm => nm.Address)" class="form-control js-address"  value="@Model.Address"
+                                       data-val="true" data-val-required="Required field" placeholder="Please enter your address" >
+                                @Html.ValidationMessageFor(nm => nm.Address)
                             </div>
+
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input type="email" name="@Html.NameFor(nm => nm.Email)" class="form-control" id="email" value="@Model.Email">
-                            </div>                                                      
-                            <button type="submit" class="btn btn-lg btn-warning">Save</button>
+                                <input type="email" name="@Html.NameFor(nm => nm.Email)" class="form-control js-email" value="@Model.Email"
+                                     data-val="true" data-val-required="Required field" data-val-email="Please enter a valid email"  
+                                       placeholder="Please enter your e-mail" >
+                                @Html.ValidationMessageFor(nm => nm.Email)
+                               
+                            </div>
+
+                            <button type="button" class="btn btn-lg btn-warning js-user-profile-save">Save</button>
+
+                            <div class="alert alert-success js-user-profile-success-alert" role="alert" style="text-align:center">
+                                User's information updated successfully
+                            </div>
+
+                            <div class="alert alert-danger js-user-profile-fail-alert" role="alert" style="text-align:center">
+                                User's information could not be updated
+                            </div>
+
                         </form>
                     </div>
                 </div>
