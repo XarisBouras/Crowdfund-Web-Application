@@ -8,7 +8,7 @@ namespace Crowdfund.Core.Services.Interfaces
         Result<bool> CreateBacking(int? userId, int? projectId, int rewardPackageId, int? amount);
         
         
-        Result<decimal> GetProjectBackingsAmount(int? projectId);
+        Result<int> GetProjectBackingsAmount(int? projectId);
 
         Result<IEnumerable<Project>> GetUserProjects(int? userId);
 
