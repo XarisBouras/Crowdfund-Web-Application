@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Crowdfund.Core.Data;
+using Crowdfund.Core.Models;
 using Crowdfund.Core.Services;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.BackingOptions;
+using Crowdfund.Core.Services.Options.ProjectOptions;
 using Crowdfund.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crowdfund.Web.Controllers
 {
-    [Route("Project")]
+    [Route("projects")]
     public class ProjectController : Controller
     {
         private readonly DataContext _context;
@@ -107,6 +109,31 @@ namespace Crowdfund.Web.Controllers
 
             return View(projectsToView);
 
+        }
+        
+        [HttpGet("explore/category/{category}")]
+        public IActionResult SearchByCategoryResults(Category category)
+        {
+            var results = _projectService.SearchProjects(new SearchProjectOptions
+            {
+                SingleCategoryId = (int) category,
+            }).ToList();
+            
+            var projectsToView = results.Select(p => new ProjectViewModel
+            {
+                ProjectId = p.ProjectId,
+                Title = p.Title,
+                Category = p.Category,
+                Description = p.Description,
+                MainImageUrl = p.MainImageUrl,
+                DaysToGo = (p.DueTo - DateTime.Now).Days,
+                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                Goal = p.Goal,
+                Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
+            });
+            
+            return View(projectsToView);
         }
 
     }

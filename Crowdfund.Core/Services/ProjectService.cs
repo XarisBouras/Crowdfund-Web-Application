@@ -235,6 +235,11 @@ namespace Crowdfund.Core.Services
                                           pj.Description.Contains(searchProjectOptions.SearchString));
             }
 
+            if (searchProjectOptions.SingleCategoryId != null)
+            {
+                query = query.Where(p => (int) p.Category == searchProjectOptions.SingleCategoryId);
+            }
+
             if (searchProjectOptions.CategoryIds != null)
             {
                 query = query.Where(pj => searchProjectOptions.CategoryIds.Contains((int) pj.Category));
