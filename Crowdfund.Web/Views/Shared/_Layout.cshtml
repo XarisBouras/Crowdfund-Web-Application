@@ -19,7 +19,7 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <form class="form-inline my-2 my-lg-0 navbar-form">
+        <form method="get" asp-controller="Project" asp-action="SearchByQueryString"  class="form-inline my-2 my-lg-0 navbar-form">
             <div class="input-group input-group-search mx-auto">
                 <div class="input-group-prepend">
                     <button id="search-btn" class="btn btn-outline-light btn-outline-dark text-warning dropdown-toggle"
@@ -36,7 +36,7 @@
                         <a class="dropdown-item" asp-controller="Project" asp-action="All">ALL</a>
                     </div>
                 </div>
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search"
+                <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search"
                        aria-describedby="search-button-addon">
                 <div class="input-group-append">
                     <button class="btn btn-warning" type="submit" id="search-button-addon">

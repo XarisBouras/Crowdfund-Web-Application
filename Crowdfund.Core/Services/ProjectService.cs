@@ -127,7 +127,7 @@ namespace Crowdfund.Core.Services
             }
         }
 
-        public Result<IEnumerable<Project>>  GetAllProjects()
+        public Result<IEnumerable<Project>> GetAllProjects()
         {
             try
             {
@@ -165,7 +165,7 @@ namespace Crowdfund.Core.Services
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.Description))
             {
                 project.Data.Description = updateProjectOptions.Description;
-            }           
+            }
 
             if (!string.IsNullOrWhiteSpace(updateProjectOptions.MainImageUrl))
             {
@@ -186,8 +186,8 @@ namespace Crowdfund.Core.Services
             {
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;
             }
-            
-            if(updateProjectOptions.DueTo < DateTime.Now)
+
+            if (updateProjectOptions.DueTo < DateTime.Now)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Date");
             }
@@ -196,7 +196,7 @@ namespace Crowdfund.Core.Services
             {
                 project.Data.Goal = updateProjectOptions.Goal;
             }
-            
+
             if (updateProjectOptions.Goal <= 0)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid goal");
@@ -230,9 +230,9 @@ namespace Crowdfund.Core.Services
 
             if (!string.IsNullOrWhiteSpace(searchProjectOptions.SearchString))
             {
-                query = query.Where(pj => pj.Title
-                                              .Contains(searchProjectOptions.SearchString) ||
-                                          pj.Description.Contains(searchProjectOptions.SearchString));
+                query = query.Where(pj => pj.Title.ToLower()
+                                              .Contains(searchProjectOptions.SearchString.ToLower()) ||
+                                          pj.Description.ToLower().Contains(searchProjectOptions.SearchString.ToLower()));
             }
 
             if (searchProjectOptions.SingleCategoryId != null)
