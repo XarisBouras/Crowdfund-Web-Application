@@ -75,69 +75,71 @@ namespace Crowdfund.Core.Services
 
 
         public User GetUserById(int? id)
+        {
+            return id != null ? _context.Set<User>().SingleOrDefault(u => u.UserId == id) : null;
+        }
+
+        public IQueryable<User> SearchUser(SearchUserOptions options)
+        {
+            if (options == null)
             {
-                return id != null ? _context.Set<User>().SingleOrDefault(u => u.UserId == id) : null;
+                return null;
             }
 
-            public IQueryable<User> SearchUser(SearchUserOptions options)
+            var query = _context.Set<User>().AsQueryable();
+
+            if (options.UserId != null)
             {
-                if (options == null)
-                {
-                    return null;
-                }
-
-                var query = _context.Set<User>().AsQueryable();
-
-                if (options.UserId != null)
-                {
-                    query = query.Where(u => u.UserId == options.UserId);
-                }
-
-                if (!string.IsNullOrWhiteSpace(options.FirstName))
-                {
-                    query = query.Where(c => c.FirstName == options.FirstName);
-                }
-
-                if (!string.IsNullOrWhiteSpace(options.LastName))
-                {
-                    query = query.Where(c => c.LastName == options.LastName);
-                }
-
-                if (!string.IsNullOrWhiteSpace(options.Email))
-                {
-                    query = query.Where(c => c.Email == options.Email);
-                }
-
-                if (!string.IsNullOrWhiteSpace(options.Address))
-                {
-                    query = query.Where(c => c.Address == options.Address);
-                }
-
-                if (options.CreatedAt != null)
-                {
-                    query = query.Where(c => c.CreatedAt == options.CreatedAt);
-                }
-
-                if (options.CreatedFrom != null)
-                {
-                    query = query.Where(c => c.CreatedAt >= options.CreatedFrom);
-                }
-
-                if (options.CreatedTo != null)
-                {
-                    query = query.Where(c => c.CreatedAt <= options.CreatedTo);
-                }
-
-                return query;
+                query = query.Where(u => u.UserId == options.UserId);
             }
 
-            public Result<bool> UpdateUser(int? userId, UpdateUserOptions options)
+            if (!string.IsNullOrWhiteSpace(options.FirstName))
             {
-                if (options == null)
-                {
-                    return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
-                }
+                query = query.Where(c => c.FirstName == options.FirstName);
+            }
 
+            if (!string.IsNullOrWhiteSpace(options.LastName))
+            {
+                query = query.Where(c => c.LastName == options.LastName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(options.Email))
+            {
+                query = query.Where(c => c.Email == options.Email);
+            }
+
+            if (!string.IsNullOrWhiteSpace(options.Address))
+            {
+                query = query.Where(c => c.Address == options.Address);
+            }
+
+            if (options.CreatedAt != null)
+            {
+                query = query.Where(c => c.CreatedAt == options.CreatedAt);
+            }
+
+            if (options.CreatedFrom != null)
+            {
+                query = query.Where(c => c.CreatedAt >= options.CreatedFrom);
+            }
+
+            if (options.CreatedTo != null)
+            {
+                query = query.Where(c => c.CreatedAt <= options.CreatedTo);
+            }
+
+            return query;
+        }
+
+        public Result<bool> UpdateUser(int? userId, UpdateUserOptions options)
+        {
+            options.Email = options.Email?.Trim();
+            options.FirstName = options.FirstName?.Trim();
+            options.LastName = options.LastName?.Trim();
+            options.Address = options.Address?.Trim();
+
+            try
+            {
                 var user = _context.Set<User>().SingleOrDefault(u => u.UserId == userId);
 
                 if (user == null)
@@ -146,12 +148,12 @@ namespace Crowdfund.Core.Services
                         "User not found");
                 }
 
-                if (!string.IsNullOrEmpty(options.FirstName))
+                if (!string.IsNullOrWhiteSpace(options.FirstName))
                 {
                     user.FirstName = options.FirstName;
                 }
 
-                if (!string.IsNullOrEmpty(options.Email))
+                if (!string.IsNullOrWhiteSpace(options.Email))
                 {
                     var validEmail = user.IsValidEmail(options.Email);
 
@@ -166,13 +168,17 @@ namespace Crowdfund.Core.Services
 
                     user.Email = options.Email;
                 }
+                else
+                {
+                    return Result<bool>.Failed(StatusCode.BadRequest, "Email cannot be empty");
+                }
 
-                if (!string.IsNullOrEmpty(options.LastName))
+                if (!string.IsNullOrWhiteSpace(options.LastName))
                 {
                     user.LastName = options.LastName;
                 }
 
-                if (!string.IsNullOrEmpty(options.Address))
+                if (!string.IsNullOrWhiteSpace(options.Address))
                 {
                     user.Address = options.Address;
                 }
@@ -192,5 +198,10 @@ namespace Crowdfund.Core.Services
                     ? Result<bool>.Failed(StatusCode.InternalServerError, "User Could Not Be Updated")
                     : Result<bool>.Succeed(true);
             }
+            catch (Exception ex)
+            {
+                return Result<bool>.Failed(StatusCode.InternalServerError, ex.Message);
+            }
         }
     }
+}
