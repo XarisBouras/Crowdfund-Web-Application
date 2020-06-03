@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Crowdfund.Web.Models.Trendings.TrendingsViewModel>
+﻿@model IEnumerable<ProjectViewModel>
 <!--- Start Landing Page Section -->
 <div class="jumbotron" id="jumbo1">
     <div class="container vertical-center">
@@ -24,7 +24,7 @@
                         <div class="card-body">
                             <h3 class="text-center mb-2">@pr.Title</h3>
                             <div class="text-center mb-2">
-                                <small class="text-muted">@pr.DueTo days to go</small>
+                                <small class="text-muted">@pr.DaysToGo days to go</small>
                             </div>
                             <div class="progress mb-5">
                                 <div class="progress-bar bg-success " role="progressbar" aria-valuenow="@pr.Progress" aria-valuemin="0" aria-valuemax="100" style="width:@pr.Progress%" >@pr.Progress%</div>
@@ -48,7 +48,7 @@
             <h1 class="display-2 mb-2 text-light">Projects</h1>
             <h1 class="display-2 mb-2 text-light">To Life</h1>
             <br>
-            <a asp-controller="Dashboard" asp-action="CreateProject" asp-route-id="@Globals.UserId"class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</a>
+            <a asp-controller="Dashboard" asp-action="CreateProject" asp-route-id="@Globals.UserId" class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</a>
             
         </div>
     </section>

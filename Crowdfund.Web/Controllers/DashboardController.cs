@@ -48,7 +48,7 @@ namespace Crowdfund.Web.Controllers
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal)*100)
             });
@@ -77,7 +77,7 @@ namespace Crowdfund.Web.Controllers
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal)*100)
             });

@@ -14,11 +14,11 @@ namespace Crowdfund.Web.Models
 
         public string MainImageUrl { get; set; }
 
-        public decimal Goal { get; set; }
+        public int Goal { get; set; }
         
         public int Backers { get; set; }
 
-        public decimal BackingsAmount { get; set; }
+        public int BackingsAmount { get; set; }
 
         public int Progress { get; set; }
         

@@ -7,9 +7,6 @@ using Crowdfund.Core.Services;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.BackingOptions;
 using Crowdfund.Web.Models;
-using Crowdfund.Web.Models.AllProjects;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crowdfund.Web.Controllers
@@ -21,13 +18,7 @@ namespace Crowdfund.Web.Controllers
 
         private readonly IProjectService _projectService;
         private readonly IBackingService _backingService;
-
-        //private readonly DataContext _context;
-        /*private readonly IUserService _userService;
-        private readonly IRewardService _rewardService;
-        private readonly IMediaService _mediaService;
-        private readonly IPostService _postService;
-        private readonly IProjectService _projectService;*/
+        
 
         public ProjectController(DataContext context, IProjectService projectService, IBackingService backingService)
         {
@@ -101,15 +92,15 @@ namespace Crowdfund.Web.Controllers
                     allProject.ErrorText);
             }
 
-            var projectsToView = allProject.Data.Select(p => new AllProjectsViewModel
+            var projectsToView = allProject.Data.Select(p => new ProjectViewModel
             {
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
-                DueTo = (p.DueTo - DateTime.Now).Days,
+                DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100)
             });
