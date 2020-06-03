@@ -133,6 +133,7 @@ namespace Crowdfund.Web.Controllers
                 Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
             
+            ViewBag.Category = category;
             return View(projectsToView);
         }
 
