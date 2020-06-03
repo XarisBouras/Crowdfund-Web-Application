@@ -12,7 +12,14 @@
     <div class="container">
         @if (Model != null)
         {
-            <h2 class="text-muted text-center my-5">Explore @(Model.Count() > 1 ? $"{Model.Count()} projects" : $"{Model.Count()} project")</h2>
+            @if (!Model.Any())
+            {
+                <h2 class="text-muted text-center my-5">Nothing Found....</h2>
+            }
+            @if (Model.Any())
+            {
+                <h2 class="text-muted text-center my-5">Explore @(Model.Count() > 1 ? $"{Model.Count()} projects" : $"{Model.Count()} project")</h2>
+            }
         }
         @if (Model == null)
         {
