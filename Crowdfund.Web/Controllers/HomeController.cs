@@ -80,32 +80,6 @@ namespace Crowdfund.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        [HttpGet]
-        public IActionResult Tredings()
-        {
-            var trendingProjects = _backingService.TrendingProjects();
-
-            if (!trendingProjects.Success)
-            {
-                return StatusCode((int)trendingProjects.ErrorCode,
-                    trendingProjects.ErrorText);
-            }
-            var trendingProjectsToView = trendingProjects.Data.Select(p => new TrendingsViewModel
-            {
-                ProjectId = p.ProjectId,
-                Title = p.Title,
-                Description = p.Description,
-                MainImageUrl = p.MainImageUrl,
-                DueTo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
-                Goal = p.Goal,
-                Progress = Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100, 2)
-            });
-
-            return View(trendingProjectsToView);
-
-            }
         
     }
 }

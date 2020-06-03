@@ -23,162 +23,174 @@ namespace Crowdfund.Core.Services
                 return Result<int>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
 
-            var existingUser = SearchUser(new SearchUserOptions
-            {
-                Email = createUserOptions.Email
-            }).FirstOrDefault();
-
-            if (existingUser != null) return Result<int>.Succeed(existingUser.UserId);
-
-            var user = new User()
-            {
-                FirstName = createUserOptions.FirstName,
-                LastName = createUserOptions.LastName,
-                Address = createUserOptions.Address
-            };
-
-            var validEmail = user.IsValidEmail(createUserOptions.Email);
-
-            if (validEmail)
-            {
-                user.Email = createUserOptions.Email;
-                Console.WriteLine("valid Email");
-            }
-            else
-            {
-                Console.WriteLine("Not valid Email, please try again!");
-                return null;
-            }
-            _context.Add(user);
-
-            var rows = 0;
-
             try
             {
-                rows = _context.SaveChanges();
+                var existingUser = SearchUser(new SearchUserOptions
+                {
+                    Email = createUserOptions.Email
+                }).SingleOrDefault();
+
+                if (existingUser != null) return Result<int>.Succeed(existingUser.UserId);
+
+                var user = new User()
+                {
+                    FirstName = createUserOptions.FirstName,
+                    LastName = createUserOptions.LastName,
+                    Address = createUserOptions.Address
+                };
+
+                var validEmail = user.IsValidEmail(createUserOptions.Email);
+
+                if (validEmail)
+                {
+                    user.Email = createUserOptions.Email;
+                }
+                else
+                {
+                    return Result<int>.Failed(StatusCode.BadRequest, "Invalid Email");
+                }
+
+                _context.Add(user);
+
+                var rows = 0;
+
+                try
+                {
+                    rows = _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return Result<int>.Failed(StatusCode.InternalServerError, ex.Message);
+                }
+
+                return rows <= 0
+                    ? Result<int>.Failed(StatusCode.InternalServerError, "User Could Not Be Created")
+                    : Result<int>.Succeed(user.UserId);
             }
             catch (Exception ex)
             {
                 return Result<int>.Failed(StatusCode.InternalServerError, ex.Message);
             }
-            return rows <= 0 ?
-                Result<int>.Failed(StatusCode.InternalServerError, "User Could Not Be Created")
-                : Result<int>.Succeed(user.UserId);
         }
+
 
         public User GetUserById(int? id)
-        {
-            return id != null ? _context.Set<User>().SingleOrDefault(u => u.UserId == id) : null;
-        }
-
-        public IQueryable<User> SearchUser(SearchUserOptions options)
-        {
-            if (options == null)
             {
-                return null;
+                return id != null ? _context.Set<User>().SingleOrDefault(u => u.UserId == id) : null;
             }
 
-            var query = _context.Set<User>().AsQueryable();
-
-            if (options.UserId != null)
+            public IQueryable<User> SearchUser(SearchUserOptions options)
             {
-                query = query.Where(u => u.UserId == options.UserId);
-            }
-            if (!string.IsNullOrWhiteSpace(options.FirstName))
-            {
-                query = query.Where(c => c.FirstName == options.FirstName);
-            }
-            if (!string.IsNullOrWhiteSpace(options.LastName))
-            {
-                query = query.Where(c => c.LastName == options.LastName);
-            }
-            if (!string.IsNullOrWhiteSpace(options.Email))
-            {
-                query = query.Where(c => c.Email == options.Email);
-            }
-            if (!string.IsNullOrWhiteSpace(options.Address))
-            {
-                query = query.Where(c => c.Address == options.Address);
-            }
-            if (options.CreatedAt != null)
-            {
-                query = query.Where(c => c.CreatedAt == options.CreatedAt);
-            }
-            if (options.CreatedFrom != null)
-            {
-                query = query.Where(c => c.CreatedAt >= options.CreatedFrom);
-            }
-            if (options.CreatedTo != null)
-            {
-                query = query.Where(c => c.CreatedAt <= options.CreatedTo);
-            }
-
-            return query;
-
-        }
-
-        public Result<bool> UpdateUser(int? userId, UpdateUserOptions options)
-        {
-            if (options == null)
-            {
-                return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
-            }
-
-            var user = _context.Set<User>().SingleOrDefault(u => u.UserId == userId);
-
-            if (user == null)
-            {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                    " you can find plenty of other things in our homepage");
-            }
-
-            if (!string.IsNullOrEmpty(options.FirstName))
-            {
-                user.FirstName = options.FirstName;
-            }
-
-            if (!string.IsNullOrEmpty(options.Email))
-            {
-                var validEmail = user.IsValidEmail(options.Email);
-
-                if (validEmail)
+                if (options == null)
                 {
-                    user.Email = options.Email;
-                    Console.WriteLine("valid Email");
-                }
-                else
-                {
-                    Console.WriteLine("Not valid Email, please try again!");
                     return null;
                 }
 
-                user.Email = options.Email;
+                var query = _context.Set<User>().AsQueryable();
+
+                if (options.UserId != null)
+                {
+                    query = query.Where(u => u.UserId == options.UserId);
+                }
+
+                if (!string.IsNullOrWhiteSpace(options.FirstName))
+                {
+                    query = query.Where(c => c.FirstName == options.FirstName);
+                }
+
+                if (!string.IsNullOrWhiteSpace(options.LastName))
+                {
+                    query = query.Where(c => c.LastName == options.LastName);
+                }
+
+                if (!string.IsNullOrWhiteSpace(options.Email))
+                {
+                    query = query.Where(c => c.Email == options.Email);
+                }
+
+                if (!string.IsNullOrWhiteSpace(options.Address))
+                {
+                    query = query.Where(c => c.Address == options.Address);
+                }
+
+                if (options.CreatedAt != null)
+                {
+                    query = query.Where(c => c.CreatedAt == options.CreatedAt);
+                }
+
+                if (options.CreatedFrom != null)
+                {
+                    query = query.Where(c => c.CreatedAt >= options.CreatedFrom);
+                }
+
+                if (options.CreatedTo != null)
+                {
+                    query = query.Where(c => c.CreatedAt <= options.CreatedTo);
+                }
+
+                return query;
             }
 
-            if (!string.IsNullOrEmpty(options.LastName))
+            public Result<bool> UpdateUser(int? userId, UpdateUserOptions options)
             {
-                user.LastName = options.LastName;
-            }
+                if (options == null)
+                {
+                    return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
+                }
 
-            if (!string.IsNullOrEmpty(options.Address))
-            {
-                user.Address = options.Address;
-            }
+                var user = _context.Set<User>().SingleOrDefault(u => u.UserId == userId);
 
-            var rows = 0;
+                if (user == null)
+                {
+                    return Result<bool>.Failed(StatusCode.NotFound,
+                        "User not found");
+                }
 
-            try
-            {
-                rows = _context.SaveChanges();
+                if (!string.IsNullOrEmpty(options.FirstName))
+                {
+                    user.FirstName = options.FirstName;
+                }
+
+                if (!string.IsNullOrEmpty(options.Email))
+                {
+                    var validEmail = user.IsValidEmail(options.Email);
+
+                    if (validEmail)
+                    {
+                        user.Email = options.Email;
+                    }
+                    else
+                    {
+                        return Result<bool>.Failed(StatusCode.BadRequest, "Invalid Email");
+                    }
+
+                    user.Email = options.Email;
+                }
+
+                if (!string.IsNullOrEmpty(options.LastName))
+                {
+                    user.LastName = options.LastName;
+                }
+
+                if (!string.IsNullOrEmpty(options.Address))
+                {
+                    user.Address = options.Address;
+                }
+
+                var rows = 0;
+
+                try
+                {
+                    rows = _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return Result<bool>.Failed(StatusCode.InternalServerError, ex.Message);
+                }
+
+                return rows <= 0
+                    ? Result<bool>.Failed(StatusCode.InternalServerError, "User Could Not Be Updated")
+                    : Result<bool>.Succeed(true);
             }
-            catch (Exception ex)
-            {
-                return Result<bool>.Failed(StatusCode.InternalServerError, ex.Message);
-            }
-            return rows <= 0 ?
-                Result<bool>.Failed(StatusCode.InternalServerError, "User Could Not Be Updated")
-                : Result<bool>.Succeed(true);
         }
-
     }
-}

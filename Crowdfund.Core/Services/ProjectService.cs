@@ -49,8 +49,7 @@ namespace Crowdfund.Core.Services
 
             if (_userService.GetUserById(userId) == null)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "User Not Found");
             }
 
             var project = new Project
@@ -66,11 +65,6 @@ namespace Crowdfund.Core.Services
             _context.Set<Project>().Add(project);
 
             var user = _userService.GetUserById(userId);
-            if (user == null)
-            {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
-            }
 
             var userProject = new UserProjectReward
             {
@@ -107,9 +101,7 @@ namespace Crowdfund.Core.Services
                     .FirstOrDefault(p => p.ProjectId == id);
 
                 return project == null
-                    ? Result<Project>.Failed(StatusCode.NotFound,
-                        "Sorry, we couldn't find this page. But don't worry," +
-                        " you can find plenty of other things in our homepage")
+                    ? Result<Project>.Failed(StatusCode.NotFound, "Project Not Found")
                     : Result<Project>.Succeed(project);
             }
             catch (Exception ex)
@@ -126,9 +118,7 @@ namespace Crowdfund.Core.Services
                     .FirstOrDefault(p => p.ProjectId == id);
 
                 return project == null
-                    ? Result<Project>.Failed(StatusCode.NotFound,
-                        "Sorry, we couldn't find this page. But don't worry," +
-                        " you can find plenty of other things in our homepage")
+                    ? Result<Project>.Failed(StatusCode.NotFound, "Project Not Found")
                     : Result<Project>.Succeed(project);
             }
             catch (Exception ex)
@@ -164,8 +154,7 @@ namespace Crowdfund.Core.Services
 
             if (project == null)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
@@ -296,8 +285,7 @@ namespace Crowdfund.Core.Services
 
             if (project == null)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
@@ -357,8 +345,7 @@ namespace Crowdfund.Core.Services
 
             if (project == null)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
             }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId) == false)
@@ -380,8 +367,7 @@ namespace Crowdfund.Core.Services
 
             if (reward == null)
             {
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                                                                " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "Reward Package Not Found");
             }
 
             var rows = 0;
@@ -396,7 +382,7 @@ namespace Crowdfund.Core.Services
             }
 
             return rows <= 0
-                ? Result<bool>.Failed(StatusCode.InternalServerError, "Reward Package Could Not Be Updated ")
+                ? Result<bool>.Failed(StatusCode.InternalServerError, "Reward Package Could Not Be Updated")
                 : Result<bool>.Succeed(true);
         }
 
