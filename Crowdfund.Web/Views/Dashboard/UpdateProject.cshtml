@@ -22,29 +22,48 @@
             <div class="card w-100 h-100">
                 <div class="card-body">
                     <h5 class="card-title">Edit your Project: @Model.Title</h5>
+                    <input type="hidden" class="form-control js-project-id" value="@Model.ProjectId">
                     <form method="post">
                         <div class="form-group">
                             <input type="hidden" name="projectId" value="@Model.ProjectId" />
                             <label for="title">Title</label>
-                            <input type="text" name="@Html.NameFor(nm => nm.Title)" class="form-control" id="title" value="@Model.Title">
+                            <input type="text" name="@Html.NameFor(nm => nm.Title)" class="form-control js-title" value="@Model.Title"
+                                   data-val="true" data-val-required="Required field">
+                            @Html.ValidationMessageFor(nm => nm.Title)
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" rows="3" name="@Html.NameFor(nm => nm.Description)" id="description" >@Model.Description</textarea>
+                            <input type="text" name="@Html.NameFor(nm => nm.Description)" class="form-control js-description" value="@Model.Description"
+                                   data-val="true" data-val-required="Required field">
+                            @Html.ValidationMessageFor(nm => nm.Description)
                         </div>
                         <div class="form-group">
                             <label for="mainImageUrl">Main Image URL</label>
-                            <input type="text" name="@Html.NameFor(nm => nm.MainImageUrl)" class="form-control" id="mainImageUrl" value="@Model.MainImageUrl">
+                            <input type="text" name="@Html.NameFor(nm => nm.MainImageUrl)" class="form-control js-mainImageUrl" value="@Model.MainImageUrl"
+                                   data-val="true" data-val-required="Required field">
+                            @Html.ValidationMessageFor(nm => nm.MainImageUrl)
                         </div>
                         <div class="form-group">
                             <label for="dueTo">Due To</label>
-                            <input type="date" name="@Html.NameFor(nm => nm.DueTo)" class="form-control" id="dueTo" value="@Model.DueTo.ToString("yyyy-MM-dd")">
+                            <input type="text" name="@Html.NameFor(nm => nm.DueTo)" class="form-control js-dueTo" value="@Model.DueTo.ToString("yyyy-MM-dd")"
+                                   data-val="true" data-val-required="Required field">
+                            @Html.ValidationMessageFor(nm => nm.DueTo)
                         </div>
                         <div class="form-group">
                             <label for="goal">Goal</label>
-                            <input type="number" name="@Html.NameFor(nm => nm.Goal)" class="form-control" id="goal" value="@Model.Goal.ToString("0,00")"> 
+                            <input type="text" name="@Html.NameFor(nm => nm.Goal)" class="form-control js-goal" value="@Model.Goal.ToString("0,00")"
+                                   data-val="true" data-val-required="Required field">
+                            @Html.ValidationMessageFor(nm => nm.Goal)
                         </div>
-                        <button type="submit" class="btn btn-lg btn-warning">Save</button>
+                        <button type="button" class="btn btn-lg btn-warning js-project-update-save">Save</button>
+
+                        <div class="alert alert-success js-project-update-success-alert" role="alert" style="text-align:center">
+                            User's information updated successfully
+                        </div>
+
+                        <div class="alert alert-danger js-project-update-fail-alert" role="alert" style="text-align:center">
+                            User's information could not be updated
+                        </div>
                     </form>
                 </div>
             </div>

@@ -197,7 +197,7 @@ namespace Crowdfund.Core.Services
             {
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;
             }
-            if(updateProjectOptions.DueTo > DateTime.Now)
+            if(updateProjectOptions.DueTo < DateTime.Now)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Date");
             }
@@ -378,7 +378,7 @@ namespace Crowdfund.Core.Services
 
             var reward = _rewardService.UpdateRewardPackage(rewardPackageToUpdate, updateRewardOptions);
 
-            if (reward == null)
+            if (reward.Data == null)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
                                                                 " you can find plenty of other things in our homepage");

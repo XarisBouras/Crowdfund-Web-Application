@@ -7,10 +7,10 @@ namespace Crowdfund.Core.Services.Interfaces
     {
         Result<RewardPackage> CreateRewardPackage(CreateRewardPackageOptions createRewardPackageOptions);
 
-        RewardPackage UpdateRewardPackage(RewardPackage rewardPackage ,UpdateRewardPackageOptions updateRewardPackageOptions);
+        Result<RewardPackage> UpdateRewardPackage(RewardPackage rewardPackage ,UpdateRewardPackageOptions updateRewardPackageOptions);
 
         bool DeleteRewardPackage(RewardPackage rewardPackage);
-        
-        RewardPackage GetRewardPackageById(int? packageId);
+
+        Result<RewardPackage> GetRewardPackageById(int? packageId);
     }
 }

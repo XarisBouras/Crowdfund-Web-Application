@@ -35,7 +35,7 @@ namespace Crowdfund.Core.Services
             return Result<Post>.Succeed(post);
         }
 
-        public Post UpdatePost(Post postToUpdate, UpdatePostOptions options)
+        public Result<Post> UpdatePost(Post postToUpdate, UpdatePostOptions options)
         {
             options.Title = options.Title?.Trim();
             options.Text = options.Text?.Trim();
@@ -50,12 +50,15 @@ namespace Crowdfund.Core.Services
                 postToUpdate.Title = options.Title;
             }
 
-            return postToUpdate;
+            return Result<Post>.Succeed(postToUpdate);
         }
 
-        public Post GetPostById(int? id)
+        public Result<Post> GetPostById(int? id)
         {
-            return id==null ? null : _context.Set<Post>().Find(id);
+            return id==null ? Result<Post>.Failed(StatusCode.NotFound,
+                        "Sorry, we couldn't find this page. But don't worry," +
+                        " you can find plenty of other things in our homepage") :
+                        Result<Post>.Succeed(_context.Set<Post>().Find(id));
         }
 
         public bool DeletePost(Post postToDelete)

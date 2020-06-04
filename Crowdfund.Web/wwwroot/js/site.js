@@ -50,3 +50,55 @@ button.on('click', () => {
         
     });
 });                     //  data: JSON.stringify(data)
+
+
+
+
+//--------------------Project Update/Edit JS-------------------------//
+
+let projectUpdateSuccessAlert = $('.js-project-update-success-alert');
+projectUpdateSuccessAlert.hide();
+
+let projectUpdateFailAlert = $('.js-project-update-fail-alert');
+projectUpdateFailAlert.hide();
+
+let saveProjectUpdateButton = $('.js-project-update-save');
+
+saveProjectUpdateButton.on('click', () => {
+    let projectTitle = $('.js-title').val();
+    let projectDescription = $('.js-description').val();
+    let projectMainImageUrl = $('.js-mainImageUrl').val();
+    let projectDueTo = $('.js-dueTo').val();
+    let projectGoal = $('.js-goal').val();
+    let projectId = $('.js-project-id').val();
+
+    alert('click');
+    projectUpdateSuccessAlert.hide();
+    projectUpdateFailAlert.hide();
+
+    //if (userEmail == '') {
+    //    userFailAlert.show();
+    //    return;
+    //}
+
+    let projectData = {
+        "Title": projectTitle,
+        "Description": projectDescription,
+        "MainImageUrl": projectMainImageUrl,
+        "DueTo": projectDueTo,
+        "Goal": parseInt(projectGoal)
+    };
+
+    alert(JSON.stringify(projectData));
+    $.ajax({
+        type: 'POST',
+        url: `/Dashboard/User/project/edit/${projectId}`,
+        contentType: 'application/json',
+        data: JSON.stringify(projectData)
+    }).done(data => {
+        alert(data);
+        projectUpdateSuccessAlert.show();
+    }).fail(failureResponse => {
+        projectUpdateFailAlert.show();
+    });
+});
