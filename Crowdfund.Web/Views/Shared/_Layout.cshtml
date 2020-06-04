@@ -8,6 +8,59 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css"/>
+    <style>
+    @@media (max-width: 576px) {
+    h1 {
+    font-size: 30px !important;
+    }
+    .jumbotron {
+        height: 100vh;
+    }
+    
+    .navbar-expand-sm .input-group-search {
+        width: 100% !important;
+    }
+}
+
+@@media (max-width: 768px) {
+
+    h1 {
+        font-size: 40px !important;
+        }
+
+/*    .project-container {
+        margin-top: 10rem;
+    }*/
+
+    .jumbotron {
+        height: 95vh !important;
+    }
+
+    .navbar-expand-md .input-group-search {
+        width: 70% !important;
+    }
+}
+
+@@media (max-width: 992px) {
+    .jumbotron {        
+        height: 100vh !important;
+    }
+        h1 {
+            font-size: 60px !important;
+            }
+
+    .navbar-expand-lg .input-group-search {
+        width: 80% !important;
+    }
+}
+
+@@media (max-width: 1200px) {
+    .navbar-expand-xl .input-group-search {
+        width: 70% !important;
+    }
+}    
+
+</style>
 </head>
 <body>
 <header>
@@ -90,7 +143,7 @@
                     <h4>Login</h4>
                 </div>
                 <div class="d-flex flex-column text-center">
-                    <form method="post">
+                    <form asp-controller="Home" asp-action="Index" method="post">
                         <div class="form-group">
                             <input name="email" type="email" class="form-control" id="email" placeholder="Your email address...">
                         </div>
