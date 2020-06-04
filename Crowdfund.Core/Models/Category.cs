@@ -5,7 +5,6 @@ namespace Crowdfund.Core.Models
         Art,
         Comics,
         Crafts,
-        Dance,
         Design,
         Fashion,
         Film,
