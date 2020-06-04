@@ -9,9 +9,17 @@
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css"/>
     <style>
+    @@media (max-width: 500px) {   
+    .cta__1 h1 {
+    font-size: 20px !important;
+    }     
+        .cta__1 .btn {
+         font-size: 80% !important;
+        }
+    }
     @@media (max-width: 576px) {
     h1 {
-    font-size: 30px !important;
+    font-size: 20px !important;
     }
     .jumbotron {
         height: 100vh;
@@ -43,18 +51,15 @@
 
 @@media (max-width: 992px) {
     .jumbotron {        
-        height: 100vh !important;
+        height: 100vw !important;
     }
-        h1 {
-            font-size: 60px !important;
-            }
 
     .navbar-expand-lg .input-group-search {
         width: 80% !important;
     }
 }
 
-@@media (max-width: 1200px) {
+@@media (min-width: 1200px) {
     .navbar-expand-xl .input-group-search {
         width: 70% !important;
     }
