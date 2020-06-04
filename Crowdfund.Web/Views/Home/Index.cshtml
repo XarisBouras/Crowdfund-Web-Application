@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ProjectViewModel>
 <!--- Start Landing Page Section -->
 <div class="jumbotron" style="padding: 13rem 2rem">
-    <div class="container vertical-center d-flex justify-content-center align-items-start">
+    <div class="container vertical-center d-flex justify-content-center align-items-start" id="hero">
         <h1 class="display-4 w-50 text-right">You Dream.</h1>
         <h1 class="display-4 w-50 text-right">We fund.</h1>
         <p class="lead w-50 text-right mt-5">
@@ -20,7 +20,7 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="@pr.MainImageUrl" alt="Card image cap">
+                        <img class="card-img-top h-100" src="@pr.MainImageUrl" alt="Card image cap">
                         <div class="card-body">
                             <h3 class="text-center">@pr.Title</h3>
                             <div class="text-center mb-2">
