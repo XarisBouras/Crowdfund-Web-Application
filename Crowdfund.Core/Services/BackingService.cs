@@ -38,6 +38,11 @@ namespace Crowdfund.Core.Services
             var rewardPackage = project.Data.RewardPackages
                 .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId);
 
+            if(rewardPackage != null && rewardPackageId != 0)
+            {
+                rewardPackage.Quantity--;
+            }
+
             if (rewardPackage == null && rewardPackageId != 0)
                 return Result<bool>.Failed(StatusCode.NotFound, "Invalid Reward Package");
 

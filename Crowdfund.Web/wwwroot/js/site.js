@@ -22,35 +22,51 @@ $(document).on('click', '#removeRow', function () {
 });
 
 //--------------------Project Page JS-------------------------//
+
+let rewardAmountButton = $('.js-reward-amount-button');
+
+
+rewardAmountButton.on('click', (event) => {
+    alert('click');
+    let clickedElement = $(event.currentTarget);
+    let rewardAmount = clickedElement.parent().parent().find('.js-button-amount').text();    
+    let amountToSet = clickedElement.parent().parent().find('.js-amount');
+    amountToSet.val(rewardAmount);
+});
+
+
 let button = $('.js-backit');
 
-button.on('click', () => {
-    let amount = $('.js-amount').val();
-    let rewardPackageId = $('.js-reward').val();
-    let projectId = $('.js-project').val();
+button.on('click', (event) => {
+    let clickedElement = $(event.currentTarget);
+    let amount = clickedElement.parent().parent().find('.js-amount').val();  
+    let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
+    let projectId = clickedElement.parent().parent().find('.js-project').val();
+
+   
 
     alert('click');
     
     let data = {
-        "Amount": parseFloat(amount),
+        "Amount": parseInt(amount),
         "RewardPackageId": parseInt(rewardPackageId),
         "ProjectId": parseInt(projectId)
     };
+
     alert(JSON.stringify(data));
+
     $.ajax({
         type: 'POST',
-        url: '/Project',
+        url: `/projects`,
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
         alert(data);
-        //successAlert.html('Backing with  was created');
-        //successAlert.show();
+             
     }).fail(failureResponse => {
         
-    });
-});                     //  data: JSON.stringify(data)
-
+    }); 
+});                    
 
 //-------------Update User Profile--------------//
 
@@ -84,8 +100,9 @@ saveUserProfileButton.on('click', () => {
         "LastName": userLastName,
         "Address": userAddress
     };
-    debugger;
+   
     alert(JSON.stringify(userData));
+
     $.ajax({
         type: 'POST',
         url: `/Dashboard/User/edit/${userId}`,
@@ -93,9 +110,55 @@ saveUserProfileButton.on('click', () => {
         data: JSON.stringify(userData)
     }).done(data => {
         alert(data);
-       // successAlert.html('User options saved successfully.');
         userSuccessAlert.show();
     }).fail(failureResponse => {
         userFailAlert.show();
     });
 });
+
+//-------------Create Project Form------------------------//
+
+let createProjectSuccessAlert = $('.js-create-project-success-alert');
+createProjectSuccessAlert.hide();
+
+let createProjectFailAlert = $('.js-create-project-fail-alert');
+createProjectFailAlert.hide();
+
+let createProjectButton = $('.js-create-project-button');
+
+createProjectButton.on('click', () => {
+    let createProjectTitle = $('.js-create-project-title').val();
+    let createProjectDescription = $('.js-create-project-description').val();
+    let createProjectMainImage = $('.js-create-project-image').val();
+    let createProjectDueTo = $('.js-create-project-dueto').val();
+    let createProjectGoal = $('.js-create-project-goal').val();
+    let createProjectCategory = $('.js-create-project-category').val();
+
+    alert('click');
+    createProjectSuccessAlert.hide();
+    createProjectFailAlert.hide();
+
+    let projectData = {
+        "Title": createProjectTitle,
+        "Description": createProjectDescription,
+        "MainImageUrl": createProjectMainImage,
+        "DueTo": createProjectDueTo,
+        "Goal": parseInt(createProjectGoal),
+        "CategoryId": parseInt(createProjectCategory)
+    };
+
+    alert(JSON.stringify(projectData));
+
+    $.ajax({
+        type: 'POST',
+        url: `/Dashboard/User/project/create`,
+        contentType: 'application/json',
+        data: JSON.stringify(projectData)
+    }).done(data => {
+        alert(data);        
+        createProjectSuccessAlert.show();
+    }).fail(failureResponse => {
+        createProjectFailAlert.show();
+    });
+});
+
