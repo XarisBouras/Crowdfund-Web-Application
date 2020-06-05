@@ -81,7 +81,8 @@ namespace Crowdfund.Web.Controllers
                     backResult.ErrorText);
             }
 
-            return Json(backResult.Data);
+            return Ok();
+            //return Json(backResult.Data);
         }
 
         [HttpGet]

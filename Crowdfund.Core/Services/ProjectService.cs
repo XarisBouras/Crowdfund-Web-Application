@@ -46,8 +46,9 @@ namespace Crowdfund.Core.Services
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
-
-            if (_userService.GetUserById(userId) == null)
+            var user = _userService.GetUserById(userId);
+            
+            if (user == null)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "User Not Found");
             }
@@ -63,8 +64,6 @@ namespace Crowdfund.Core.Services
             };
 
             _context.Set<Project>().Add(project);
-
-            var user = _userService.GetUserById(userId);
 
             var userProject = new UserProjectReward
             {
@@ -296,7 +295,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-            if (project == null)
+            if (!project.Success)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
             }
@@ -306,10 +305,10 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            if (project.Data.RewardPackages.Any(r => r.MinAmount == createRewardOptions.MinAmount))
+            if (project.Data.RewardPackages.Any(r => r.Title.ToLower().Equals(createRewardOptions.Title.ToLower())))
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Can Not Create A Reward Package With The Same Value");
+                    "Can Not Create A Reward Package With The Same Title");
             }
 
 
@@ -321,8 +320,8 @@ namespace Crowdfund.Core.Services
             }
             else
             {
-                return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Invalid Reward Package options");
+                return Result<bool>.Failed(rewardResult.ErrorCode,
+                    rewardResult.ErrorText);
             }
 
             var rows = 0;

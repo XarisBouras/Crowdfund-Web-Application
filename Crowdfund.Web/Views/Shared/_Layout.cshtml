@@ -9,12 +9,37 @@
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css"/>
     <style>
+    @@media (max-width: 430px) { 
+    .jumbotron {
+        min-height: 100vh !important;
+        height: 100% !important;
+    }
+    #hero .lead{
+         margin-top: 0 !important;
+     }
+            
+            #hero h1{
+                       font-size: .5rem !important;
+            }
+    }
+    @@media (max-width: 500px) {   
+    .cta__1 h1 {
+    font-size: 20px !important;
+    }     
+        .cta__1 .btn {
+         font-size: 80% !important;
+        }
+    }
     @@media (max-width: 576px) {
+   
+           #hero h1{
+           font-size: 2rem !important;
+        }
     h1 {
-    font-size: 30px !important;
+    font-size: 20px !important;
     }
     .jumbotron {
-        height: 100vh;
+        height: 100vw;
     }
     
     .navbar-expand-sm .input-group-search {
@@ -32,9 +57,10 @@
         margin-top: 10rem;
     }*/
 
-    .jumbotron {
-        height: 95vh !important;
-    }
+.jumbotron {
+    max-height: 150vw !important;
+    height: 100% !important;
+}
 
     .navbar-expand-md .input-group-search {
         width: 70% !important;
@@ -43,18 +69,15 @@
 
 @@media (max-width: 992px) {
     .jumbotron {        
-        height: 100vh !important;
+        height: 100vw !important;
     }
-        h1 {
-            font-size: 60px !important;
-            }
 
     .navbar-expand-lg .input-group-search {
         width: 80% !important;
     }
 }
 
-@@media (max-width: 1200px) {
+@@media (min-width: 1200px) {
     .navbar-expand-xl .input-group-search {
         width: 70% !important;
     }
@@ -72,7 +95,7 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <form method="get" asp-controller="Project" asp-action="SearchByQueryString"  class="form-inline my-2 my-lg-0 navbar-form">
+        <form method="get" asp-controller="Project" asp-action="SearchByQueryString" class="form-inline my-2 my-lg-0 navbar-form">
             <div class="input-group input-group-search mx-auto">
                 <div class="input-group-prepend">
                     <button id="search-btn" class="btn btn-outline-light btn-outline-dark text-warning dropdown-toggle"
@@ -94,7 +117,7 @@
                 <div class="input-group-append">
                     <button class="btn btn-warning" type="submit" id="search-button-addon">
                         <i class="fa fa-search text-light"></i>
-                        </button>
+                    </button>
                 </div>
             </div>
         </form>
