@@ -5,7 +5,7 @@
         <h1 class="display-4 w-50 text-right">You Dream.</h1>
         <h1 class="display-4 w-50 text-right">We fund.</h1>
         <p class="lead w-50 text-right mt-5">
-            <a asp-controller="Dashboard" asp-action="CreateProject" asp-route-id="@Globals.UserId" class="btn btn-warning btn-lg" role="button">Create Project</a>
+            <a asp-controller="Dashboard" asp-action="CreateProject"  class="btn btn-warning btn-lg" role="button">Create Project</a>
         </p>
     </div>
 </div>
@@ -35,7 +35,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@pr.BackingsAmount / @pr.Goal$</span>
-                                    <small class="badge badge-pill badge-warning" style="font-size: .9rem">@pr.Backers backings</small>
+                                    <small class="badge badge-pill badge-warning" style="font-size: .9rem">@pr.Backings backings</small>
                                 </div>
                                 <a asp-controller="Project" asp-action="Details" asp-route-id="@pr.ProjectId" type="button" class="btn btn-md w-50 btn-success">View</a>
                             </div>
@@ -51,7 +51,7 @@
             <h1 class="display-2 mb-2 text-light">Projects</h1>
             <h1 class="display-2 mb-2 text-light">To Life</h1>
             <br>
-            <a asp-controller="Dashboard" asp-action="CreateProject" asp-route-id="@Globals.UserId" class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</a>
+            <a asp-controller="Dashboard" asp-action="CreateProject" class="btn btn-success btn-lg text-nowrap text-uppercase text-light">Start your journey now</a>
 
         </div>
     </section>

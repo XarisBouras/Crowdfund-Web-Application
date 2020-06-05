@@ -10,9 +10,9 @@
         <div class="progress-bar bg-success" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100">@Model.Progress%</div>
     </div>
     <div class="row mt-1 mb-1">
-        <div class="col col-md-3 "><h6>Amount: <span>@Model.BackingsAmount</span></h6>  </div>
-        <div class="col col-md-3 "><h6>Pledged For: <span>@Model.Goal</span></h6> </div>
-        <div class="col col-md-2 "><h6>Backings: <span>@Model.Backers</span></h6> </div>
+        <div class="col col-md-3 "><h6>Amount: <span id="total-amount">@Model.BackingsAmount</span></h6>  </div>
+        <div class="col col-md-3 "><h6>Pledged For: <span id="goal">@Model.Goal</span></h6> </div>
+        <div class="col col-md-2 "><h6>Backings: <span id="backings">@Model.Backings</span></h6> </div>
         <div class="col col-md-2 "><h6>Days To Go: @Model.DaysToGo</h6> </div>
         <div class="col col-md-2"><h6>Category: @Model.Category</h6> </div>
     </div>

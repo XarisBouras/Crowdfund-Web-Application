@@ -29,10 +29,7 @@ backSuccessAlert.hide();
 let backFailAlert = $('.js-back-fail-alert');
 backFailAlert.hide();
 
-
-
 let rewardAmountButton = $('.js-reward-amount-button');
-
 
 rewardAmountButton.on('click', (event) => {
     alert('click');
@@ -42,12 +39,11 @@ rewardAmountButton.on('click', (event) => {
     amountToSet.val(rewardAmount);
 });
 
-
 let button = $('.js-backit');
 
 button.on('click', (event) => {
     let clickedElement = $(event.currentTarget);
-    let amount = clickedElement.parent().parent().find('.js-amount').val();  
+    var amount = clickedElement.parent().parent().find('.js-amount').val();  
     let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
     let projectId = clickedElement.parent().parent().find('.js-project').val();
 
@@ -69,6 +65,8 @@ button.on('click', (event) => {
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
+       // document.querySelector('.js-create-project-form').reset();
+        
         backSuccessAlert.show().delay(3000);
         backSuccessAlert.fadeOut();
              
@@ -83,12 +81,8 @@ button.on('click', (event) => {
 let userSuccessAlert = $('.js-user-profile-success-alert');
 userSuccessAlert.hide();
 
-
-
 let userFailAlert = $('.js-user-profile-fail-alert');
 userFailAlert.hide();
-
-
 
 let saveUserProfileButton = $('.js-user-profile-save');
 
@@ -98,37 +92,27 @@ saveUserProfileButton.on('click', () => {
     let userAddress = $('.js-address').val();
     let userEmail = $('.js-email').val();
     let userId = $('.js-user-id').val();
-
-    alert('click');
-    userSuccessAlert.hide();
-    userFailAlert.hide();
-
    
-
-    if (userEmail == '') {
-        userFailAlert.show();
-        return;
-    }
+    userSuccessAlert.hide();
+    userFailAlert.hide();    
 
     let userData = {
         "Email": userEmail,
         "FirstName": userFirstName,
         "LastName": userLastName,
         "Address": userAddress
-    };
-   
-    alert(JSON.stringify(userData));
+    };   
 
     $.ajax({
         type: 'POST',
         url: `/Dashboard/User/edit/${userId}`,
         contentType: 'application/json',
         data: JSON.stringify(userData)
-    }).done(data => {
-        alert(data);
+    }).done(data => {       
         userSuccessAlert.show().delay(3000);
         userSuccessAlert.fadeOut();
     }).fail(failureResponse => {
+        userFailAlert.text(failureResponse.responseText);
         userFailAlert.show().delay(3000);
         userFailAlert.fadeOut();
     });
@@ -164,25 +148,28 @@ createProjectButton.on('click', () => {
         "CategoryId": parseInt(createProjectCategory)
     };
 
-    alert(JSON.stringify(projectData));
-
     $.ajax({
         type: 'POST',
         url: `/Dashboard/User/project/create`,
         contentType: 'application/json',
         data: JSON.stringify(projectData)
     }).done(data => {
-        alert(data);
+        document.querySelector('.js-create-project-form').reset();
         createProjectSuccessAlert.show().delay(3000);
         createProjectSuccessAlert.fadeOut();
     }).fail(failureResponse => {
+        createProjectFailAlert.text(failureResponse.responseText);
         createProjectFailAlert.show().delay(3000);
         createProjectFailAlert.fadeOut();
     });
 });
 
+
+//--------------Create Post--------//
+
 $('.js-create-post-success-alert').hide();
 $('.js-create-post-fail-alert').hide();
+
 $('.js-createpost').on('click', () => {
     let title = $('.js-title').val();
     let projectId = $('.js-project').val();
@@ -200,12 +187,18 @@ $('.js-createpost').on('click', () => {
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
-        $('.js-create-post-success-alert').show();
+        document.querySelector('.js-create-post-form').reset();
+        $('.js-create-post-success-alert').show().delay(3000);
+        $('.js-create-post-success-alert').fadeOut();
     }).fail(failureResponse => {
-        $('.js-create-post-fail-alert').text(failureResponse);
-        $('.js-create-post-fail-alert').show();
+        $('.js-create-post-fail-alert').text(failureResponse.responseText);
+        $('.js-create-post-fail-alert').show().delay(3000);
+        $('.js-create-post-fail-alert').fadeOut();
     });
 });
+
+
+//-------Create Reward Package----------//
 
 $('.js-create-reward-success-alert').hide();
 $('.js-create-reward-fail-alert').hide();
@@ -217,8 +210,6 @@ $('.js-createrewardpackage').on('click', () => {
     let description = $('.js-description').val();
     let projectId = $('.js-projectId').val();
 
-    alert('click');
-
     let data = {
         "Title" : title,
         "ProjectId": parseInt(projectId),
@@ -226,7 +217,6 @@ $('.js-createrewardpackage').on('click', () => {
         "MinAmount": parseInt(amount),
         "Quantity" : quantity ? parseInt(quantity) : null
     };
-    alert(JSON.stringify(data));
 
     $.ajax({
         type: 'POST',
@@ -234,10 +224,12 @@ $('.js-createrewardpackage').on('click', () => {
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
-        $('.js-create-reward-success-alert').show();
+        document.querySelector('.js-create-reward-form').reset();
+        $('.js-create-reward-success-alert').show().delay(3000);
+        $('.js-create-reward-success-alert').fadeOut();
     }).fail(failureResponse => {
-        console.log(failureResponse);
         $('.js-create-reward-fail-alert').text(failureResponse.responseText);
-        $('.js-create-reward-fail-alert').show();
+        $('.js-create-reward-fail-alert').show().delay(3000);
+        $('.js-create-reward-fail-alert').fadeOut();
     });
 });

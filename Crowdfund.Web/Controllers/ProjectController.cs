@@ -58,7 +58,7 @@ namespace Crowdfund.Web.Controllers
                 Posts = project.Data.Posts,
                 RewardPackages = project.Data.RewardPackages,
                 IsFirstImage = true,
-                Backers = _backingService.GetProjectBackingsCount(id).Data,
+                Backings = _backingService.GetProjectBackingsCount(id).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(id).Data,
                 Progress =
                     (int) ((decimal) _backingService.GetProjectBackingsAmount(id).Data / project.Data.Goal * 100),
@@ -103,7 +103,7 @@ namespace Crowdfund.Web.Controllers
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int) ((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
@@ -128,7 +128,7 @@ namespace Crowdfund.Web.Controllers
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int) ((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
@@ -153,7 +153,7 @@ namespace Crowdfund.Web.Controllers
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int) ((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)

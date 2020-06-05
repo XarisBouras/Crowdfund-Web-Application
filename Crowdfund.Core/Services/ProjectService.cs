@@ -542,9 +542,14 @@ namespace Crowdfund.Core.Services
 
             var post = _postService.CreatePost(createPostOptions);
 
-            if (post != null)
+            if (post.Success)
             {
                 project.Data.Posts.Add(post.Data);
+            }
+            else
+            {
+                return Result<bool>.Failed(post.ErrorCode,
+                    post.ErrorText);
             }
 
             var rows = 0;

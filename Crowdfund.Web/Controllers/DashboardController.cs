@@ -47,7 +47,7 @@ namespace Crowdfund.Web.Controllers
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
@@ -76,7 +76,7 @@ namespace Crowdfund.Web.Controllers
                 Description = p.Description,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
@@ -98,7 +98,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("project/create")]
-        public IActionResult CreateProject(CreateProjectOptions options)
+        public IActionResult CreateProject([FromBody] CreateProjectOptions options)
         {
             var result = _projectService.CreateProject(Globals.UserId, options);
 

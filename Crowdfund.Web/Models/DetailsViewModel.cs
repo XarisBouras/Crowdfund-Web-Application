@@ -22,7 +22,7 @@ namespace Crowdfund.Web.Models
 
         public Category Category { get; set; }
 
-        public int Backers { get; set; }
+        public int Backings { get; set; }
 
         public decimal BackingsAmount { get; set; }
         public int Progress { get; set; }
