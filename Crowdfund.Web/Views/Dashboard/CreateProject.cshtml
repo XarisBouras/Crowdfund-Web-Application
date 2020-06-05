@@ -23,11 +23,11 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="title">Project Title</label>
-                            <input type="text" name="title" class="form-control" id="title">
+                            <input type="text" name="title" class="form-control js-create-project-title" id="title">
                         </div>
                         <div class="form-group">
                             <label for="categoryId">Category</label>
-                            <select class="form-control" name="categoryId" id="categoryId">
+                            <select class="form-control js-create-project-category" name="categoryId" id="categoryId">
                                 @foreach (var category in Globals.Categories)
                                 {
                                     <option value='@((int) category)'>@category</option>
@@ -36,21 +36,30 @@
                         </div>
                         <div class="form-group">
                             <label for="mainImageUrl">Image Url</label>
-                            <input type="text" name="mainImageUrl" class="form-control" id="mainImageUrl">
+                            <input type="text" name="mainImageUrl" class="form-control js-create-project-image" id="mainImageUrl">
                         </div>
                         <div class="form-group">
                             <label for="dueTo">Due To</label>
-                            <input type="date" name="dueTo" class="form-control" id="dueTo">
+                            <input type="date" name="dueTo" class="form-control js-create-project-dueto" id="dueTo">
                         </div>
                         <div class="form-group">
                             <label for="goal">Goal</label>
-                            <input type="number" min="1" step="1" name="goal" class="form-control" id="goal">
+                            <input type="number" min="1" step="1" name="goal" class="form-control js-create-project-goal" id="goal">
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea name="description" class="form-control" id="description" rows="8"></textarea>
+                            <textarea name="description" class="form-control js-create-project-description" id="description" rows="8"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-lg btn-warning">Create</button>
+                        <button type="button" class="btn btn-lg btn-warning js-create-project-button">Create</button>
+
+                        <div class="alert alert-success mt-3 js-create-project-success-alert" role="alert" style="text-align:center">
+                            Project created successfully
+                        </div>
+
+                        <div class="alert alert-danger mt-3 js-create-project-fail-alert" role="alert" style="text-align:center">
+                            Project could not be created
+                        </div>
+
                     </form>
                 </div>
             </div>

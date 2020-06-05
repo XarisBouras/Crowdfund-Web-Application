@@ -43,7 +43,7 @@
                                     <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@pr.BackingsAmount / @pr.Goal $</span>
                                     <small class="badge badge-pill badge-warning" style="font-size: .9rem">@pr.Backers backers</small>
                                 </div>
-                                <a asp-controller="Project" asp-action="@pr.ProjectId" type="button" class="btn btn-md w-50 btn-success">View</a>
+                                <a asp-controller="Project" asp-action="Details" asp-route-id="@pr.ProjectId" type="button" class="btn btn-md w-50 btn-success">View</a>
                             </div>
                         </div>
                     </div>
