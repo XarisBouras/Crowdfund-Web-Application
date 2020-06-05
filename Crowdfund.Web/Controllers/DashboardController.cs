@@ -130,7 +130,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("post/project/{id}")]
-        public IActionResult CreatePost(PostFormOptions options)
+        public IActionResult CreatePost([FromBody] PostFormOptions options)
         {
             var postOptions = new CreatePostOptions
             {
@@ -145,8 +145,8 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
-
-            return RedirectToAction("CreatePost", options.ProjectId);
+            return Ok();
+            //return RedirectToAction("CreatePost", options.ProjectId);
         }
 
 

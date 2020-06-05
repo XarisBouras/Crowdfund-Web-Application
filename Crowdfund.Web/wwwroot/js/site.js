@@ -133,8 +133,7 @@ createProjectButton.on('click', () => {
     let createProjectDueTo = $('.js-create-project-dueto').val();
     let createProjectGoal = $('.js-create-project-goal').val();
     let createProjectCategory = $('.js-create-project-category').val();
-
-    alert('click');
+    
     createProjectSuccessAlert.hide();
     createProjectFailAlert.hide();
 
@@ -159,6 +158,31 @@ createProjectButton.on('click', () => {
         createProjectSuccessAlert.show();
     }).fail(failureResponse => {
         createProjectFailAlert.show();
+    });
+});
+
+$('.js-create-post-success-alert').hide();
+$('.js-create-post-fail-alert').hide();
+$('.js-createpost').on('click', () => {
+    let title = $('.js-title').val();
+    let projectId = $('.js-project').val();
+    let description = $('.js-description').val();
+    
+    let data = {
+        "Title": title,
+        "ProjectId": parseInt(projectId),
+        "Text": description
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: `/Dashboard/User/post/project/${projectId}`,
+        contentType: 'application/json',
+        data: JSON.stringify(data)
+    }).done(data => {
+        $('.js-create-post-success-alert').show();
+    }).fail(failureResponse => {
+        $('.js-create-post-fail-alert').show();
     });
 });
 
