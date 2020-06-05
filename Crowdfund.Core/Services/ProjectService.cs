@@ -305,10 +305,10 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            if (project.Data.RewardPackages.Any(r => r.MinAmount == createRewardOptions.MinAmount))
+            if (project.Data.RewardPackages.Any(r => r.Title.ToLower().Equals(createRewardOptions.Title.ToLower())))
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Can Not Create A Reward Package With The Same Value");
+                    "Can Not Create A Reward Package With The Same Title");
             }
 
 

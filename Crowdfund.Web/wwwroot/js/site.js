@@ -217,7 +217,7 @@ $('.js-createrewardpackage').on('click', () => {
         $('.js-create-reward-success-alert').show();
     }).fail(failureResponse => {
         console.log(failureResponse);
-        $('.js-create-reward-fail-alert').text(failureResponse.statusText);
+        $('.js-create-reward-fail-alert').text(failureResponse.responseText);
         $('.js-create-reward-fail-alert').show();
     });
 });
