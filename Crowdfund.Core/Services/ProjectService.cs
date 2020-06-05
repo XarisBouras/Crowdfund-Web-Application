@@ -46,8 +46,9 @@ namespace Crowdfund.Core.Services
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
-
-            if (_userService.GetUserById(userId) == null)
+            var user = _userService.GetUserById(userId);
+            
+            if (user == null)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "User Not Found");
             }
@@ -63,8 +64,6 @@ namespace Crowdfund.Core.Services
             };
 
             _context.Set<Project>().Add(project);
-
-            var user = _userService.GetUserById(userId);
 
             var userProject = new UserProjectReward
             {
