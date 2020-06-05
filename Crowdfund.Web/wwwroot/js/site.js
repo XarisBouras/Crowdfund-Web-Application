@@ -23,6 +23,14 @@ $(document).on('click', '#removeRow', function () {
 
 //--------------------Project Page JS-------------------------//
 
+let backSuccessAlert = $('.js-back-success-alert');
+backSuccessAlert.hide();
+
+let backFailAlert = $('.js-back-fail-alert');
+backFailAlert.hide();
+
+
+
 let rewardAmountButton = $('.js-reward-amount-button');
 
 
@@ -43,10 +51,10 @@ button.on('click', (event) => {
     let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
     let projectId = clickedElement.parent().parent().find('.js-project').val();
 
-   
-
     alert('click');
-    
+    backSuccessAlert.hide();
+    backFailAlert.hide();
+
     let data = {
         "Amount": parseInt(amount),
         "RewardPackageId": parseInt(rewardPackageId),
@@ -61,10 +69,12 @@ button.on('click', (event) => {
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
-        alert(data);
+        backSuccessAlert.show().delay(3000);
+        backSuccessAlert.fadeOut();
              
     }).fail(failureResponse => {
-        
+        backFailAlert.show().delay(3000);
+        backFailAlert.fadeOut();
     }); 
 });                    
 
@@ -73,8 +83,12 @@ button.on('click', (event) => {
 let userSuccessAlert = $('.js-user-profile-success-alert');
 userSuccessAlert.hide();
 
+
+
 let userFailAlert = $('.js-user-profile-fail-alert');
 userFailAlert.hide();
+
+
 
 let saveUserProfileButton = $('.js-user-profile-save');
 
@@ -88,6 +102,8 @@ saveUserProfileButton.on('click', () => {
     alert('click');
     userSuccessAlert.hide();
     userFailAlert.hide();
+
+   
 
     if (userEmail == '') {
         userFailAlert.show();
@@ -110,9 +126,11 @@ saveUserProfileButton.on('click', () => {
         data: JSON.stringify(userData)
     }).done(data => {
         alert(data);
-        userSuccessAlert.show();
+        userSuccessAlert.show().delay(3000);
+        userSuccessAlert.fadeOut();
     }).fail(failureResponse => {
-        userFailAlert.show();
+        userFailAlert.show().delay(3000);
+        userFailAlert.fadeOut();
     });
 });
 
@@ -155,10 +173,12 @@ createProjectButton.on('click', () => {
         contentType: 'application/json',
         data: JSON.stringify(projectData)
     }).done(data => {
-        alert(data);        
-        createProjectSuccessAlert.show();
+        alert(data);
+        createProjectSuccessAlert.show().delay(3000);
+        createProjectSuccessAlert.fadeOut();
     }).fail(failureResponse => {
-        createProjectFailAlert.show();
+        createProjectFailAlert.show().delay(3000);
+        createProjectFailAlert.fadeOut();
     });
 });
 
