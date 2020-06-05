@@ -3,11 +3,11 @@
     ViewData["Title"] = "UpdateProject";
 }
 
-<div class="container updateproject-container">
+<div class="container" style="margin-top: 90px;">
 
     <!-- Project Title & Foto-->
     <div class="row">
-        <div class="col col-md-3">
+        <div class="col-12 col-sm-12 col-md-3">
             <div class="card w-100 h-100">
                 <div class="card-body">
                     <a asp-controller="Dashboard" asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-warning mb-4 w-100">
@@ -18,7 +18,7 @@
         </div>
 
 
-        <div class="col col-md-9">
+        <div class="col-12 col-sm-12 col-md-9">
             <div class="card w-100 h-100">
                 <div class="card-body">
                     <h5 class="card-title">Edit your Project: @Model.Title</h5>

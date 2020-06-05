@@ -27,19 +27,12 @@ namespace Crowdfund.Web.Models
         public decimal BackingsAmount { get; set; }
         public int Progress { get; set; }
         public bool IsFirstImage { get; set; } 
-        public IList<RewardPackage> RewardPackages { get; set; }
+        public IEnumerable<RewardPackage> RewardPackages { get; set; }
 
-        public IList<Post> Posts { get; set; }
+        public IEnumerable<Post> Posts { get; set; }
 
-        public IList<Media> Medias { get; set; }
+        public IEnumerable<Media> Medias { get; set; }
 
         public IEnumerable<Project> InterestingProjects { get; set; }
-
-        public DetailsViewModel()
-        {
-            RewardPackages = new List<RewardPackage>();
-            Posts = new List<Post>();
-            Medias = new List<Media>();
-        }
     }
 }

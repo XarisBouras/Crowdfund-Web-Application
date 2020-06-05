@@ -221,10 +221,9 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
-
+            
             return RedirectToAction("AddImages", options.ProjectId);
         }
-
 
 
         [HttpGet("videos/project/{id}")]
@@ -242,7 +241,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("videos/project/{id}")]
-        public IActionResult AddVideos(MediaFormOptions options)
+        public IActionResult AddVideos([FromBody] MediaFormOptions options)
         {
             var createMediaOptions = options.Url.Select
             (url => new CreateMediaOptions

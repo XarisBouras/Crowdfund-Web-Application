@@ -48,7 +48,6 @@ button.on('click', (event) => {
     let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
     let projectId = clickedElement.parent().parent().find('.js-project').val();
 
-    alert('click');
     backSuccessAlert.hide();
     backFailAlert.hide();
 
@@ -206,7 +205,6 @@ $('.js-createpost').on('click', () => {
         $('.js-create-post-fail-alert').fadeOut();
     });
 });
-
 
 //-------Create Reward Package----------//
 
