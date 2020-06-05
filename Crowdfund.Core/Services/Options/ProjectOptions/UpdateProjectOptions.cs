@@ -15,5 +15,7 @@ namespace Crowdfund.Core.Services.Options.ProjectOptions
         public DateTime? DueTo { get; set; }
 
         public int Goal { get; set; }
+        
+        public int CategoryId { get; set;}
     }
 }

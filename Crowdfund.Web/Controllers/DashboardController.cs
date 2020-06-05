@@ -50,7 +50,7 @@ namespace Crowdfund.Web.Controllers
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal)*100)
+                Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(projectsToView);
@@ -77,9 +77,9 @@ namespace Crowdfund.Web.Controllers
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = (int)Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal)*100)
+                Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(projectsToView);
@@ -299,7 +299,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("project/edit/{id}")]
-        public IActionResult UpdateProject(UpdateProjectFormOptions options)
+        public IActionResult UpdateProject([FromBody] UpdateProjectFormOptions options)
         {
             var editProjectOptions = new UpdateProjectOptions()
             {
@@ -308,7 +308,8 @@ namespace Crowdfund.Web.Controllers
                 Description = options.Description,
                 MainImageUrl = options.MainImageUrl,
                 DueTo = options.DueTo,
-                Goal = options.Goal
+                Goal = options.Goal,
+                CategoryId = options.CategoryId
             };
 
             var result = _projectService.UpdateProject
@@ -319,8 +320,8 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
-
-            return RedirectToAction("UpdateProject", options.ProjectId);
+            return Ok();
+            //return RedirectToAction("UpdateProject", options.ProjectId);
         }
     }
 }

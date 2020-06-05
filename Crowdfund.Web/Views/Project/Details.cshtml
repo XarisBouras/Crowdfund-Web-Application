@@ -45,7 +45,7 @@
 
                             <img class="img-fluid vw-100 vh-50" src="@Model.MainImageUrl"/>
                             <div class="text-center text-wrap font-weight-bolder">
-                                <p><h1>@Model.Title</h1></p>
+                                <h1>@Model.Title</h1>
                             </div>
                             <div class="text-justify text-wrap mr-2 font-weight-normal">
                                 <p>
@@ -179,8 +179,7 @@
                                     @rew.Description
                                 </p>
                                 <div class="mb-2">
-
-                                    <p><strong>@rew.Quantity left</strong></p>
+                                    <p><strong>@(rew.Quantity != null ? $"{rew.Quantity} left" : "Unlimited" )</strong></p>
                                 </div>
                                 <div class="text-center my-2">
                                     <button type="button" class="btn btn-md w-50 btn-warning js-backit">Back It</button>

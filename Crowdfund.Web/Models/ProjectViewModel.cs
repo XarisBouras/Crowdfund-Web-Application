@@ -1,4 +1,5 @@
 using System;
+using Crowdfund.Core.Models;
 
 namespace Crowdfund.Web.Models
 {
@@ -7,6 +8,8 @@ namespace Crowdfund.Web.Models
         public int ProjectId { get; set; }
 
         public string Title { get; set; }
+        
+        public Category Category { get; set; }
 
         public string Description { get; set; }
 
@@ -14,11 +17,11 @@ namespace Crowdfund.Web.Models
 
         public string MainImageUrl { get; set; }
 
-        public decimal Goal { get; set; }
+        public int Goal { get; set; }
         
         public int Backers { get; set; }
 
-        public decimal BackingsAmount { get; set; }
+        public int BackingsAmount { get; set; }
 
         public int Progress { get; set; }
         

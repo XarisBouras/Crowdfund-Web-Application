@@ -29,8 +29,7 @@ namespace Crowdfund.Core.Services
             var project = _projectService.GetProjectById(projectId);
 
             if (user == null || project == null)
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                    " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
 
 
             if (Helpers.UserOwnsProject(_context, userId, projectId))
@@ -40,8 +39,7 @@ namespace Crowdfund.Core.Services
                 .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId);
 
             if (rewardPackage == null && rewardPackageId != 0)
-                return Result<bool>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                    " you can find plenty of other things in our homepage");
+                return Result<bool>.Failed(StatusCode.NotFound, "Invalid Reward Package");
 
             var userProjectBacking = new UserProjectReward
             {
@@ -76,8 +74,7 @@ namespace Crowdfund.Core.Services
 
             var user = Helpers.UserExists(_context, userId);
 
-            if (user == false) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                    " you can find plenty of other things in our homepage");
+            if (user == false) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "User Not Found");
 
             try
             {
@@ -100,13 +97,13 @@ namespace Crowdfund.Core.Services
 
             var backer = Helpers.UserExists(_context, backerId);
 
-            if (backer == false) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                    " you can find plenty of other things in our homepage");
+            if (backer == false) return Result<IEnumerable<Project>>.Failed(StatusCode.NotFound, "User Not Found");
 
             try
             {
                 var projectsIds = _context.Set<UserProjectReward>()
                     .Where(u => u.UserId == backerId && u.IsOwner == false).Select(p => p.ProjectId)
+                    .Distinct()
                     .ToList();
 
                 return Result<IEnumerable<Project>>
@@ -119,13 +116,13 @@ namespace Crowdfund.Core.Services
         }
 
 
-        public Result<decimal> GetProjectBackingsAmount(int? projectId)
+        public Result<int> GetProjectBackingsAmount(int? projectId)
         {
-            if (projectId == null) return Result<decimal>.Failed(StatusCode.BadRequest, "Null option");
+            if (projectId == null) return Result<int>.Failed(StatusCode.BadRequest, "Null option");
 
             if (Helpers.ProjectExists(_context, projectId) == false)
             {
-                return Result<decimal>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
+                return Result<int>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
                     " you can find plenty of other things in our homepage");
             }
 
@@ -135,11 +132,11 @@ namespace Crowdfund.Core.Services
                     .Where(u => u.ProjectId == projectId && u.IsOwner == false)
                     .Sum(a => a.Amount);
 
-                return Result<decimal>.Succeed(backingsAmount ?? 0);
+                return Result<int>.Succeed(backingsAmount ?? 0);
             }
             catch (Exception ex)
             {
-                return Result<decimal>.Failed(StatusCode.InternalServerError, ex.Message);
+                return Result<int>.Failed(StatusCode.InternalServerError, ex.Message);
             }
         }
 

@@ -70,6 +70,7 @@ saveProjectUpdateButton.on('click', () => {
     let projectMainImageUrl = $('.js-mainImageUrl').val();
     let projectDueTo = $('.js-dueTo').val();
     let projectGoal = $('.js-goal').val();
+    let projectCategory = $('.js-project-update-category').val();
     let projectId = $('.js-project-id').val();
 
     alert('click');
@@ -82,11 +83,13 @@ saveProjectUpdateButton.on('click', () => {
     //}
 
     let projectData = {
+        "ProjectId": parseInt(projectId),
         "Title": projectTitle,
         "Description": projectDescription,
         "MainImageUrl": projectMainImageUrl,
         "DueTo": projectDueTo,
-        "Goal": parseInt(projectGoal)
+        "Goal": parseInt(projectGoal),
+        "CategoryId": parseInt(projectCategory)
     };
 
     alert(JSON.stringify(projectData));

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.UserOptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Crowdfund.Web.Models;
 using Microsoft.AspNetCore.Http;
-using Crowdfund.Web.Models.Trendings;
-
 namespace Crowdfund.Web.Controllers
 {
     public class HomeController : Controller
@@ -38,17 +34,18 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)trendingProjects.ErrorCode,
                     trendingProjects.ErrorText);
             }
-            var trendingProjectsToView = trendingProjects.Data.Select(p => new TrendingsViewModel
+            var trendingProjectsToView = trendingProjects.Data.Select(p => new ProjectViewModel
             {
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
+                Category = p.Category,
                 MainImageUrl = p.MainImageUrl,
-                DueTo = (p.DueTo - DateTime.Now).Days,
+                DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress =(int) Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100)
+                Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(trendingProjectsToView);
@@ -80,32 +77,6 @@ namespace Crowdfund.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        [HttpGet]
-        public IActionResult Tredings()
-        {
-            var trendingProjects = _backingService.TrendingProjects();
-
-            if (!trendingProjects.Success)
-            {
-                return StatusCode((int)trendingProjects.ErrorCode,
-                    trendingProjects.ErrorText);
-            }
-            var trendingProjectsToView = trendingProjects.Data.Select(p => new TrendingsViewModel
-            {
-                ProjectId = p.ProjectId,
-                Title = p.Title,
-                Description = p.Description,
-                MainImageUrl = p.MainImageUrl,
-                DueTo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
-                Goal = p.Goal,
-                Progress = Math.Round((_backingService.GetProjectBackingsAmount(p.ProjectId).Data) / (p.Goal) * 100, 2)
-            });
-
-            return View(trendingProjectsToView);
-
-            }
         
     }
 }

@@ -32,7 +32,7 @@
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <div class="card-title">
-                                            <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
                                                 <h2>@p.Title</h2>
                                                 <p class="card-text">
                                                     <small>@p.DaysToGo days to go</small>
@@ -55,11 +55,11 @@
                                             <small class="badge badge-pill badge-warning" style="font-size: .9rem">@p.Backers backers</small>
                                         </p>
 
-                                        <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary">Create Post</a>
-                                        <a asp-action="AddVideos" asp-route-id="@p.ProjectId" class="btn btn-sm btn-danger">Videos</a>
-                                        <a asp-action="AddImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success">Images</a>
-                                        <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info">Add Reward</a>
-                                        <a asp-action="UpdateProject" asp-route-id="@p.ProjectId" class="btn btn-sm btn-secondary">Edit</a>
+                                        <a asp-action="CreatePost" asp-route-id="@p.ProjectId" class="btn btn-sm btn-primary mb-2">Create Post</a>
+                                        <a asp-action="AddVideos" asp-route-id="@p.ProjectId" class="btn btn-sm btn-danger mb-2">Videos</a>
+                                        <a asp-action="AddImages" asp-route-id="@p.ProjectId" class="btn btn-sm btn-success mb-2">Images</a>
+                                        <a asp-action="CreateRewardPackage" asp-route-id="@p.ProjectId" class="btn btn-sm btn-info mb-2">Add Reward</a>
+                                        <a asp-action="UpdateProject" asp-route-id="@p.ProjectId" class="btn btn-sm btn-secondary mb-2">Edit</a>
                                     </div>
                                 </div>
                             </div>

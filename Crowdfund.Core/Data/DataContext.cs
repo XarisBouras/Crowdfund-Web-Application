@@ -8,12 +8,6 @@ namespace Crowdfund.Core.Data
         public DataContext(DbContextOptions options) : base(options)
         {           
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseSqlServer("");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
