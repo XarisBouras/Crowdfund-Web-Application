@@ -66,9 +66,10 @@ button.on('click', (event) => {
         data: JSON.stringify(data)
     }).done(data => {
        // document.querySelector('.js-create-project-form').reset();
-        
-        backSuccessAlert.show().delay(3000);
-        backSuccessAlert.fadeOut();
+        $('.js-back-modal').modal('show');
+      //  $('.js-user-modal').modal('hide');
+      //  backSuccessAlert.show().delay(3000);
+      //  backSuccessAlert.fadeOut();
              
     }).fail(failureResponse => {
         backFailAlert.show().delay(3000);
@@ -108,7 +109,7 @@ saveUserProfileButton.on('click', () => {
         url: `/Dashboard/User/edit/${userId}`,
         contentType: 'application/json',
         data: JSON.stringify(userData)
-    }).done(data => {       
+    }).done(data => {
         userSuccessAlert.show().delay(3000);
         userSuccessAlert.fadeOut();
     }).fail(failureResponse => {
