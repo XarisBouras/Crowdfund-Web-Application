@@ -295,7 +295,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-            if (project == null)
+            if (!project.Success)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
             }
@@ -320,8 +320,8 @@ namespace Crowdfund.Core.Services
             }
             else
             {
-                return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Invalid Reward Package options");
+                return Result<bool>.Failed(rewardResult.ErrorCode,
+                    rewardResult.ErrorText);
             }
 
             var rows = 0;

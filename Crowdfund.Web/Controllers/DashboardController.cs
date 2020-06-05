@@ -166,7 +166,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("reward/project/{id}")]
-        public IActionResult CreateRewardPackage(RewardFormOptions options)
+        public IActionResult CreateRewardPackage([FromBody] RewardFormOptions options)
         {
             var rewardPackageOptions = new CreateRewardPackageOptions
             {
@@ -184,7 +184,8 @@ namespace Crowdfund.Web.Controllers
                     result.ErrorText);
             }
 
-            return RedirectToAction("CreateRewardPackage", options.ProjectId);
+            return Ok();
+            //return RedirectToAction("CreateRewardPackage", options.ProjectId);
         }
 
 

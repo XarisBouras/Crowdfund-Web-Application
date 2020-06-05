@@ -182,7 +182,42 @@ $('.js-createpost').on('click', () => {
     }).done(data => {
         $('.js-create-post-success-alert').show();
     }).fail(failureResponse => {
+        $('.js-create-post-fail-alert').text(failureResponse);
         $('.js-create-post-fail-alert').show();
     });
 });
 
+$('.js-create-reward-success-alert').hide();
+$('.js-create-reward-fail-alert').hide();
+
+$('.js-createrewardpackage').on('click', () => {
+    let title = $('.js-title').val();
+    let amount = $('.js-amount').val();
+    let quantity = $('.js-quantity').val();
+    let description = $('.js-description').val();
+    let projectId = $('.js-projectId').val();
+
+    alert('click');
+
+    let data = {
+        "Title" : title,
+        "ProjectId": parseInt(projectId),
+        "Description": description,
+        "MinAmount": parseInt(amount),
+        "Quantity" : quantity ? parseInt(quantity) : null
+    };
+    alert(JSON.stringify(data));
+
+    $.ajax({
+        type: 'POST',
+        url: `/Dashboard/User/reward/project/${projectId}`,
+        contentType: 'application/json',
+        data: JSON.stringify(data)
+    }).done(data => {
+        $('.js-create-reward-success-alert').show();
+    }).fail(failureResponse => {
+        console.log(failureResponse);
+        $('.js-create-reward-fail-alert').text(failureResponse.statusText);
+        $('.js-create-reward-fail-alert').show();
+    });
+});

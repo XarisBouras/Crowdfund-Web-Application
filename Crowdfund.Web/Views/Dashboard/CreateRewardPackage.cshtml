@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <a asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-warning mb-4 w-100">
                         Back
-                    </a>                    
+                    </a>
                 </div>
             </div>
         </div>
@@ -24,22 +24,29 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control" id="title">
+                            <input type="text" name="title" class="form-control js-title" id="title">
                         </div>
                         <div class="form-group">
                             <label for="minAmount">Amount</label>
-                            <input type="number" name="minAmount" class="form-control" id="minAmount">
+                            <input type="number" name="minAmount" class="form-control js-amount" id="minAmount">
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="quantity" placeholder="Leave empty for unlimited">
+                            <input type="number" name="quantity" class="form-control js-quantity" id="quantity" placeholder="Leave empty for unlimited">
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea name="description" class="form-control" id="description" rows="8"></textarea>
+                            <textarea name="description" class="form-control js-description" id="description" rows="8"></textarea>
                         </div>
-                        <input type="hidden" name="projectId" value="@Model.ProjectId"/>
-                        <button type="submit" class="btn btn-lg btn-warning">Create</button>
+                        <input type="hidden" name="projectId" class="js-projectId" value="@Model.ProjectId"/>
+                        <button type="button" class="btn btn-lg btn-warning js-createrewardpackage">Create</button>
+
+                        <div class="alert alert-success mt-3 js-create-reward-success-alert" role="alert" style="text-align:center">
+                            Reward Package created successfully
+                        </div>
+
+                        <div class="alert alert-danger mt-3 js-create-reward-fail-alert" role="alert" style="text-align:center">
+                        </div>
                     </form>
                 </div>
             </div>
