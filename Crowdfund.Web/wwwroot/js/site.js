@@ -43,7 +43,8 @@ let button = $('.js-backit');
 
 button.on('click', (event) => {
     let clickedElement = $(event.currentTarget);
-    var amount = clickedElement.parent().parent().find('.js-amount').val();  
+    let amount = clickedElement.parent().parent().find('.js-amount').val();
+    var parsedAmount = parseInt(amount);
     let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
     let projectId = clickedElement.parent().parent().find('.js-project').val();
 
@@ -66,6 +67,15 @@ button.on('click', (event) => {
         data: JSON.stringify(data)
     }).done(data => {
        // document.querySelector('.js-create-project-form').reset();
+        let currentTotal = parseInt(document.querySelector('#total-amount').innerText);
+        let goal = parseInt(document.querySelector('#goal').innerText);
+        let totalAmount = currentTotal + parsedAmount;
+        let percentage = Math.round(totalAmount/goal*100);
+        document.querySelector('#percentage').innerText = `${percentage}%`;
+        $('.progress-bar').css('width', `${percentage}%`);
+        
+        document.querySelector('#total-amount').innerText = totalAmount;
+        document.querySelector('#backings').innerText = parseInt(document.querySelector('#backings').innerText) + 1;
         
         backSuccessAlert.show().delay(3000);
         backSuccessAlert.fadeOut();

@@ -7,7 +7,7 @@
 <div class="container " style="margin-top: 40px;">
 
     <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100">@Model.Progress%</div>
+        <div class="progress-bar bg-success" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100"><span id="percentage">@Model.Progress%</span></div>
     </div>
     <div class="row mt-1 mb-1">
         <div class="col col-md-3 "><h6>Amount: <span id="total-amount">@Model.BackingsAmount</span></h6>  </div>
