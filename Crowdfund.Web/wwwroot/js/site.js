@@ -101,6 +101,9 @@ userFailAlert.hide();
 let saveUserProfileButton = $('.js-user-profile-save');
 
 saveUserProfileButton.on('click', () => {
+    if (!form.valid()) {
+        return;
+    }
     let userFirstName = $('.js-firstName').val();
     let userLastName = $('.js-lastName').val();
     let userAddress = $('.js-address').val();
@@ -143,6 +146,9 @@ createProjectFailAlert.hide();
 let createProjectButton = $('.js-create-project-button');
 
 createProjectButton.on('click', () => {
+    if (!form.valid()) {
+        return;
+    }
     let createProjectTitle = $('.js-create-project-title').val();
     let createProjectDescription = $('.js-create-project-description').val();
     let createProjectMainImage = $('.js-create-project-image').val();
@@ -161,8 +167,6 @@ createProjectButton.on('click', () => {
         "Goal": parseInt(createProjectGoal),
         "CategoryId": parseInt(createProjectCategory)
     };
-
-  //  alert(stringify(projectData));
 
     $.ajax({
         type: 'POST',
@@ -186,6 +190,9 @@ $('.js-create-post-success-alert').hide();
 $('.js-create-post-fail-alert').hide();
 
 $('.js-createpost').on('click', () => {
+    if (!form.valid()) {
+        return;
+    }
     let title = $('.js-title').val();
     let projectId = $('.js-project').val();
     let description = $('.js-description').val();
@@ -218,6 +225,9 @@ $('.js-create-reward-success-alert').hide();
 $('.js-create-reward-fail-alert').hide();
 
 $('.js-createrewardpackage').on('click', () => {
+    if (!form.valid()) {
+        return;
+    }
     let title = $('.js-title').val();
     let amount = $('.js-amount').val();
     let quantity = $('.js-quantity').val();
