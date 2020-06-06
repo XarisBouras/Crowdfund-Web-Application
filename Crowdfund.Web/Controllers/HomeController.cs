@@ -25,7 +25,6 @@ namespace Crowdfund.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            HttpContext.Session.SetString("Test", "Session Test!");
             Globals.UserId = HttpContext.Session.GetInt32("UserId");
             var trendingProjects = _backingService.TrendingProjects();
 

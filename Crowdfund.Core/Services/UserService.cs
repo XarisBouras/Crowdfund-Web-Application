@@ -195,7 +195,7 @@ namespace Crowdfund.Core.Services
                 }
 
                 return rows <= 0
-                    ? Result<bool>.Failed(StatusCode.InternalServerError, "User Could Not Be Updated")
+                    ? Result<bool>.Failed(StatusCode.BadRequest, "No Changes Applied")
                     : Result<bool>.Succeed(true);
             }
             catch (Exception ex)
