@@ -1,28 +1,21 @@
 ﻿@model Crowdfund.Web.Models.DetailsViewModel
-@{
-    ViewData["Title"] = "Details";
-}
 
 
-<!-- Button trigger modal
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                  Launch demo modal  tabindex="1"
-                 </button>   -->
 <!-- Modal -->
 <div data-toggle="modal">
-    <div class="modal js-back-modal" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal js-back-success-modal text-justify" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="text-center" id="exampleModalLabel">Thanks for the support!</h5>
+            <div class="modal-content ">
+                <div class="modal-header" style="background-color:#ffc107">
+                    <h4 id="exampleModalLabel"><strong>Thanks For The Support!</strong></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    Your contribution matters to our Dream.
+                    <h5>Your Contribution Matters To Our Dream.</h5>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="border-top:none">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -30,15 +23,17 @@
     </div>
 </div>
 
+<div class="alert alert-danger mt-3 js-back-fail-alert" role="alert" style="text-align:center">
+</div>
 
-<div class="container " style="margin-top: 40px;">
+<div class="container " style="margin-top: 100px;">
 
     <div class="progress">
         <div class="progress-bar bg-success" role="progressbar" style="width: @Model.Progress%" aria-valuenow="@Model.Progress" aria-valuemin="0" aria-valuemax="100"><span id="percentage">@Model.Progress%</span></div>
     </div>
-    <div class="row mt-1 mb-1">
-        <div class="col col-md-3 "><h6>Amount: <span id="total-amount">@Model.BackingsAmount</span></h6>  </div>
-        <div class="col col-md-3 "><h6>Pledged For: <span id="goal">@Model.Goal</span></h6> </div>
+    <div class="row mt-1 mb-3">
+        <div class="col col-md-3 "><h6>Amount: $<span id="total-amount">@Model.BackingsAmount</span></h6>  </div>
+        <div class="col col-md-3 "><h6>Pledged For: $<span id="goal">@Model.Goal</span></h6> </div>
         <div class="col col-md-2 "><h6>Backings: <span id="backings">@Model.Backings</span></h6> </div>
         <div class="col col-md-2 "><h6>Days To Go: @Model.DaysToGo</h6> </div>
         <div class="col col-md-2"><h6>Category: @Model.Category</h6> </div>
@@ -52,16 +47,16 @@
                     <ul class="nav nav-pills  nav-justified">
                         <!--card-header-pills-->
                         <li class="nav-item">
-                            <a class="nav-link active text-secondary" data-toggle="tab" href="#Campaign">Campaign</a>
+                            <a class="nav-link active text-dark" data-toggle="tab" href="#Campaign">Campaign</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-secondary" data-toggle="tab" href="#Images">Images</a>
+                            <a class="nav-link text-dark" data-toggle="tab" href="#Images">Images</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-secondary" data-toggle="tab" href="#Videos">Videos</a>
+                            <a class="nav-link text-dark" data-toggle="tab" href="#Videos">Videos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-secondary" data-toggle="tab" href="#Post">Post Updates</a>
+                            <a class="nav-link text-dark" data-toggle="tab" href="#Post">Post Updates</a>
                         </li>
                     </ul>
                 </div>
@@ -163,17 +158,16 @@
         <div class="col col-md-4 col-sm-12 h-auto">
 
             <div class="card  ">
-                <div class="card-header">
-                    <h4 class="mt-1 text-muted">Rewards</h4>
+                <div class="card-header">                   
+                   <h4 class="mt-1 text-dark">Rewards</h4>
                 </div>
                 <div class="card-body scroll">
 
                     <div class="card mb-4 box-shadow w-auto " data-rewardId="0">
                         <div class="card-body text-center">
                             <button class="btn btn-success mb-4 w-100" disabled style="font-size: 1.1rem;">
-                                Back It because you believe It
-                            </button>
-                            <h2 class="mb-2">Reward</h2>
+                                Back It Because You Believe It
+                            </button>                     
                             <div class="input-group my-4">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
@@ -182,7 +176,7 @@
                                 <input type="hidden" class="form-control js-reward" value="0">
                                 <input type="hidden" class="form-control js-project" value="@Model.ProjectId">
                             </div>
-                            <p class="card-text">Get a Thank you email</p>
+                            <p class="card-text text-center">Get a Thank You E-mail</p>
                             <div class="mb-2">
                                 <p><strong>Unlimited</strong></p>
                             </div>
@@ -208,7 +202,7 @@
                                     <input type="hidden" class="form-control js-reward" value="@rew.RewardPackageId">
                                     <input type="hidden" class="form-control js-project" value="@Model.ProjectId">
                                 </div>
-                                <p class="card-text">
+                                <p class="card-text text-center">
                                     @rew.Description
                                 </p>
                                 <div class="mb-2">
@@ -222,18 +216,11 @@
                     }
                 </div>
             </div>
-
-            <div class="alert alert-success mt-3 js-back-success-alert" role="alert" style="text-align:center">
-                Thanks for your contribution!
-            </div>
-
-            <div class="alert alert-danger mt-3 js-back-fail-alert" role="alert" style="text-align:center">
-                Project could not be backed. Please Try Again
-            </div>
-
         </div>
     </div>
 </div>
+
+
 
 <!--Interesting Projects-->
 <div class="container" style="margin-top: 120px">
