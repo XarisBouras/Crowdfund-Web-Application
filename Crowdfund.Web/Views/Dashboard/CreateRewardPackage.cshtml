@@ -1,7 +1,4 @@
 @model Crowdfund.Web.Models.Dashboard.ProjectInfoViewModel
-@{
-    ViewBag.Title = "title";
-}
 
 <div class="container" style="margin-top: 90px;">
 
@@ -41,8 +38,7 @@
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea name="@Html.NameFor(nm=>nm.RewardOptions.Description)" class="form-control js-description"
-                                      data-val="true" data-val-required="Field required" id="description" rows="8"></textarea>
-                            @Html.ValidationMessageFor(nm => nm.RewardOptions.Description)
+                                       id="description" rows="8"></textarea>                          
                         </div>
                         <input type="hidden" name="projectId" class="js-projectId" value="@Model.ProjectId" />
                         <button type="button" class="btn btn-lg btn-warning js-createrewardpackage">Create</button>

@@ -38,7 +38,6 @@ backFailAlert.hide();
 let rewardAmountButton = $('.js-reward-amount-button');
 
 rewardAmountButton.on('click', (event) => {
-   // alert('click');
     let clickedElement = $(event.currentTarget);
     let rewardAmount = clickedElement.parent().parent().find('.js-button-amount').text();    
     let amountToSet = clickedElement.parent().parent().find('.js-amount');
@@ -81,10 +80,12 @@ button.on('click', (event) => {
         
         document.querySelector('#total-amount').innerText = totalAmount;
         document.querySelector('#backings').innerText = parseInt(document.querySelector('#backings').innerText) + 1;
-        $('.js-back-modal').modal('show');
+        $('.js-back-success-modal').modal('show');
              
     }).fail(failureResponse => {
+        backFailAlert.text(failureResponse.responseText);
         backFailAlert.show().delay(3000);
+        window.scrollTo(0, 0);
         backFailAlert.fadeOut();
     }); 
 });                    
@@ -156,10 +157,12 @@ createProjectButton.on('click', () => {
         "Title": createProjectTitle,
         "Description": createProjectDescription,
         "MainImageUrl": createProjectMainImage,
-        "DueTo": createProjectDueTo,
+        "DueTo": createProjectDueTo ? createProjectDueTo : null,
         "Goal": parseInt(createProjectGoal),
         "CategoryId": parseInt(createProjectCategory)
     };
+
+  //  alert(stringify(projectData));
 
     $.ajax({
         type: 'POST',
@@ -222,10 +225,10 @@ $('.js-createrewardpackage').on('click', () => {
     let projectId = $('.js-projectId').val();
 
     let data = {
-        "Title" : title,
         "ProjectId": parseInt(projectId),
+        "Title" : title,    
         "Description": description,
-        "MinAmount": parseInt(amount),
+        "MinAmount": amount ? parseInt(amount) : null,
         "Quantity" : quantity ? parseInt(quantity) : null
     };
 

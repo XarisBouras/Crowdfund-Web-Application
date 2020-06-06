@@ -23,7 +23,7 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> CreateBacking(int? userId, int? projectId, int rewardPackageId, int? amount)
         {
-            if (userId == null || projectId == null || amount == null || amount <= 0) return Result<bool>.Failed(StatusCode.BadRequest, "Null options");
+            if (userId == null || projectId == null ) return Result<bool>.Failed(StatusCode.BadRequest, "Null options");
 
             var user = _userService.GetUserById(userId);
             var project = _projectService.GetProjectById(projectId);
@@ -31,9 +31,13 @@ namespace Crowdfund.Core.Services
             if (user == null || project == null)
                 return Result<bool>.Failed(StatusCode.NotFound, "User or Project Not Found");
 
+            if (amount <= 0 || amount == null)
+            {
+                return Result<bool>.Failed(StatusCode.BadRequest, "Please enter a valid amount");
+            }
 
             if (Helpers.UserOwnsProject(_context, userId, projectId))
-                return Result<bool>.Failed(StatusCode.BadRequest, "You cannot back your project");
+                return Result<bool>.Failed(StatusCode.BadRequest, "You cannot back your own project");
 
             var rewardPackage = rewardPackageId != 0 ? project.Data.RewardPackages
                 .FirstOrDefault(rp => amount >= rp.MinAmount && rp.RewardPackageId == rewardPackageId) : null;

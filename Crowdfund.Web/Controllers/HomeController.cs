@@ -48,8 +48,7 @@ namespace Crowdfund.Web.Controllers
                 Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
-            return View(trendingProjectsToView);
-            //return View();
+            return View(trendingProjectsToView);           
         }
         
         [HttpPost]
@@ -65,12 +64,6 @@ namespace Crowdfund.Web.Controllers
             return Redirect("/");
         }
 
-        public IActionResult Privacy()
-        {
-            ViewBag.Message = HttpContext.Session.GetString("Test");
-            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

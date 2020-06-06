@@ -105,6 +105,7 @@ namespace Crowdfund.Web.Controllers
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                Category=p.Category, 
                 Goal = p.Goal,
                 Progress = (int) ((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });

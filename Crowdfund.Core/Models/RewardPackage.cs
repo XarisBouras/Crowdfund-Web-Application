@@ -8,7 +8,7 @@ namespace Crowdfund.Core.Models
         
         public string Description { get; set; } 
         
-        public int MinAmount { get; set; } 
+        public int? MinAmount { get; set; } 
         
         public int? Quantity { get; set; }
     }

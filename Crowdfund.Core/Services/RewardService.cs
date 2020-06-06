@@ -16,12 +16,27 @@ namespace Crowdfund.Core.Services
 
         public Result<RewardPackage> CreateRewardPackage(CreateRewardPackageOptions options)
         {
+            if(options == null)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please fill in the form");
+            }
+
             options.Title = options.Title?.Trim();
             options.Description = options.Description?.Trim();
             
-            if (string.IsNullOrWhiteSpace(options.Title) || options.Quantity < 0 || options.MinAmount <= 0)
+            if (string.IsNullOrWhiteSpace(options.Title))
             {
-                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Options Not Valid");
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please enter a Title");
+            }
+
+            if(options.Quantity < 0)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please enter a valid Quantity");
+            }
+
+            if(options.MinAmount <= 0 || options.MinAmount == null)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please enter a valid Amount");
             }
             
             var reward = new RewardPackage
@@ -35,7 +50,7 @@ namespace Crowdfund.Core.Services
             return Result<RewardPackage>.Succeed(reward);
         }
        
-        public Result<RewardPackage> UpdateRewardPackage(RewardPackage packageToUpdate ,UpdateRewardPackageOptions options)
+        public RewardPackage UpdateRewardPackage(RewardPackage packageToUpdate ,UpdateRewardPackageOptions options)
         {
             
             options.Title = options.Title?.Trim();
@@ -60,12 +75,8 @@ namespace Crowdfund.Core.Services
             {
                 packageToUpdate.MinAmount = options.MinAmount.Value;
             }
-            //if (options.MinAmount <= 0)
-            //{
-            //    return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Amount");
-            //}
-
-            return Result<RewardPackage>.Succeed(packageToUpdate);
+        
+            return packageToUpdate;
         }
 
         public bool DeleteRewardPackage(RewardPackage rewardPackage)
@@ -75,12 +86,9 @@ namespace Crowdfund.Core.Services
             return _context.SaveChanges() > 0;
         }
 
-        public Result<RewardPackage>  GetRewardPackageById(int? packageId)
+        public RewardPackage GetRewardPackageById(int? packageId)
         {
-            return packageId == null ? Result<RewardPackage>.Failed(StatusCode.NotFound,
-                        "Sorry, we couldn't find this page. But don't worry," +
-                        " you can find plenty of other things in our homepage") : 
-                        Result<RewardPackage>.Succeed(_context.Set<RewardPackage>().Find(packageId));
+            return packageId == null ? null : _context.Set<RewardPackage>().Find(packageId);
         }
     }
 }
