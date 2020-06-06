@@ -32,7 +32,7 @@ backFailAlert.hide();
 let rewardAmountButton = $('.js-reward-amount-button');
 
 rewardAmountButton.on('click', (event) => {
-    alert('click');
+   // alert('click');
     let clickedElement = $(event.currentTarget);
     let rewardAmount = clickedElement.parent().parent().find('.js-button-amount').text();    
     let amountToSet = clickedElement.parent().parent().find('.js-amount');
@@ -43,11 +43,11 @@ let button = $('.js-backit');
 
 button.on('click', (event) => {
     let clickedElement = $(event.currentTarget);
-    var amount = clickedElement.parent().parent().find('.js-amount').val();  
+    let amount = clickedElement.parent().parent().find('.js-amount').val();
+    var parsedAmount = parseInt(amount);
     let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
     let projectId = clickedElement.parent().parent().find('.js-project').val();
 
-    alert('click');
     backSuccessAlert.hide();
     backFailAlert.hide();
 
@@ -57,19 +57,25 @@ button.on('click', (event) => {
         "ProjectId": parseInt(projectId)
     };
 
-    alert(JSON.stringify(data));
-
+    clickedElement.parent().parent().find('.js-amount').val('');
+ 
     $.ajax({
         type: 'POST',
         url: `/projects`,
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
-       // document.querySelector('.js-create-project-form').reset();
+
+        let currentTotal = parseInt(document.querySelector('#total-amount').innerText);
+        let goal = parseInt(document.querySelector('#goal').innerText);
+        let totalAmount = currentTotal + parsedAmount;
+        let percentage = Math.round(totalAmount/goal*100);
+        document.querySelector('#percentage').innerText = `${percentage}%`;
+        $('.progress-bar').css('width', `${percentage}%`);
+        
+        document.querySelector('#total-amount').innerText = totalAmount;
+        document.querySelector('#backings').innerText = parseInt(document.querySelector('#backings').innerText) + 1;
         $('.js-back-modal').modal('show');
-      //  $('.js-user-modal').modal('hide');
-      //  backSuccessAlert.show().delay(3000);
-      //  backSuccessAlert.fadeOut();
              
     }).fail(failureResponse => {
         backFailAlert.show().delay(3000);
@@ -109,7 +115,7 @@ saveUserProfileButton.on('click', () => {
         url: `/Dashboard/User/edit/${userId}`,
         contentType: 'application/json',
         data: JSON.stringify(userData)
-    }).done(data => {
+    }).done(data => {       
         userSuccessAlert.show().delay(3000);
         userSuccessAlert.fadeOut();
     }).fail(failureResponse => {
@@ -165,7 +171,6 @@ createProjectButton.on('click', () => {
     });
 });
 
-
 //--------------Create Post--------//
 
 $('.js-create-post-success-alert').hide();
@@ -197,7 +202,6 @@ $('.js-createpost').on('click', () => {
         $('.js-create-post-fail-alert').fadeOut();
     });
 });
-
 
 //-------Create Reward Package----------//
 

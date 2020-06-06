@@ -3,11 +3,11 @@
     ViewData["Title"] = "UpdateUser";
 }
 
-    <div class="container profile-container">
+    <div class="container profile-container" style="margin-top: 90px;">
 
         <!-- Project Title & Foto-->
         <div class="row">
-            <div class="col col-md-3">
+            <div class="col-12 col-sm-12 col-md-3">
                 <div class="card w-100 h-100">
                     <div class="card-body">                      
                         <a asp-action="Index" asp-route-id="@Globals.UserId" class="btn btn-lg btn-info mb-4 w-100">
@@ -18,7 +18,7 @@
             </div>
 
 
-            <div class="col col-md-9">
+            <div class="col-12 col-sm-12 col-md-9">
                 <div class="card w-100 h-100">
                     <div class="card-body">
                         <h5 class="card-title">Edit your Profile</h5>
@@ -28,7 +28,7 @@
                             <div class="form-group">
                                 <label for="firstName">First Name</label>
                                 <input type="text" name="@Html.NameFor(nm => nm.FirstName)" class="form-control js-firstName" value="@Model.FirstName"
-                                       data-val="true" data-val-required="Required field">
+                                       data-val="true" data-val-required="Required field" placeholder="Please enter your firstname">
                                 @Html.ValidationMessageFor(nm => nm.FirstName)
                             </div>
 

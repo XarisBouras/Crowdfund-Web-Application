@@ -50,7 +50,7 @@ namespace Crowdfund.Web.Controllers
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
+                Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(projectsToView);
@@ -77,9 +77,9 @@ namespace Crowdfund.Web.Controllers
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                BackingsAmount = (int)_backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
+                Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(projectsToView);
@@ -91,7 +91,7 @@ namespace Crowdfund.Web.Controllers
         [Route("project/create")]
         public IActionResult CreateProject()
         {
-           
+
             return View();
         }
 
@@ -224,8 +224,6 @@ namespace Crowdfund.Web.Controllers
 
             return RedirectToAction("AddImages", options.ProjectId);
         }
-
-
 
         [HttpGet("videos/project/{id}")]
         public IActionResult AddVideos(int id)
