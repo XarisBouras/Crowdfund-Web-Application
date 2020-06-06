@@ -4,6 +4,12 @@
 
 
 // Write your JavaScript code.
+let form = $('.js-form-validations');
+form.click(function () {
+    if (!form.valid()) {
+        return;
+    }
+});
 $("#addMedia").click(function () {
     let html = '';
     html += '<div id="inputFormRow">';
@@ -239,5 +245,59 @@ $('.js-createrewardpackage').on('click', () => {
         $('.js-create-reward-fail-alert').text(failureResponse.responseText);
         $('.js-create-reward-fail-alert').show().delay(3000);
         $('.js-create-reward-fail-alert').fadeOut();
+    });
+});
+
+
+//--------------------Project Update/Edit JS-------------------------//
+
+let projectUpdateSuccessAlert = $('.js-project-update-success-alert');
+projectUpdateSuccessAlert.hide();
+
+let projectUpdateFailAlert = $('.js-project-update-fail-alert');
+projectUpdateFailAlert.hide();
+
+let saveProjectUpdateButton = $('.js-project-update-save');
+
+
+
+
+saveProjectUpdateButton.on('click', () => {
+    if (!form.valid()) {
+        return;
+    }
+    let projectTitle = $('.js-title').val();
+    let projectDescription = $('.js-description').val();
+    let projectMainImageUrl = $('.js-mainImageUrl').val();
+    let projectDueTo = $('.js-dueTo').val();
+    let projectGoal = $('.js-goal').val();
+    let projectCategory = $('.js-project-update-category').val();
+    let projectId = $('.js-project-id').val();
+
+    projectUpdateSuccessAlert.hide();
+    projectUpdateFailAlert.hide();
+
+    let projectData = {
+        "ProjectId": parseInt(projectId),
+        "Title": projectTitle,
+        "Description": projectDescription,
+        "MainImageUrl": projectMainImageUrl,
+        "DueTo": projectDueTo,
+        "Goal": parseInt(projectGoal),
+        "CategoryId": parseInt(projectCategory)
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: `/Dashboard/User/project/edit/${projectId}`,
+        contentType: 'application/json',
+        data: JSON.stringify(projectData)
+    }).done(data => {
+        projectUpdateSuccessAlert.show().delay(3000);
+        projectUpdateSuccessAlert.fadeOut();
+    }).fail(failureResponse => {
+        projectUpdateFailAlert.text(failureResponse.responseText);
+        projectUpdateFailAlert.show().delay(3000);
+        projectUpdateFailAlert.fadeOut();
     });
 });

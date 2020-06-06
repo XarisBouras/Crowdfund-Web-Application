@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Crowdfund.Core.Models;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.MediaOptions;
@@ -8,8 +10,7 @@ using Crowdfund.Core.Services.Options.UserOptions;
 using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.Dashboard;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
+using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace Crowdfund.Web.Controllers
 {
@@ -158,10 +159,10 @@ namespace Crowdfund.Web.Controllers
             {
                 ProjectId = id,
                 ProjectTitle = projectTitle,
-                 RewardOptions = new CreateRewardPackageOptions(),
-                 PostOptions = new CreatePostOptions()
+                RewardOptions = new CreateRewardPackageOptions(),
+                PostOptions = new CreatePostOptions()
             };
-
+            
             return View(projectInfoViewModel);
         }
 
@@ -300,7 +301,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("project/edit/{id}")]
-        public IActionResult UpdateProject(UpdateProjectFormOptions options)
+        public IActionResult UpdateProject([FromBody] UpdateProjectFormOptions options)
         {
             var editProjectOptions = new UpdateProjectOptions()
             {
@@ -321,7 +322,6 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
-
             return Ok();
             //return RedirectToAction("UpdateProject", options.ProjectId);
         }

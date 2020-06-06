@@ -10,7 +10,7 @@ namespace Crowdfund.Core.Services.Interfaces
         RewardPackage UpdateRewardPackage(RewardPackage rewardPackage ,UpdateRewardPackageOptions updateRewardPackageOptions);
 
         bool DeleteRewardPackage(RewardPackage rewardPackage);
-        
+
         RewardPackage GetRewardPackageById(int? packageId);
     }
 }

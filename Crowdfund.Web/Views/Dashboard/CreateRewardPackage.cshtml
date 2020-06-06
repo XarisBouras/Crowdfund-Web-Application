@@ -13,36 +13,38 @@
                 </div>
             </div>
         </div>
-
-
         <div class="col-12 col-sm-12 col-md-9">
             <div class="card w-100 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Project: @Model.ProjectTitle</h5>
-                    <form method="post" class="js-create-reward-form">
+                    <h5 class="card-title">Create a Reward Package For: @Model.ProjectTitle</h5>
+                    <form method="post" class="js-create-reward-form js-form-validations">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control js-title" id="title">
+                            <input type="text" name="@Html.NameFor(nm=>nm.RewardOptions.Title)" class="form-control js-title"
+                                   data-val="true" data-val-required="Field required" id="title">
+                            @Html.ValidationMessageFor(nm => nm.RewardOptions.Title)
                         </div>
                         <div class="form-group">
                             <label for="minAmount">Amount</label>
-                            <input type="number" name="minAmount" class="form-control js-amount" id="minAmount">
+                            <input type="number" name="@Html.NameFor(nm=>nm.RewardOptions.MinAmount)" class="form-control js-amount"
+                                   data-val="true" data-val-required="Field required" id="minAmount">
+                            @Html.ValidationMessageFor(nm => nm.RewardOptions.MinAmount)
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
-                            <input type="number" name="quantity" class="form-control js-quantity" id="quantity" placeholder="Leave empty for unlimited">
+                            <input type="number" name="@Html.NameFor(nm=>nm.RewardOptions.Quantity)" class="form-control js-quantity"
+                                   id="quantity" placeholder="Leave empty for unlimited">              
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea name="description" class="form-control js-description" id="description" rows="8"></textarea>
+                            <textarea name="@Html.NameFor(nm=>nm.RewardOptions.Description)" class="form-control js-description"
+                                       id="description" rows="8"></textarea>                          
                         </div>
-                        <input type="hidden" name="projectId" class="js-projectId" value="@Model.ProjectId"/>
+                        <input type="hidden" name="projectId" class="js-projectId" value="@Model.ProjectId" />
                         <button type="button" class="btn btn-lg btn-warning js-createrewardpackage">Create</button>
-
                         <div class="alert alert-success mt-3 js-create-reward-success-alert" role="alert" style="text-align:center">
                             Reward Package created successfully
                         </div>
-
                         <div class="alert alert-danger mt-3 js-create-reward-fail-alert" role="alert" style="text-align:center">
                         </div>
                     </form>

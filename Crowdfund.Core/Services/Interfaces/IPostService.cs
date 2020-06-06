@@ -6,8 +6,8 @@ namespace Crowdfund.Core.Services.Interfaces
     public interface IPostService
     {
         Result<Post> CreatePost(CreatePostOptions options);
-        Post UpdatePost(Post post, UpdatePostOptions options);
-        Post GetPostById(int? id);
+        Result<Post> UpdatePost(Post post, UpdatePostOptions options);
+        Result<Post> GetPostById(int? id);
         bool DeletePost(Post post);
     }
 }
