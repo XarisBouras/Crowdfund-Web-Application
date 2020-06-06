@@ -211,7 +211,9 @@ namespace Crowdfund.Web.Controllers
         [Route("images/project/{id}")]
         public IActionResult AddImages(MediaFormOptions options)
         {
-            var createMediaOptions = options.Url.Select
+            var urlList = options.Url.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
+
+            var createMediaOptions = urlList.Select
             (url => new CreateMediaOptions
             {
                 MediaType = MediaType.Photo,
@@ -246,7 +248,9 @@ namespace Crowdfund.Web.Controllers
         [Route("videos/project/{id}")]
         public IActionResult AddVideos(MediaFormOptions options)
         {
-            var createMediaOptions = options.Url.Select
+            var urlList = options.Url.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
+            
+            var createMediaOptions = urlList.Select
             (url => new CreateMediaOptions
             {
                 MediaType = MediaType.Video,
