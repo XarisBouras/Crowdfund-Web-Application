@@ -13,12 +13,10 @@
                 </div>
             </div>
         </div>
-
-
         <div class="col-12 col-sm-12 col-md-9">
             <div class="card w-100 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Project: @Model.ProjectTitle</h5>
+                    <h5 class="card-title">Add a Post For: @Model.ProjectTitle</h5>
                     <form method="post" class="js-create-post-form js-form-validations">
                         <div class="form-group">
                             <label for="title">Post Title</label>
@@ -27,7 +25,6 @@
                             @Html.ValidationMessageFor(nm => nm.PostOptions.Title)
                             <input type="hidden" class="js-project" name="projectId" value="@Model.ProjectId" />
                         </div>
-
                         <div class="form-group">
                             <label for="text">Description</label>
                             <textarea name="@Html.NameFor(nm=>nm.PostOptions.Text)" class="form-control js-description"
@@ -38,7 +35,6 @@
                         <div class="alert alert-success mt-3 js-create-post-success-alert" role="alert" style="text-align:center">
                             Post created successfully
                         </div>
-
                         <div class="alert alert-danger mt-3 js-create-post-fail-alert" role="alert" style="text-align:center">                           
                         </div>
                     </form>
