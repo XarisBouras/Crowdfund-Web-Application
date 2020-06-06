@@ -32,10 +32,11 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> CreateProject(int? userId, CreateProjectOptions createProjectOptions)
         {
-            if(createProjectOptions == null)
+            if (createProjectOptions == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Cannot Be Null");
             }
+
             createProjectOptions.MainImageUrl = createProjectOptions.MainImageUrl?.Trim();
             createProjectOptions.Title = createProjectOptions.Title?.Trim();
             createProjectOptions.Description = createProjectOptions.Description?.Trim();
@@ -50,8 +51,9 @@ namespace Crowdfund.Core.Services
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
+
             var user = _userService.GetUserById(userId);
-            
+
             if (user == null)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "User Not Found");
@@ -233,9 +235,15 @@ namespace Crowdfund.Core.Services
 
             if (!string.IsNullOrWhiteSpace(searchProjectOptions.SearchString))
             {
-                query = query.Where(pj => pj.Title.ToLower()
-                                              .Contains(searchProjectOptions.SearchString.ToLower()) ||
-                                          pj.Description.ToLower().Contains(searchProjectOptions.SearchString.ToLower()));
+                Enum.TryParse(searchProjectOptions.SearchString, true, out Category category);
+                
+                query = query.Where(
+                    pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
+                          ||
+                          pj.Description.ToLower()
+                              .Contains(searchProjectOptions.SearchString.ToLower())
+                          ||
+                          pj.Category == category);
             }
 
             if (searchProjectOptions.SingleCategoryId != null)
@@ -291,7 +299,7 @@ namespace Crowdfund.Core.Services
         public Result<bool> AddRewardPackage(int? projectId, int? userId,
             CreateRewardPackageOptions createRewardOptions)
         {
-            if(createRewardOptions == null)
+            if (createRewardOptions == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
                     "Please fill in the form");
