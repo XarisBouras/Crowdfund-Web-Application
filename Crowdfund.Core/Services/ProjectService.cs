@@ -47,6 +47,7 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
             }
             var user = _userService.GetUserById(userId);
+            
             if (user == null)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "User Not Found");
@@ -175,6 +176,11 @@ namespace Crowdfund.Core.Services
                 project.Data.Title = updateProjectOptions.Title;
             }
 
+            if (!string.IsNullOrWhiteSpace(updateProjectOptions.MainImageUrl))
+            {
+                project.Data.MainImageUrl = updateProjectOptions.MainImageUrl;
+            }
+
             if (updateProjectOptions.DueTo != null && updateProjectOptions.DueTo > DateTime.Now)
             {
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;
@@ -289,7 +295,7 @@ namespace Crowdfund.Core.Services
 
             var project = GetProjectById(projectId);
 
-            if (project == null)
+            if (!project.Success)
             {
                 return Result<bool>.Failed(StatusCode.NotFound, "Project Not Found");
             }
@@ -299,10 +305,10 @@ namespace Crowdfund.Core.Services
                 return Result<bool>.Failed(StatusCode.BadRequest, "Can Not Access A Project You Don't Own");
             }
 
-            if (project.Data.RewardPackages.Any(r => r.MinAmount == createRewardOptions.MinAmount))
+            if (project.Data.RewardPackages.Any(r => r.Title.ToLower().Equals(createRewardOptions.Title.ToLower())))
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Can Not Create A Reward Package With The Same Value");
+                    "Can Not Create A Reward Package With The Same Title");
             }
 
 
@@ -314,8 +320,8 @@ namespace Crowdfund.Core.Services
             }
             else
             {
-                return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Invalid Reward Package options");
+                return Result<bool>.Failed(rewardResult.ErrorCode,
+                    rewardResult.ErrorText);
             }
 
             var rows = 0;
@@ -536,9 +542,14 @@ namespace Crowdfund.Core.Services
 
             var post = _postService.CreatePost(createPostOptions);
 
-            if (post != null)
+            if (post.Success)
             {
                 project.Data.Posts.Add(post.Data);
+            }
+            else
+            {
+                return Result<bool>.Failed(post.ErrorCode,
+                    post.ErrorText);
             }
 
             var rows = 0;

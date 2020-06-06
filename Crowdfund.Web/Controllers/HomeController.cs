@@ -42,7 +42,7 @@ namespace Crowdfund.Web.Controllers
                 Category = p.Category,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
-                Backers = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
+                Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
                 Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)

@@ -16,7 +16,7 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="@pr.MainImageUrl" alt="Card image cap">
+                        <img class="card-img-top h-100" src="@pr.MainImageUrl" alt="Card image cap">
                         <div class="card-body">
                             <h3 class="text-center">@pr.Title</h3>
                             <div class="text-center mb-2">
@@ -31,7 +31,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <span class="badge badge-pill badge-warning mb-2" style="font-size: .9rem">@pr.BackingsAmount / @pr.Goal $</span>
-                                    <small class="badge badge-pill badge-warning" style="font-size: .9rem">@pr.Backers backers</small>
+                                    <small class="badge badge-pill badge-warning" style="font-size: .9rem">@pr.Backings backings</small>
                                 </div>
                                 <a asp-controller="Project" asp-action="Details" asp-route-id="@pr.ProjectId" type="button" class="btn btn-md w-50 btn-success">View</a>
                             </div>

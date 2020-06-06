@@ -19,7 +19,7 @@ namespace Crowdfund.Web.Models
 
         public int Goal { get; set; }
         
-        public int Backers { get; set; }
+        public int Backings { get; set; }
 
         public int BackingsAmount { get; set; }
 
