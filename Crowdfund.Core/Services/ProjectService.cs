@@ -32,6 +32,10 @@ namespace Crowdfund.Core.Services
 
         public Result<bool> CreateProject(int? userId, CreateProjectOptions createProjectOptions)
         {
+            if(createProjectOptions == null)
+            {
+                return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Cannot Be Null");
+            }
             createProjectOptions.MainImageUrl = createProjectOptions.MainImageUrl?.Trim();
             createProjectOptions.Title = createProjectOptions.Title?.Trim();
             createProjectOptions.Description = createProjectOptions.Description?.Trim();
@@ -146,7 +150,7 @@ namespace Crowdfund.Core.Services
         {
             if (projectId == null || userId == null)
             {
-                return Result<bool>.Failed(StatusCode.BadRequest, "Project Options Not Valid");
+                return Result<bool>.Failed(StatusCode.BadRequest, "Options Not Valid");
             }
 
             var project = GetSingleProject(projectId);
@@ -186,7 +190,7 @@ namespace Crowdfund.Core.Services
                 project.Data.DueTo = updateProjectOptions.DueTo.Value;
             }
 
-            if (updateProjectOptions.DueTo < DateTime.Now)
+            if (updateProjectOptions.DueTo <= DateTime.Now)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Date");
             }
@@ -198,7 +202,7 @@ namespace Crowdfund.Core.Services
 
             if (updateProjectOptions.Goal <= 0)
             {
-                return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid goal");
+                return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Goal");
             }
 
             project.Data.Category = (Category) updateProjectOptions.CategoryId;
@@ -287,10 +291,16 @@ namespace Crowdfund.Core.Services
         public Result<bool> AddRewardPackage(int? projectId, int? userId,
             CreateRewardPackageOptions createRewardOptions)
         {
+            if(createRewardOptions == null)
+            {
+                return Result<bool>.Failed(StatusCode.BadRequest,
+                    "Please fill in the form");
+            }
+
             if (projectId == null || userId == null)
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Project or User Not Specified. Reward Package Options Not Valid");
+                    "Project or User Not Specified");
             }
 
             var project = GetProjectById(projectId);
@@ -308,9 +318,8 @@ namespace Crowdfund.Core.Services
             if (project.Data.RewardPackages.Any(r => r.Title.ToLower().Equals(createRewardOptions.Title.ToLower())))
             {
                 return Result<bool>.Failed(StatusCode.BadRequest,
-                    "Can Not Create A Reward Package With The Same Title");
+                    "A Reward Package with the same title already exists");
             }
-
 
             var rewardResult = _rewardService.CreateRewardPackage(createRewardOptions);
 
@@ -479,7 +488,6 @@ namespace Crowdfund.Core.Services
                     return Result<bool>.Failed(mediaResult.ErrorCode, mediaResult.ErrorText);
                 }
             }
-
 
             var rows = 0;
 

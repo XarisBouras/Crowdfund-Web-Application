@@ -20,7 +20,7 @@ namespace Crowdfund.Core.Services
         {
             if (createUserOptions == null || string.IsNullOrWhiteSpace(createUserOptions.Email))
             {
-                return Result<int>.Failed(StatusCode.BadRequest, "Options Not Valid");
+                return Result<int>.Failed(StatusCode.BadRequest, "Please enter a valid E-mail");
             }
 
             try

@@ -16,12 +16,27 @@ namespace Crowdfund.Core.Services
 
         public Result<RewardPackage> CreateRewardPackage(CreateRewardPackageOptions options)
         {
+            if(options == null)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please fill in the form");
+            }
+
             options.Title = options.Title?.Trim();
             options.Description = options.Description?.Trim();
             
-            if (string.IsNullOrWhiteSpace(options.Title) || options.Quantity < 0 || options.MinAmount <= 0)
+            if (string.IsNullOrWhiteSpace(options.Title))
             {
-                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Options Not Valid");
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please enter a Title");
+            }
+
+            if(options.Quantity < 0)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please enter a valid Quantity");
+            }
+
+            if(options.MinAmount <= 0 || options.MinAmount == null)
+            {
+                return Result<RewardPackage>.Failed(StatusCode.BadRequest, "Please enter a valid Amount");
             }
             
             var reward = new RewardPackage
@@ -60,11 +75,7 @@ namespace Crowdfund.Core.Services
             {
                 packageToUpdate.MinAmount = options.MinAmount.Value;
             }
-            //if (options.MinAmount <= 0)
-            //{
-            //    return Result<bool>.Failed(StatusCode.BadRequest, "Not Valid Date");
-            //}
-
+        
             return packageToUpdate;
         }
 

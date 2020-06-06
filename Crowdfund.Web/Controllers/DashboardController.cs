@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Crowdfund.Core.Models;
 using Crowdfund.Core.Services.Interfaces;
 using Crowdfund.Core.Services.Options.MediaOptions;
@@ -10,7 +8,8 @@ using Crowdfund.Core.Services.Options.UserOptions;
 using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.Dashboard;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Patterns;
+using System;
+using System.Linq;
 
 namespace Crowdfund.Web.Controllers
 {
@@ -50,7 +49,7 @@ namespace Crowdfund.Web.Controllers
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
                 BackingsAmount = _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
+                Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(projectsToView);
@@ -77,9 +76,9 @@ namespace Crowdfund.Web.Controllers
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
-                BackingsAmount = (int) _backingService.GetProjectBackingsAmount(p.ProjectId).Data,
+                BackingsAmount = (int)_backingService.GetProjectBackingsAmount(p.ProjectId).Data,
                 Goal = p.Goal,
-                Progress = (int)((decimal) _backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
+                Progress = (int)((decimal)_backingService.GetProjectBackingsAmount(p.ProjectId).Data / p.Goal * 100)
             });
 
             return View(projectsToView);
@@ -91,7 +90,7 @@ namespace Crowdfund.Web.Controllers
         [Route("project/create")]
         public IActionResult CreateProject()
         {
-           
+
             return View();
         }
 
@@ -158,7 +157,9 @@ namespace Crowdfund.Web.Controllers
             var projectInfoViewModel = new ProjectInfoViewModel
             {
                 ProjectId = id,
-                ProjectTitle = projectTitle
+                ProjectTitle = projectTitle,
+                 RewardOptions = new CreateRewardPackageOptions(),
+                 PostOptions = new CreatePostOptions()
             };
 
             return View(projectInfoViewModel);
@@ -221,10 +222,9 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
-            
+
             return RedirectToAction("AddImages", options.ProjectId);
         }
-
 
         [HttpGet("videos/project/{id}")]
         public IActionResult AddVideos(int id)
@@ -241,7 +241,7 @@ namespace Crowdfund.Web.Controllers
 
         [HttpPost]
         [Route("videos/project/{id}")]
-        public IActionResult AddVideos([FromBody] MediaFormOptions options)
+        public IActionResult AddVideos(MediaFormOptions options)
         {
             var createMediaOptions = options.Url.Select
             (url => new CreateMediaOptions
@@ -322,7 +322,8 @@ namespace Crowdfund.Web.Controllers
                     result.ErrorText);
             }
 
-            return RedirectToAction("UpdateProject", options.ProjectId);
+            return Ok();
+            //return RedirectToAction("UpdateProject", options.ProjectId);
         }
     }
 }
