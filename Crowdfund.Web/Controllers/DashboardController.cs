@@ -224,8 +224,13 @@ namespace Crowdfund.Web.Controllers
 
             if (!result.Success)
             {
-                return StatusCode((int)result.ErrorCode,
-                    result.ErrorText);
+                Globals.HasError = true;
+                Globals.Error = result.ErrorText;
+            }
+            else
+            {
+                Globals.HasError = false;
+                Globals.Error = null;
             }
 
             return RedirectToAction("AddImages", options.ProjectId);
@@ -261,8 +266,13 @@ namespace Crowdfund.Web.Controllers
 
             if (!result.Success)
             {
-                return StatusCode((int)result.ErrorCode,
-                    result.ErrorText);
+                Globals.HasError = true;
+                Globals.Error = result.ErrorText;
+            }
+            else
+            {
+                Globals.HasError = false;
+                Globals.Error = null;
             }
 
             return RedirectToAction("AddVideos", options.ProjectId);
