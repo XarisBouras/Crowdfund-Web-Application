@@ -269,9 +269,6 @@ projectUpdateFailAlert.hide();
 
 let saveProjectUpdateButton = $('.js-project-update-save');
 
-
-
-
 saveProjectUpdateButton.on('click', () => {
     if (!form.valid()) {
         return;
