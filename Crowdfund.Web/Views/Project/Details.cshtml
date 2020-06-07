@@ -141,7 +141,7 @@
                             @foreach (var p in Model.Posts)
                             {
                                 <div class="card border-light mb-3 mr-1" style="width:auto">
-                                    <div class="card-header text-center" style="background-color:lightgray"><h5>@p.Title &nbsp; &nbsp;</h5><h6> @p.CreatedAt</h6></div>
+                                    <div class="card-header text-center" style="background-color:lightgray"><h5>@p.Title &nbsp; &nbsp;</h5><h6> @p.CreatedAt.ToString("MM/dd/yyyy")</h6></div>
 
                                     <p class="card-text font-weight-normal text-center" style="color:black">@p.Text</p>
 
