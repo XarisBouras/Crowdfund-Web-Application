@@ -11,36 +11,40 @@
     <style>
     @@media (max-width: 430px) { 
     .jumbotron {
-        min-height: 180vw !important;
+        min-height: 200vw !important;
         height: 100% !important;
     }
-    #hero .lead{
-         margin-top: 0 !important;
-     }
-            
-/*            #hero h1{
-                       font-size: 18px !important;
-            }*/
+
+    .cta__1 h1 {
+        font-size: 12px !important;
+        }     
     }
     @@media (max-width: 500px) {   
+       .jumbotron {
+            min-height: 180vw !important;
+            height: 100% !important;
+        }
+                   #hero h1{
+                   font-size: 20px !important;
+                }
     .cta__1 h1 {
     font-size: 20px !important;
     }     
         .cta__1 .btn {
-         font-size: 80% !important;
+         font-size: 70% !important;
         }
     }
     @@media (max-width: 576px) {
     
     .cta__1 h1 {
-        font-size: 18px !important;
+        font-size: 30px !important;
         }     
             .cta__1 .btn {
-             font-size: 70% !important;
+             font-size: 80% !important;
             }
    
            #hero h1{
-           font-size: 30px !important;
+           font-size: 40px !important;
         }
     h1 {
     font-size: 20px !important;
@@ -56,13 +60,14 @@
 
 @@media (max-width: 768px) {
 
+    .cta__1 {
+        height: 100vh;
+    }
+
     h1 {
         font-size: 50px !important;
         }
 
-/*    .project-container {
-        margin-top: 10rem;
-    }*/
 
 .jumbotron {
     max-height: 150vw !important;
@@ -75,9 +80,13 @@
 }
 
 @@media (max-width: 992px) {
+    h1 {
+        font-size: 50px !important;
+        }
     .jumbotron {        
          height: 100vw !important;
     }
+    
 
     .navbar-expand-lg .input-group-search {
         width: 80% !important;
