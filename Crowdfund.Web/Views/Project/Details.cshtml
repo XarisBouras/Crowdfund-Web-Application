@@ -127,7 +127,7 @@
                                 @if (vid.MediaType == Crowdfund.Core.Models.MediaType.Video)
                                 {
                                     <div class="embed-responsive embed-responsive-16by9 mb-1">
-                                        <iframe class="embed-responsive-item" src="@vid.MediaUrl" allowfullscreen></iframe>
+                                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/@vid.MediaUrl.Substring(@vid.MediaUrl.LastIndexOf('=') + 1)" allowfullscreen></iframe>
                                     </div>
                                 }
                             }

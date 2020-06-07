@@ -45,6 +45,7 @@ namespace Crowdfund.Web.Controllers
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
+                Category = p.Category,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
@@ -74,6 +75,7 @@ namespace Crowdfund.Web.Controllers
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
+                Category = p.Category,
                 MainImageUrl = p.MainImageUrl,
                 DaysToGo = (p.DueTo - DateTime.Now).Days,
                 Backings = _backingService.GetProjectBackingsCount(p.ProjectId).Data,
@@ -209,7 +211,9 @@ namespace Crowdfund.Web.Controllers
         [Route("images/project/{id}")]
         public IActionResult AddImages(MediaFormOptions options)
         {
-            var createMediaOptions = options.Url.Select
+            var urlList = options.Url.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
+
+            var createMediaOptions = urlList.Select
             (url => new CreateMediaOptions
             {
                 MediaType = MediaType.Photo,
@@ -220,8 +224,13 @@ namespace Crowdfund.Web.Controllers
 
             if (!result.Success)
             {
-                return StatusCode((int)result.ErrorCode,
-                    result.ErrorText);
+                Globals.HasError = true;
+                Globals.Error = result.ErrorText;
+            }
+            else
+            {
+                Globals.HasError = false;
+                Globals.Error = null;
             }
 
             return RedirectToAction("AddImages", options.ProjectId);
@@ -244,7 +253,9 @@ namespace Crowdfund.Web.Controllers
         [Route("videos/project/{id}")]
         public IActionResult AddVideos(MediaFormOptions options)
         {
-            var createMediaOptions = options.Url.Select
+            var urlList = options.Url.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
+            
+            var createMediaOptions = urlList.Select
             (url => new CreateMediaOptions
             {
                 MediaType = MediaType.Video,
@@ -255,8 +266,13 @@ namespace Crowdfund.Web.Controllers
 
             if (!result.Success)
             {
-                return StatusCode((int)result.ErrorCode,
-                    result.ErrorText);
+                Globals.HasError = true;
+                Globals.Error = result.ErrorText;
+            }
+            else
+            {
+                Globals.HasError = false;
+                Globals.Error = null;
             }
 
             return RedirectToAction("AddVideos", options.ProjectId);
