@@ -228,22 +228,31 @@ namespace Crowdfund.Core.Services
         public IQueryable<Project> SearchProjects(SearchProjectOptions searchProjectOptions)
         {
             searchProjectOptions.SearchString = searchProjectOptions.SearchString?.Trim();
-
+            var number = 0;
             var query = _context
                 .Set<Project>()
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchProjectOptions.SearchString))
-            {
-                Enum.TryParse(searchProjectOptions.SearchString, true, out Category category);
-                
-                query = query.Where(
-                    pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
-                          ||
-                          pj.Description.ToLower()
-                              .Contains(searchProjectOptions.SearchString.ToLower())
-                          ||
-                          pj.Category == category);
+            {              
+               if(Enum.TryParse(searchProjectOptions.SearchString, true, out Category category) && !int.TryParse(searchProjectOptions.SearchString, out number))
+                {
+                    query = query.Where(
+                   pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
+                         ||
+                         pj.Description.ToLower()
+                             .Contains(searchProjectOptions.SearchString.ToLower())
+                         ||
+                         pj.Category == category);
+                }
+                else
+                {
+                    query = query.Where(
+                   pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
+                         ||
+                         pj.Description.ToLower()
+                             .Contains(searchProjectOptions.SearchString.ToLower()));
+                }             
             }
 
             if (searchProjectOptions.SingleCategoryId != null)

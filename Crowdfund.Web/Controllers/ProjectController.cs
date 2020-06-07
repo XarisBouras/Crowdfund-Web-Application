@@ -29,11 +29,6 @@ namespace Crowdfund.Web.Controllers
             _backingService = backingService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet("{id}")]
         public IActionResult Details(int id)
         {

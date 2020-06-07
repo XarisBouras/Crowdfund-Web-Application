@@ -44,6 +44,10 @@ namespace Crowdfund.Core.Services
 
             if(rewardPackage != null && rewardPackageId != 0)
             {
+                if(rewardPackage.Quantity == 0)
+                {
+                    return Result<bool>.Failed(StatusCode.BadRequest, "Reward Package No Longer Available");
+                }
                 rewardPackage.Quantity--;
             }
 
