@@ -52,7 +52,7 @@ namespace Crowdfund.Core.Services
             }
 
             if (rewardPackage == null && rewardPackageId != 0)
-                return Result<bool>.Failed(StatusCode.NotFound, "Invalid Reward Package");
+                return Result<bool>.Failed(StatusCode.NotFound, "Not eligible for this reward package");
 
             var userProjectBacking = new UserProjectReward
             {

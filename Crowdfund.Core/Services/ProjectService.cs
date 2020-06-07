@@ -234,25 +234,26 @@ namespace Crowdfund.Core.Services
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchProjectOptions.SearchString))
-            {              
-               if(Enum.TryParse(searchProjectOptions.SearchString, true, out Category category) && !int.TryParse(searchProjectOptions.SearchString, out number))
+            {
+                if (Enum.TryParse(searchProjectOptions.SearchString, true, out Category category) &&
+                    !int.TryParse(searchProjectOptions.SearchString, out number))
                 {
                     query = query.Where(
-                   pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
-                         ||
-                         pj.Description.ToLower()
-                             .Contains(searchProjectOptions.SearchString.ToLower())
-                         ||
-                         pj.Category == category);
+                        pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
+                              ||
+                              pj.Description.ToLower()
+                                  .Contains(searchProjectOptions.SearchString.ToLower())
+                              ||
+                              pj.Category == category);
                 }
                 else
                 {
                     query = query.Where(
-                   pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
-                         ||
-                         pj.Description.ToLower()
-                             .Contains(searchProjectOptions.SearchString.ToLower()));
-                }             
+                        pj => pj.Title.ToLower().Contains(searchProjectOptions.SearchString.ToLower())
+                              ||
+                              pj.Description.ToLower()
+                                  .Contains(searchProjectOptions.SearchString.ToLower()));
+                }
             }
 
             if (searchProjectOptions.SingleCategoryId != null)

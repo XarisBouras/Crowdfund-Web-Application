@@ -49,7 +49,7 @@ let button = $('.js-backit');
 button.on('click', (event) => {
     let clickedElement = $(event.currentTarget);
     let amount = clickedElement.parent().parent().find('.js-amount').val();
-    var parsedAmount = parseInt(amount);
+    let parsedAmount = parseInt(amount);
     let rewardPackageId = clickedElement.parent().parent().find('.js-reward').val();
     let projectId = clickedElement.parent().parent().find('.js-project').val();
 
@@ -70,7 +70,16 @@ button.on('click', (event) => {
         contentType: 'application/json',
         data: JSON.stringify(data)
     }).done(data => {
-
+        let qtyEl = clickedElement.parent().parent().find('.js-qty');
+        
+        if (parseInt(qtyEl.text()) > 0 && qtyEl.text() !== 'Unlimited') {
+            let newQty = parseInt(qtyEl.text()) -1;
+            qtyEl.text(newQty);
+        }
+        
+        if (qtyEl.text() !== 'Unlimited' && parseInt(qtyEl.text()) === 0) {
+            clickedElement.prop('disabled', true);
+        }
         let currentTotal = parseInt(document.querySelector('#total-amount').innerText);
         let goal = parseInt(document.querySelector('#goal').innerText);
         let totalAmount = currentTotal + parsedAmount;
