@@ -32,6 +32,7 @@ namespace Crowdfund.Web.Controllers
         [HttpGet("{id}")]
         public IActionResult Index(int id)
         {
+            Globals.HasError = null;
             var projects = _backingService.GetUserProjects(id);
 
             if (!projects.Success)
