@@ -42,6 +42,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectToView = new DetailsViewModel
             {
+                UserName = "xaris",
                 ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,
                 Description = project.Data.Description,
@@ -92,6 +93,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = allProject.Data.Select(p => new ProjectViewModel
             {
+                 UserName = "Xaris",
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
@@ -117,6 +119,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = results?.Select(p => new ProjectViewModel
             {
+                UserName = "xaris",
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Category = p.Category,
@@ -142,6 +145,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = results.Select(p => new ProjectViewModel
             {
+                UserName = "xaris",
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Category = p.Category,

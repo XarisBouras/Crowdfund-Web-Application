@@ -5,6 +5,7 @@ namespace Crowdfund.Web.Models
 {
     public class ProjectViewModel
     {
+        public string UserName { get; set; }
         public int ProjectId { get; set; }
 
         public string Title { get; set; }
