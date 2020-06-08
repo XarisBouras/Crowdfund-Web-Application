@@ -77,7 +77,6 @@ namespace Crowdfund.Web.Controllers
             }
 
             return Ok();
-            //return Json(backResult.Data);
         }
 
         [HttpGet]

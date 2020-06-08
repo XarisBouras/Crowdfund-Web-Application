@@ -10,7 +10,6 @@ using Crowdfund.Core.Services.Options.UserOptions;
 using Crowdfund.Web.Models;
 using Crowdfund.Web.Models.Dashboard;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace Crowdfund.Web.Controllers
 {
@@ -110,10 +109,8 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
-
-            return RedirectToAction("Index", new { id = Globals.UserId });
-
-            //return Ok();
+            
+            return Ok();
         }
 
 
@@ -148,8 +145,8 @@ namespace Crowdfund.Web.Controllers
                 return StatusCode((int)result.ErrorCode,
                     result.ErrorText);
             }
+            
             return Ok();
-            //return RedirectToAction("CreatePost", options.ProjectId);
         }
 
 
@@ -190,7 +187,6 @@ namespace Crowdfund.Web.Controllers
             }
 
             return Ok();
-            //return RedirectToAction("CreateRewardPackage", options.ProjectId);
         }
 
 
@@ -302,7 +298,6 @@ namespace Crowdfund.Web.Controllers
             }
 
             return Ok();
-           // return RedirectToAction("Index", new { id = Globals.UserId });
         }
 
 
@@ -340,7 +335,6 @@ namespace Crowdfund.Web.Controllers
                     result.ErrorText);
             }
             return Ok();
-            //return RedirectToAction("UpdateProject", options.ProjectId);
         }
     }
 }
