@@ -91,12 +91,12 @@ namespace Crowdfund.Core.Services
 
             try
             {
-                var projectsIds = _context.Set<UserProjectReward>()
-                    .Where(u => u.UserId == userId && u.IsOwner == true).Select(p => p.ProjectId)
-                    .ToList();
+                var projects = _context.Set<UserProjectReward>()
+                    .Include(p => p.Project)
+                    .Where(u => u.ProjectId == u.Project.ProjectId && u.UserId == userId && u.IsOwner == true)
+                    .Select(p => p.Project).ToList();
 
-                return Result<IEnumerable<Project>>
-                    .Succeed(projectsIds.Select(id => _projectService.GetSingleProject(id).Data));
+                return Result<IEnumerable<Project>>.Succeed(projects);
             }
             catch (Exception ex)
             {
@@ -114,13 +114,13 @@ namespace Crowdfund.Core.Services
 
             try
             {
-                var projectsIds = _context.Set<UserProjectReward>()
-                    .Where(u => u.UserId == backerId && u.IsOwner == false).Select(p => p.ProjectId)
-                    .Distinct()
-                    .ToList();
+                var projects = _context.Set<UserProjectReward>()
+                    .Include(p => p.Project)
+                    .Where(u => u.ProjectId == u.Project.ProjectId && u.UserId == backerId && u.IsOwner == false)
+                    .Select(p => p.Project).Distinct().ToList();
 
-                return Result<IEnumerable<Project>>
-                    .Succeed(projectsIds.Select(id => _projectService.GetProjectById(id).Data));
+                return Result<IEnumerable<Project>>.Succeed(projects);
+                
             }
             catch (Exception ex)
             {
@@ -135,8 +135,7 @@ namespace Crowdfund.Core.Services
 
             if (Helpers.ProjectExists(_context, projectId) == false)
             {
-                return Result<int>.Failed(StatusCode.NotFound, "Sorry, we couldn't find this page. But don't worry," +
-                    " you can find plenty of other things in our homepage");
+                return Result<int>.Failed(StatusCode.NotFound, "Project Not Found");
             }
 
             try

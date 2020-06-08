@@ -14,12 +14,14 @@ namespace Crowdfund.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUserService _userService;
         private readonly IBackingService _backingService;
+        private readonly IProjectService _projectService;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService, IBackingService backingService)
+        public HomeController(ILogger<HomeController> logger, IUserService userService, IBackingService backingService, IProjectService projectService)
         {
             _logger = logger;
             _userService = userService;
             _backingService = backingService;
+            _projectService = projectService;
         }
 
         [HttpGet]
@@ -35,7 +37,7 @@ namespace Crowdfund.Web.Controllers
             }
             var trendingProjectsToView = trendingProjects.Data.Select(p => new ProjectViewModel
             {
-                UserName = "xaris",
+                UserName = _projectService.GetOwnerName(p.ProjectId),
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,

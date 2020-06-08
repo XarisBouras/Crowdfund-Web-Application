@@ -34,6 +34,6 @@ namespace Crowdfund.Web.Models
 
         public IEnumerable<Media> Medias { get; set; }
 
-        public IEnumerable<Project> InterestingProjects { get; set; }
+        public IEnumerable<InterestingProject> InterestingProjects { get; set; }
     }
 }

@@ -82,8 +82,13 @@
                 <div class="card-body">
                     <img class="img-fluid vw-100 vh-50" src="@Model.MainImageUrl"/>
                     <div class="text-center text-wrap font-weight-bolder mt-4">
-                        <h2>@Model.Title <p><small>by @Model.UserName</small></p></h2>
-                        
+                        <h2>
+                            @Model.Title
+                            <p>
+                                <small>by @Model.UserName</small>
+                            </p>
+                        </h2>
+
                     </div>
                     <div class="text-justify text-wrap font-weight-normal">
                         <p>
@@ -234,7 +239,8 @@
                             <p>
                                 @if (rew.Quantity != null)
                                 {
-                                    <strong class="js-qty">@rew.Quantity</strong><strong> left</strong>
+                                    <strong class="js-qty">@rew.Quantity</strong>
+                                    <strong> left</strong>
                                 }
 
                                 @if (rew.Quantity == null)
@@ -289,7 +295,10 @@
                         <h3 class="mb-1 text-center">@proj.Title</h3>
                         <div class="text-center mb-2">
                             <small class="text-muted">@proj.Category</small>
-                        </div>                      
+                        </div>
+                        <div class="text-center mb-4">
+                            <small class="text-muted">Created by: @proj.UserName</small>
+                        </div>
                         <div class="d-flex justify-content-center align-items-center">
                             <div class="btn-group">
                                 <a asp-action="Details" asp-route-id="@proj.ProjectId" class="btn btn-lg btn-warning mb-1 w-100">

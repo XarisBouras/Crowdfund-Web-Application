@@ -684,9 +684,9 @@ namespace Crowdfund.Core.Services
             }
 
             var user = _context
-                .Set<UserProjectReward>()
-                .Include(u => u.User)
-                .SingleOrDefault(p => p.ProjectId == projectId && p.IsOwner == true)!
+                    .Set<UserProjectReward>()
+                    .Include(u => u.User)
+                    .SingleOrDefault(p => p.ProjectId == projectId && p.UserId == p.User.UserId && p.IsOwner)!
                 .User;
 
             return $"{user.FirstName} {user.LastName}";

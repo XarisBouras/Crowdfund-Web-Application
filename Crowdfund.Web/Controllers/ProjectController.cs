@@ -42,7 +42,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectToView = new DetailsViewModel
             {
-                UserName = "xaris",
+                UserName = _projectService.GetOwnerName(project.Data.ProjectId),
                 ProjectId = project.Data.ProjectId,
                 Title = project.Data.Title,
                 Description = project.Data.Description,
@@ -60,6 +60,15 @@ namespace Crowdfund.Web.Controllers
                     (int) ((decimal) _backingService.GetProjectBackingsAmount(id).Data / project.Data.Goal * 100),
                 InterestingProjects = _projectService.GetAllProjects().Data.Where(p => p.ProjectId != id)
                     .OrderBy(x => Guid.NewGuid()).Take(3)
+                    .Select(p => new InterestingProject
+                    {
+                        ProjectId = p.ProjectId,
+                        Category = p.Category,
+                        DaysToGo = (p.DueTo - DateTime.Now).Days,
+                        MainImageUrl = p.MainImageUrl,
+                        Title = p.Title,
+                        UserName = _projectService.GetOwnerName(p.ProjectId)
+                    })
             };
 
 
@@ -93,7 +102,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = allProject.Data.Select(p => new ProjectViewModel
             {
-                 UserName = "Xaris",
+                 UserName = _projectService.GetOwnerName(p.ProjectId),
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
@@ -119,7 +128,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = results?.Select(p => new ProjectViewModel
             {
-                UserName = "xaris",
+                UserName = _projectService.GetOwnerName(p.ProjectId),
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Category = p.Category,
@@ -145,7 +154,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = results.Select(p => new ProjectViewModel
             {
-                UserName = "xaris",
+                UserName = _projectService.GetOwnerName(p.ProjectId),
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Category = p.Category,
