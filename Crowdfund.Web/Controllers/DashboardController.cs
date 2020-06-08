@@ -42,6 +42,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = projects.Data.Select(p => new ProjectViewModel
             {
+                 UserName = "xaris",
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
@@ -72,6 +73,7 @@ namespace Crowdfund.Web.Controllers
 
             var projectsToView = projects.Data.Select(p => new ProjectViewModel
             {
+                UserName = "xaris",
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,

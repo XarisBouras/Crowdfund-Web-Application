@@ -35,6 +35,7 @@ namespace Crowdfund.Web.Controllers
             }
             var trendingProjectsToView = trendingProjects.Data.Select(p => new ProjectViewModel
             {
+                UserName = "xaris",
                 ProjectId = p.ProjectId,
                 Title = p.Title,
                 Description = p.Description,
