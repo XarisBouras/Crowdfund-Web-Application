@@ -675,5 +675,21 @@ namespace Crowdfund.Core.Services
 
             return project.Data.Posts.OrderByDescending(p => p.CreatedAt).ToList();
         }
+
+        public string GetOwnerName(int? projectId)
+        {
+            if (projectId == null)
+            {
+                return null;
+            }
+
+            var user = _context
+                .Set<UserProjectReward>()
+                .Include(u => u.User)
+                .SingleOrDefault(p => p.ProjectId == projectId && p.IsOwner == true)!
+                .User;
+
+            return $"{user.FirstName} {user.LastName}";
+        }
     }
 }

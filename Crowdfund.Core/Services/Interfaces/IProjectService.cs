@@ -45,6 +45,8 @@ namespace Crowdfund.Core.Services.Interfaces
         Result<bool> UpdatePost(int? postId, int? userId, int? projectId, UpdatePostOptions updatePostOptions);
 
         Result<bool> DeletePost(int? postId, int? userId, int? projectId);
+        
+        string GetOwnerName(int? projectId);
 
     }
 }
