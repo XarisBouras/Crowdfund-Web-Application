@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crowdfund", "Crowdfund\Crowdfund.csproj", "{CFF0BDD8-3C94-4BB2-AC4C-703BBBFF8430}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crowdfund.Core", "Crowdfund.Core\Crowdfund.Core.csproj", "{1F19E3E6-E272-4390-907C-A1C2347FAA79}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crowdfund.Web", "Crowdfund.Web\Crowdfund.Web.csproj", "{4181F716-B543-4101-80AD-6830A15A3963}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CFF0BDD8-3C94-4BB2-AC4C-703BBBFF8430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFF0BDD8-3C94-4BB2-AC4C-703BBBFF8430}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFF0BDD8-3C94-4BB2-AC4C-703BBBFF8430}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFF0BDD8-3C94-4BB2-AC4C-703BBBFF8430}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F19E3E6-E272-4390-907C-A1C2347FAA79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1F19E3E6-E272-4390-907C-A1C2347FAA79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F19E3E6-E272-4390-907C-A1C2347FAA79}.Release|Any CPU.ActiveCfg = Release|Any CPU
