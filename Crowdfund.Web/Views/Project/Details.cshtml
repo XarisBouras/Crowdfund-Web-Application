@@ -55,7 +55,7 @@
 
 <!-- Project Title & Foto-->
 <div class="row">
-<div class="col col-md-8 col-sm-12 ">
+<div class="col-12 col-sm-12 col-md-7 col-lg-8">
     <div class="card w-100 text-center ">
         <div class="card-header">
             <ul class="nav nav-pills  nav-justified">
@@ -160,9 +160,6 @@
 
             <!--Posts-->
             <div class="tab-pane fade scroll" id="Post">
-                @*
-                    <div class="card-body">
-                        *@
                 @foreach (var p in Model.Posts)
                 {
                     <div class="card text-center bg-light m-5">
@@ -175,7 +172,6 @@
                         </div>
                     </div>
                 }
-                @*</div>*@
             </div>
         </div>
 
@@ -183,7 +179,7 @@
 </div>
 
 <!--Reward packages-->
-<div class="col col-md-4 col-sm-12 h-auto">
+<div class="col-12 col-sm-12 col-md-5 col-lg-4 h-auto">
 
     <div class="card  ">
         <div class="card-header">
